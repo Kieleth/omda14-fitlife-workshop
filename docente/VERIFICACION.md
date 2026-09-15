@@ -6,4 +6,4 @@ La rama de sesión pasó 20 tests locales en macOS con Python 3.13.3: instalaci�
 
 La lógica del HTML pasó una prueba con una representación mínima del DOM: editar, guardar, ejecutar, mostrar; títulos vacíos, comillas y texto literal; anterior y reinicio. Es una ilustración de la edición del título, sin transformaciones de mensajes. No es una prueba de renderizado; la comprobación visual sigue pendiente por la restricción de la herramienta sobre URLs de archivos locales.
 
-La comprobación de esta corrección en GitHub Actions está pendiente de finalizar.
+La corrección pasó la instalación desde cero y los 20 tests en Windows, macOS y Linux: [ejecución 34932005539](https://github.com/Kieleth/omda14-fitlife-workshop/actions/runs/34932005539), commit ab9af9960e9626d16346a47a6b278c91fb90cae2.
