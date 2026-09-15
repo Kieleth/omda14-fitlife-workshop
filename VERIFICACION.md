@@ -1,35 +1,47 @@
-# Verificación de la instalación de OMDA14
+# OMDA14 · Verificación de la preparación y del paso 0
 
 Fecha: 14 de septiembre de 2026.
 
-## Comprobado
+## Instalación en main
 
-Se creó un entorno vacío con Python 3.13.3 en macOS ARM64 y se ejecutó `pip install -r requirements.txt`. La instalación terminó correctamente; `pip check` no detectó incompatibilidades.
+La preparación publicada en `main` incluye los requisitos previos, `.venv`, dependencias fijadas, `pip check`, `check_setup.py` y la prueba interactiva `test_app.py`.
 
-Los nueve chequeos del entorno pasaron. Los trece tests automáticos pasaron, incluidos los controles de Streamlit sin credenciales ni conexión de red, los errores de configuración y datos, y la conservación exacta de los 16 ejercicios, el extra y los dos CSV originales.
+[GitHub Actions](https://github.com/Kieleth/omda14-fitlife-workshop/actions/runs/34928208238) comprobó el commit `033b2b0662f0c2b59c7821d52e9fda65775a34b5`: instalación desde cero y quince tests correctos en Windows, macOS y Linux. Los dos tests nuevos impiden reintroducir las instrucciones antiguas del entorno y el descarte de trabajo al actualizar.
 
-También se arrancó Streamlit y se comprobó la app en un navegador real:
+## Paso 0 en codex/sesion-1
 
-- El control numérico pasó a 7 y el resultado a 49.
-- El contador mostró nuevas ejecuciones del script.
-- El plan cambió de `basic` a `premium` y los registros pasaron de 4.480 a 6.826; la tabla mostró filas del plan `premium`.
+Los dieciocho tests locales pasaron con Python 3.13.3 en macOS ARM64. Incluyen:
 
-Los archivos se ejecutaron desde el nuevo repositorio, usando un entorno temporal de verificación fuera del repositorio. Ese entorno no se distribuye: cada alumno crea su propio `.venv` con las instrucciones de `SETUP.md`.
+- El error intencionado del import en el archivo que recibe el alumno.
+- La app tras corregir solo ese import en una copia en memoria.
+- Entrada, salida, texto vacío, contenido tratado como texto, trazas en la terminal y contadores.
+- Cambio del título y de la transformación, y separación entre sesiones.
+- La app sin API key y con conexiones de red bloqueadas durante las pruebas.
+- La conservación exacta de los otros quince ejercicios, el extra y los dos CSV originales.
 
-El primer chequeo en Windows detectó que Git convertía los saltos de línea de los 19 archivos originales. La instalación de paquetes, el chequeo del entorno y los controles de la app sí pasaron. `.gitattributes` fija los saltos de línea LF para todos los sistemas. Un test reproduce una extracción de Git con `core.autocrlf=true`: falló antes de la corrección y pasó después.
+El paso 0 está adaptado. `material_base.json` conserva su hash original y el motivo del cambio. El original sigue disponible en el repositorio MDA13 y en `main` de OMDA14.
 
-## Publicación
+La comprobación de esta rama en GitHub Actions está pendiente de finalizar.
 
-El repositorio público es [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop). La guía [SETUP.md](SETUP.md) incluye los comandos para clonar `main` e instalar el taller.
+## Observado en un navegador real
 
-## Instalación en Windows, macOS y Linux
+Se arrancó una copia temporal de `paso_0.py` con el import corregido, usando el mismo entorno de verificación. El archivo publicado mantiene el reto inicial.
 
-[La ejecución de GitHub Actions](https://github.com/Kieleth/omda14-fitlife-workshop/actions/runs/34927723265) terminó correctamente en los tres sistemas para el commit `4e025bcad0e2e6c2405efcd187a85741da31ba9b`.
+- Cambiar «Hola, FitLife» por «Hola, Madrid» mostró `HOLA, MADRID` y el contador de sesión pasó de 1 a 2.
+- Pulsar el botón de repetir dejó el texto igual y aumentó el contador a 3. El contador local siguió en 1.
+- Recargar la pestaña restauró el mensaje inicial y el contador de sesión a 1.
+- Las líneas `[paso_0]` de la terminal coincidieron con cada entrada, salida y ejecución.
 
-En cada sistema se clonó el repositorio, se creó `.venv` con Python 3.13, se instalaron las dependencias desde `requirements.txt`, se ejecutaron `pip check` y `check_setup.py`, y pasaron los trece tests. Esto comprueba la instalación y las interacciones locales de Streamlit en los entornos de GitHub Actions. No sustituye la prueba de apertura en el navegador de cada portátil.
+## Explicación HTML
 
-El commit posterior que registra estos resultados solo cambia documentación; el código, los datos, las dependencias y la configuración comprobados siguen siendo los mismos.
+`explicaciones/streamlit.html` contiene sus estilos y su JavaScript. No requiere nuevas dependencias, no carga recursos externos y no llama a una API. Sus referencias son enlaces que solo se visitan al pulsarlos.
 
-## Pendiente
+Se ejecutó el JavaScript con una representación mínima del DOM para comprobar los cinco pasos, el momento en que cambia la salida, las entradas vacías, el texto con etiquetas, los botones de volver y reiniciar, Intro y el estado accesible del paso actual. Esta comprobación no es un renderizado de navegador.
 
-No se han probado llamadas a una API ni la ejecución de un modelo local. Los ejercicios originales se han conservado; eso no demuestra su compatibilidad completa con las versiones fijadas. Las ramas de las sesiones y las explicaciones HTML siguen pendientes de diseño y adaptación.
+La herramienta de navegador bloqueó la URL de archivo local. No se ha verificado visualmente el HTML en un navegador; no se afirma lo contrario. La prueba de apertura con doble clic en el portátil sigue pendiente de revisión.
+
+## Límites
+
+El HTML es una simulación didáctica, separada de la app. Los contadores y trazas de Streamlit proceden de la ejecución real de Python.
+
+No se han probado llamadas a una API de LLM ni modelos locales. Los otros ejercicios no se han adaptado ni verificado con el SDK actual. Esta rama entrega el paso 0, no la sesión 1 completa.

@@ -11,7 +11,13 @@ Cuatro sesiones de 2 h 30 min. Construiremos una aplicación para explorar los d
 
 Para esta preparación no necesitas una API key ni descargar un modelo. La comprobación ejecuta Python sobre archivos locales. El acceso al LLM se configurará por separado.
 
-La rama `main` es el punto de entrada para instalar y comprobar el entorno. No tienes que completar los ejercicios antes de clase.
+La rama `main` es el punto de entrada para instalar y comprobar el entorno. Esta rama, `codex/sesion-1`, contiene la primera práctica. No tienes que completar los ejercicios antes de clase.
+
+## Primera práctica: del navegador a Python
+
+Sigue [SESION1_PASO0.md](SESION1_PASO0.md): crea tu rama, corrige el import de `paso_0.py`, prueba las entradas y observa las ejecuciones. La explicación [explicaciones/streamlit.html](explicaciones/streamlit.html) se abre directamente en el navegador desde tu copia local.
+
+La app del ejercicio empieza con un error intencionado. La app de instalación `test_app.py` debe funcionar antes de iniciar la práctica.
 
 ## Qué encontrarás
 
@@ -27,6 +33,6 @@ La rama `main` es el punto de entrada para instalar y comprobar el entorno. No t
 
 ## Sesiones en preparación
 
-El contenido original está conservado en `exercises/`, `exercises2/`, `exercises3/`, `extras/` y las guías de repaso. Algunos ejercicios tienen errores y huecos intencionados. No se usan para verificar la instalación.
+El resto del contenido original está conservado en `exercises/`, `exercises2/`, `exercises3/`, `extras/` y las guías de repaso. Algunos ejercicios tienen errores y huecos intencionados. No se usan para verificar la instalación.
 
-Las ramas de las cuatro sesiones y las explicaciones HTML todavía no están publicadas. El profesor indicará qué rama usar cuando se prepare cada sesión. La propuesta docente está en [PLAN_DOCENTE.md](PLAN_DOCENTE.md).
+`paso_0.py` está adaptado para OMDA14 en esta rama. Los demás ejercicios y los dos CSV mantienen los archivos originales de MDA13; `material_base.json` registra qué se conserva y qué se adapta. Los siguientes pasos de la sesión y las otras tres ramas siguen pendientes. La propuesta docente está en [PLAN_DOCENTE.md](PLAN_DOCENTE.md).

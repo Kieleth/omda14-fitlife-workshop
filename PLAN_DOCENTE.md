@@ -2,11 +2,11 @@
 
 ## Estado
 
-La prioridad de esta entrega es instalar y comprobar el entorno desde `main`. Los contenidos de FitLife se conservan desde el commit `af557b1cdb1dbd3ea33748a93f46d422a3a30baf` de [MDA13](https://github.com/Kieleth/mda13-fitlife-workshop). Los ejercicios, el extra y los dos CSV se comparan mediante SHA-256 en `material_base.json`.
+La prioridad de esta entrega es instalar y comprobar el entorno desde `main`. Los contenidos de FitLife se conservan desde el commit `af557b1cdb1dbd3ea33748a93f46d422a3a30baf` de [MDA13](https://github.com/Kieleth/mda13-fitlife-workshop). Los archivos heredados sin adaptar se comparan mediante SHA-256 en `material_base.json`. La sección `adaptations` registra `paso_0.py`, su hash original y el motivo del cambio.
 
 Se ha importado el material comprometido en Git. Las modificaciones locales de `paso_6.py`, `paso_12.py` y `paso_13.py` no forman parte de esa base. Tampoco se han copiado claves, archivos privados, guiones del profesor ni código de referencia ignorado por Git.
 
-Las siguientes secciones son una **propuesta para discutir**. No hay ramas de sesión ni explicaciones HTML creadas todavía.
+La rama `codex/sesion-1` contiene el paso 0 aprobado: mismo error de import que MDA13, entrada de texto, transformación con Python, contadores y explicación HTML de Streamlit. La guía es [SESION1_PASO0.md](SESION1_PASO0.md). Las siguientes secciones mantienen la propuesta para el resto del curso; los otros ejercicios no se han adaptado todavía.
 
 ## Cuatro sesiones de 2 h 30 min
 

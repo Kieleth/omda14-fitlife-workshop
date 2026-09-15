@@ -1,70 +1,59 @@
-# ============================================================
-# PASO 0 — Arranca la app
-# ============================================================
+# OMDA14 · Paso 0: del navegador a Python y de vuelta
 #
-# ── ¿Qué es Streamlit? ─────────────────────────────────────
+# Empieza por SESION1_PASO0.md. Este import tiene el error de MDA13.
+# Léelo y corrige SOLO el nombre del módulo. No instales paquetes nuevos.
 #
-# Streamlit es una librería de Python que convierte código en
-# una página web. Una línea de Python = un elemento en la
-# página. Sin HTML, sin CSS, sin complicaciones.
+# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_0.py
+# macOS:   .venv/bin/python -m streamlit run exercises/paso_0.py
 #
-# Pensad en ello así: si sabéis escribir print("hola"), sabéis
-# hacer una web con Streamlit. En vez de print, usáis st.write.
-#
-# Cada vez que guardáis el archivo, la web se actualiza sola.
-# No tenéis que parar y arrancar nada.
-#
-# ── Tu reto ─────────────────────────────────────────────────
-#
-# Hacer que esta app funcione. Tiene un error.
-#
-# 1. Abre la terminal en VS Code:
-#    - Mac:  Ctrl + `  (la tecla al lado del 1)
-#    - También: menú Terminal → Nuevo terminal
-#
-# 2. Asegúrate de que el entorno está activo. Deberías ver
-#    (mda13) al principio de la línea. Si no lo ves, escribe:
-#
-#      conda activate mda13
-#
-# 3. Ejecuta:
-#
-#      streamlit run exercises/paso_0.py
-#
-#    Se abrirá una pestaña en tu navegador automáticamente.
-#    Si no se abre, busca en la terminal una línea que diga
-#    "Local URL: http://localhost:8501" y ábrela tú.
-#
-# 4. Verás un error en la terminal (texto rojo). Léelo con
-#    calma — el error te dice qué está mal y en qué línea.
-#
-#    Si ves "ModuleNotFoundError", vas por buen camino.
-#    Fíjate en el nombre del módulo que intenta importar.
-#    ¿Está bien escrito?
-#
-# 5. Arregla el error en el código, guarda el archivo (Ctrl+S
-#    o Cmd+S), y Streamlit recargará la app automáticamente.
-#
-# Cuando veas el mensaje en el navegador, has completado el paso.
-#
-# ── Si has terminado antes ──────────────────────────────────
-#
-#   A. Prueba a cambiar el texto del título y del st.write.
-#      Guarda y mira cómo se actualiza la web al instante.
-#
-#   B. Añade una línea nueva al final del archivo:
-#        st.balloons()
-#      ¿Qué pasa? Prueba también: st.snow()
-#
-#   C. Añade:
-#        st.slider("Tu edad", 0, 100, 25)
-#      Aparece un slider interactivo en la web. Streamlit
-#      tiene decenas de componentes así. Los iremos viendo.
-#
-# Ejecuta:  streamlit run exercises/paso_0.py
-# ============================================================
+# Después: predice qué cambiará, escribe un mensaje y pulsa Intro.
+# Compara la pantalla, los dos contadores y la terminal.
 
 import streamlt as st
 
-st.title("Hola Mundo")
-st.write("Si ves esto en el navegador, tu primer app web funciona.")
+st.set_page_config(page_title="OMDA14 · Paso 0", page_icon="🔎")
+
+# RETO 2: cambia este título y guarda el archivo.
+titulo = "Hola, FitLife"
+
+# Esta variable vuelve a empezar en cada ejecución.
+contador_local = 0
+contador_local += 1
+
+# Este valor se conserva entre ejecuciones de la misma sesión.
+if "ejecuciones" not in st.session_state:
+    st.session_state["ejecuciones"] = 0
+st.session_state["ejecuciones"] += 1
+ejecucion = st.session_state["ejecuciones"]
+
+st.title(titulo)
+st.caption("Paso 0 · Tu navegador habla con un programa de Python en tu portátil.")
+st.write("Antes de tocar nada, predice qué cambiará en la pantalla y en la terminal.")
+
+mensaje = st.text_input("Mensaje", "Hola, FitLife")
+st.button("Volver a ejecutar sin cambiar el mensaje")
+
+# RETO 3: cambia upper() por lower(), guarda y compara.
+resultado = mensaje.upper()
+
+st.subheader("1. Valor que recibe Python")
+st.code(repr(mensaje), language="python")
+st.subheader("2. Resultado que muestra el navegador")
+st.code(repr(resultado), language="python")
+st.caption("Las comillas representan una cadena de texto. '' es una cadena vacía.")
+
+local, sesion = st.columns(2)
+local.metric("Contador local", contador_local)
+sesion.metric("Ejecuciones en esta sesión", ejecucion)
+
+# print escribe en la terminal; st.write y st.code escriben en la página.
+print(f"[paso_0] ejecución={ejecucion} | local={contador_local} | "
+      f"entrada={mensaje!r} | salida={resultado!r}", flush=True)
+
+st.write("El contador local empieza en 0 y sube a 1 en cada ejecución. "
+         "El otro se guarda en st.session_state y aumenta entre ejecuciones. "
+         "Recargar la pestaña inicia una sesión nueva y reinicia ese estado.")
+st.info("Aquí Python transforma el texto con la regla que has escrito. "
+        "No hay un LLM ni una llamada a una API. Streamlit organiza la interacción.")
+st.caption("Abre explicaciones/streamlit.html para recorrer el proceso paso a paso. "
+           "Es una simulación; la pantalla y la terminal de esta app muestran la ejecución real.")
