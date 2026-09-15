@@ -16,12 +16,12 @@ También se arrancó Streamlit y se comprobó la app en un navegador real:
 
 Los archivos se ejecutaron desde el nuevo repositorio, usando un entorno temporal de verificación fuera del repositorio. Ese entorno no se distribuye: cada alumno crea su propio `.venv` con las instrucciones de `SETUP.md`.
 
+## Publicación
+
+El repositorio público es [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop). La guía [SETUP.md](SETUP.md) incluye los comandos para clonar `main` e instalar el taller.
+
 ## Pendiente
 
-El repositorio [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop) se ha creado como público. Por ahora solo contiene el README de inicialización. Los archivos preparados de OMDA14 todavía están en el repositorio local.
-
-GitHub devolvió un error 403 de permisos al intentar publicar mediante el conector. La revisión automática también rechazó una llamada a Git desde Node porque las instrucciones del proyecto exigen el flujo MCP de GitHub. Hace falta habilitar escritura del conector en este repositorio o aprobar expresamente el uso de Git CLI para publicarlo. La guía local ya incluye la dirección final, pero no se debe distribuir como instalación publicada hasta que los archivos estén en GitHub.
-
-Las instalaciones de Windows y Linux no se han ejecutado. La configuración de GitHub Actions incluye ambas y macOS, pero sus resultados solo se podrán comprobar después de publicar.
+La comprobación de las instalaciones en Windows, macOS y Linux mediante GitHub Actions está pendiente de finalizar. Los resultados deben verificarse antes de afirmar que la instalación ha pasado en los tres sistemas.
 
 No se han probado llamadas a una API ni la ejecución de un modelo local. Los ejercicios originales se han conservado; eso no demuestra su compatibilidad completa con las versiones fijadas. Las ramas de las sesiones y las explicaciones HTML siguen pendientes de diseño y adaptación.
