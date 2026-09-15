@@ -77,11 +77,25 @@ class SetupTests(unittest.TestCase):
              patch("builtins.print"):
             self.assertEqual(main(), 1)
 
-    def test_inherited_content_is_unchanged(self):
-        manifest = json.loads((ROOT / "material_base.json").read_text())
+    def assert_inherited_content(self, root):
+        manifest = json.loads((ROOT / "material_base.json").read_text(encoding="utf-8"))
         for name, checksum in manifest["files"].items():
             with self.subTest(path=name):
-                self.assertEqual(hashlib.sha256((ROOT / name).read_bytes()).hexdigest(), checksum)
+                self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), checksum)
+
+    def test_inherited_content_is_unchanged(self):
+        self.assert_inherited_content(ROOT)
+
+    def test_checkout_preserves_content_with_autocrlf(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory)
+            result = subprocess.run(
+                ["git", "-c", "core.autocrlf=true", "checkout-index", "--all",
+                 f"--prefix={destination.as_posix()}/"],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assert_inherited_content(destination)
 
 
 class AppTests(unittest.TestCase):

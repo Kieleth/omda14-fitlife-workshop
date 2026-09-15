@@ -6,7 +6,7 @@ Fecha: 14 de septiembre de 2026.
 
 Se creó un entorno vacío con Python 3.13.3 en macOS ARM64 y se ejecutó `pip install -r requirements.txt`. La instalación terminó correctamente; `pip check` no detectó incompatibilidades.
 
-Los nueve chequeos del entorno pasaron. Los doce tests automáticos pasaron, incluidos los controles de Streamlit sin credenciales ni conexión de red, los errores de configuración y datos, y la conservación exacta de los 16 ejercicios, el extra y los dos CSV originales.
+Los nueve chequeos del entorno pasaron. Los trece tests automáticos pasaron, incluidos los controles de Streamlit sin credenciales ni conexión de red, los errores de configuración y datos, y la conservación exacta de los 16 ejercicios, el extra y los dos CSV originales.
 
 También se arrancó Streamlit y se comprobó la app en un navegador real:
 
@@ -15,6 +15,8 @@ También se arrancó Streamlit y se comprobó la app en un navegador real:
 - El plan cambió de `basic` a `premium` y los registros pasaron de 4.480 a 6.826; la tabla mostró filas del plan `premium`.
 
 Los archivos se ejecutaron desde el nuevo repositorio, usando un entorno temporal de verificación fuera del repositorio. Ese entorno no se distribuye: cada alumno crea su propio `.venv` con las instrucciones de `SETUP.md`.
+
+El primer chequeo en Windows detectó que Git convertía los saltos de línea de los 19 archivos originales. La instalación de paquetes, el chequeo del entorno y los controles de la app sí pasaron. `.gitattributes` fija los saltos de línea LF para todos los sistemas. Un test reproduce una extracción de Git con `core.autocrlf=true`: falló antes de la corrección y pasó después.
 
 ## Publicación
 

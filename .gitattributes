@@ -1,0 +1,2 @@
+# Conserva los mismos saltos de línea en todos los sistemas.
+* text=auto eol=lf
