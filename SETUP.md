@@ -4,11 +4,11 @@ Al terminar tendrás el proyecto en tu portátil, las librerías instaladas en u
 
 ## 1. Herramientas
 
-Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13](https://www.python.org/downloads/). Selecciona una versión de la serie **3.13** con instalador para tu sistema. El taller fija la versión de Python en `.python-version`.
+Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13.15](https://www.python.org/downloads/release/python-31315/#files). En la tabla **Files**, elige **Windows installer (64-bit)** para un PC habitual o **macOS installer** para Mac. Si tu PC utiliza Windows ARM, consulta a Luis antes de instalar. El taller fija la versión de Python en `.python-version`.
 
 En Windows, el instalador de Python debe incluir el lanzador `py`. En macOS, el instalador oficial permite ejecutar `python3.13`. Si ya tienes otra versión o Anaconda, puedes conservarla: el entorno del taller estará en la carpeta `.venv`.
 
-Crea también una [cuenta de GitHub](https://github.com/signup) para los ejercicios de Git. En VS Code instala la extensión **Python**, de Microsoft. El proyecto la recomienda al abrirse.
+Git guarda versiones de tus archivos en tu ordenador. GitHub es la web donde está publicado el proyecto. Crea también una [cuenta de GitHub](https://github.com/signup) para usarla durante el curso. En VS Code instala la extensión **Python**, de Microsoft. El proyecto la recomienda al abrirse.
 
 Abre una terminal nueva después de instalar las herramientas. En Windows usa PowerShell; en macOS usa Terminal.
 
@@ -32,7 +32,7 @@ Python debe mostrar `3.13.x`. Si un comando falla, resuélvelo antes de continua
 
 El repositorio es público: [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop).
 
-En la terminal, sitúate en la carpeta donde quieras guardar el proyecto y ejecuta:
+Un repositorio es la carpeta del proyecto con su historial. Clonar descarga una copia a tu ordenador. Abre VS Code y usa **File > Open Folder** para elegir **Documentos** como carpeta donde guardarla. Después abre **Terminal > New Terminal**: la terminal empieza en la carpeta seleccionada. Ejecuta ahí estos comandos:
 
 ```text
 git clone https://github.com/Kieleth/omda14-fitlife-workshop.git
@@ -81,6 +81,8 @@ python3.13 -m venv .venv
 .venv/bin/python -m streamlit run test_app.py
 ```
 
+Ejecuta únicamente el bloque de tu sistema operativo.
+
 Usamos la ruta del Python de `.venv` en todos los comandos. Así instalamos y ejecutamos siempre en el mismo entorno y no hace falta activar scripts de PowerShell.
 
 `pip install -r requirements.txt` instala todas las dependencias del proyecto. No instales paquetes sueltos para arreglar un error: repite ese comando con el Python de `.venv`.
@@ -100,6 +102,8 @@ En la página de OMDA14:
 Has probado que el navegador, Streamlit, Python y los archivos locales trabajan juntos. **Esto todavía no comprueba una conexión con un LLM.** No necesitas `.env` ni clave para pasar esta prueba.
 
 Para parar la app, vuelve a la terminal y pulsa `Ctrl+C`.
+
+**Ya estás preparado. Para aquí y espera a la clase para construir la aplicación con Luis.**
 
 ## 5. Volver otro día
 

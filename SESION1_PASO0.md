@@ -1,16 +1,22 @@
-# Sesión 1 · Paso 0: ver Streamlit por dentro
+# Construimos nuestra primera app
 
-Partimos del mismo reto de MDA13: la app no arranca por un error en el import. Después observaremos qué ocurre cuando el navegador recibe texto y Python actualiza la página.
+**Esta actividad se hace en clase. Espera a que Luis indique cada ronda.** Partimos de tres líneas de Python y construiremos una app que recibe un mensaje, lo transforma y lo muestra.
 
-## 1. Prepara tu rama
+Trabajad por parejas: una persona escribe y la otra predice qué ocurrirá. Cambiad los papeles en la siguiente ronda. Cuando lleguéis a «Pausa», contrastad lo observado con Luis antes de seguir.
 
-Completa primero [SETUP.md](SETUP.md) en `main`. La misma `.venv` sirve para este ejercicio. Desde la raíz del proyecto:
+## 1. Nuestro espacio de trabajo
+
+Una rama guarda una línea de trabajo en Git. La rama del profesor contiene los archivos de partida; tu rama guardará tus cambios. Al cambiar de rama pueden cambiar los archivos que ves en VS Code. Seguimos en la misma carpeta y usamos el mismo entorno `.venv`.
+
+Abre `omda14-fitlife-workshop` en VS Code y **Terminal > New Terminal**. Si sigue abierta la app de instalación, pulsa `Ctrl+C` en su terminal para pararla. Comprueba el estado:
 
 ```text
 git status
 ```
 
-Si tienes cambios pendientes, guárdalos siguiendo [ACTUALIZAR.md](ACTUALIZAR.md). Con la carpeta sin cambios pendientes, descarga las ramas y crea tu rama de trabajo:
+Si aparece `nothing to commit, working tree clean`, no hay cambios pendientes. Si aparece una lista de archivos modificados, enséñasela a Luis antes de cambiar de rama; [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo conservarlos.
+
+Cuando Luis lo indique:
 
 ```text
 git fetch origin
@@ -18,11 +24,17 @@ git switch -c alumno/sesion-1 origin/codex/sesion-1
 git branch --show-current
 ```
 
-El último comando debe mostrar `alumno/sesion-1`. Cada alumno tiene su propia copia del repositorio, así que puede usar ese mismo nombre. Si ya creaste esa rama antes, vuelve a ella con `git switch alumno/sesion-1`; no repitas el comando de creación. No necesitas permiso para escribir en el repositorio del profesor: estos cambios y commits son locales.
+`fetch` descarga los puntos de partida publicados. `switch -c` crea tu rama desde el de la clase. El último comando debe mostrar `alumno/sesion-1`. No necesitas permiso para escribir en el GitHub del profesor: trabajarás en tu copia local.
 
-## 2. Lee el error y arranca la app
+Si ya creaste tu rama antes, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
 
-Ejecuta según tu sistema desde la carpeta del proyecto:
+**Pausa:** localiza `exercises/paso_0.py` en el explorador de VS Code y ábrelo.
+
+## 2. Leer el primer error
+
+Streamlit es la librería de Python que permite mostrar elementos en el navegador. `import` carga una librería; `as st` le da un nombre corto para usarla en este archivo.
+
+Desde la terminal del proyecto, ejecuta solo el comando de tu sistema:
 
 Windows:
 
@@ -36,48 +48,89 @@ macOS:
 .venv/bin/python -m streamlit run exercises/paso_0.py
 ```
 
-Abre la dirección que muestre la terminal. Verás un `ModuleNotFoundError` intencionado. Compara el nombre del módulo en `exercises/paso_0.py` con la librería que acabas de comprobar en `test_app.py`. Corrige ese nombre y guarda.
+Abre la dirección local que aparezca en la terminal. Hay una errata intencionada: `ModuleNotFoundError` dice que Python no encuentra el módulo que intenta cargar. Compara su nombre con «Streamlit». Corrige solo ese nombre en la línea `import` y guarda con `Ctrl+S` o `Cmd+S`.
 
-Si Streamlit te ofrece **Rerun**, púlsalo. Puedes activar **Always rerun** para los siguientes cambios. No hace falta parar y arrancar el servidor cada vez que editas el archivo. Al ver «Hola, FitLife», ya has resuelto el reto original.
+Si aparece **Rerun** en el navegador, púlsalo. **Always rerun** permite repetir automáticamente al guardar los siguientes cambios. Mantén abierta la terminal que ejecuta Streamlit.
 
-## 3. Predice, prueba y explica
+**Pausa:** deberías ver un título y un mensaje. Señala qué línea produce cada uno.
 
-Trabajad por parejas: una persona hace una predicción y la otra cambia el código o la entrada. Comparad la predicción con la pantalla y la línea `[paso_0]` de la terminal. Después intercambiad los papeles.
+## 3. Hacerla nuestra
 
-| Antes de actuar, predice | Qué haces | Qué debes observar |
-| :--- | :--- | :--- |
-| ¿Dónde aparecerá el texto? | Escribe `Hola, Madrid` en Mensaje y pulsa Intro. | Python recibe ese texto; el navegador muestra `HOLA, MADRID`; aparece una línea en la terminal. |
-| ¿Se ejecuta solo la línea que cambia? | Pulsa «Volver a ejecutar sin cambiar el mensaje». | El contador de la sesión aumenta, pero el contador local vuelve a 1. La salida conserva el mismo texto. |
-| ¿Es HTML o Python lo que editamos? | Cambia `titulo` por `El gimnasio de nuestro equipo`, guarda y ejecuta de nuevo. | Cambia el título de la página. |
-| ¿Quién decide la transformación? | Sustituye `mensaje.upper()` por `mensaje.lower()`, guarda y prueba de nuevo. | El mismo texto ahora aparece en minúsculas. Puedes señalar la línea que lo produce. |
-| ¿Qué queda al abrir otra sesión? | Recarga la pestaña del navegador. | Se reinicia el contador de sesión y vuelve el texto inicial. La función que editaste sigue cambiada porque está guardada en el archivo. |
-| ¿Hay una respuesta escondida? | Borra el mensaje y pulsa Intro. | Entrada y salida son `''`, una cadena vacía. Python no inventa un mensaje. |
+**Predice:** si cambias un texto en el archivo, ¿qué parte de la página cambiará?
 
-El número exacto de ejecuciones depende de las acciones que hagáis, incluidos los cambios de código. Comparad el contador antes y después de cada acción, sin asumir que siempre estará en un número concreto.
+En `st.title("Hola, FitLife")`, cambia únicamente el texto entre comillas por el nombre de vuestro equipo. Conserva la función, los paréntesis y las comillas. En la última línea, escribe vuestro propio mensaje de bienvenida. Guarda y observa.
 
-## 4. Recorre la explicación HTML
+**Pausa:** enseña a tu pareja la relación entre una línea y lo que aparece en la página. Todavía no hemos añadido una entrada para el usuario.
 
-Abre `explicaciones/streamlit.html` con doble clic desde Finder o el Explorador de archivos. Funciona sin instalar nada más. Elige una entrada y avanza por el recorrido navegador → servidor de Streamlit → Python → navegador.
+## 4. Recibir un mensaje
 
-**Es una simulación didáctica.** Sus pasos y valores no están conectados con tu app. Úsala para explicar lo que has observado en la ejecución real. No tiene un modelo de lenguaje ni envía tu texto a un servicio.
+Luis introducirá las variables: un nombre que permite utilizar un valor después. Añade estas dos líneas **al final del archivo**, debajo de la bienvenida:
 
-En el programa real, `print(...)` escribe en la terminal. `st.code(...)` muestra valores en la página. El texto que ves es una transformación programada, no una respuesta generada por un LLM. Una API de un LLM será otra llamada que añadiremos más adelante.
+<!-- build:entrada -->
+```python
+mensaje = st.text_input("Mensaje", "Hola, FitLife")
+st.write(mensaje)
+```
 
-## 5. Guarda tu primer cambio con Git
+**Antes de probar:** señala qué texto crees que aparecerá en la entrada y dónde se mostrará lo que escribas.
 
-Después de corregir el import y probar tus cambios:
+Guarda. Escribe una frase distinta en **Mensaje** y pulsa Intro. Prueba también a borrar el texto.
+
+**Pausa:** explica qué valor guarda `mensaje`. La línea que crea la entrada debe ir antes de la que usa su valor.
+
+## 5. Cambiar lo que hace Python
+
+**Predice:** queremos mostrar el mensaje en mayúsculas. ¿Dónde pondrías esa transformación: antes o después de mostrarlo?
+
+Con Luis, sustituye **solo** la línea `st.write(mensaje)` que acabas de añadir por estas dos:
+
+<!-- build:transformacion -->
+```python
+resultado = mensaje.upper()
+st.write(resultado)
+```
+
+Guarda y prueba una frase con mayúsculas y minúsculas. Después, cada pareja cambia `upper()` por `lower()` y explica qué ha cambiado en la regla. Conserva la versión que hayas probado.
+
+**Pausa:** señala la entrada, la transformación y la salida en tu código. ¿Qué habéis construido que no estaba al arrancar?
+
+## 6. Ver la ejecución en la terminal
+
+**Predice antes de añadirlo:** ¿dónde aparecerá un `print`? ¿Es el mismo sitio que un `st.write`?
+
+Añade esta línea **al final del archivo**, después de mostrar el resultado:
+
+<!-- build:traza -->
+```python
+print("Entrada:", mensaje, "| Salida:", resultado)
+```
+
+Guarda, cambia el mensaje y pulsa Intro. Mira el navegador y la terminal donde arrancaste Streamlit. Compara los valores con tu pareja.
+
+Ahora añade esta línea **justo después del import**, antes del título:
+
+<!-- build:arranque -->
+```python
+print("Se ejecuta paso_0")
+```
+
+**Predice:** al cambiar el mensaje, ¿veremos otra vez esa línea aunque esté antes de la entrada? Haz la prueba y cuéntale a Luis qué has observado.
+
+**Pausa:** hemos construido entrada, transformación, salida y una traza. Una traza es un mensaje que nos ayuda a observar lo que ejecuta el programa.
+
+## 7. Explicarlo y guardar nuestro trabajo
+
+Luis utilizará `explicaciones/streamlit.html` para recorrer navegador → servidor de Streamlit → Python → navegador. Si os pide abrirlo, usa Finder o el Explorador de archivos y haz doble clic en el archivo. Es una simulación: compárala con lo que acabas de observar en tu programa.
+
+Para guardar la versión que has construido, abre **otra terminal** del proyecto con **Terminal > New Terminal**. La primera puede seguir ejecutando la app. Ejecuta:
 
 ```text
 git diff -- exercises/paso_0.py
 git add exercises/paso_0.py
-git commit -m "Paso 0: entiendo entrada, ejecucion y salida"
+git commit -m "Construyo mi primera app"
 git status
 ```
 
-Si Git pide tu nombre y correo, sigue [ACTUALIZAR.md](ACTUALIZAR.md). El commit guarda tu versión en tu rama local. No es necesario hacer push para completar este paso.
+`diff` muestra tus cambios. Si ocupa una pantalla con `(END)`, pulsa `q` para volver a la terminal. `add` selecciona este archivo para guardarlo. `commit` registra esa versión en tu rama. `status` debe terminar con `nothing to commit, working tree clean`. Si Git pide nombre y correo, Luis os guiará con [ACTUALIZAR.md](ACTUALIZAR.md). El commit queda en tu ordenador; no hay que publicarlo para completar la práctica.
 
-## Para terminar
-
-Explica a tu pareja dónde se ejecuta Python, por qué el contador local vuelve a 1 y dónde añadirías una llamada a un LLM. Señala qué has visto de verdad y qué has recorrido en la simulación.
-
-Referencias: [comportamiento de los controles de Streamlit](https://docs.streamlit.io/develop/concepts/architecture/widget-behavior), [estado de sesión](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state), [cambio de rama con Git](https://git-scm.com/docs/git-switch).
+**Cierre con Luis:** explica quién recibe el texto, qué línea lo transforma y dónde se ejecuta Python. Este programa aplica la regla que hemos escrito; aún no hemos conectado un modelo de lenguaje.

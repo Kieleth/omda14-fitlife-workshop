@@ -1,0 +1,25 @@
+{
+  "source_repository": "https://github.com/Kieleth/mda13-fitlife-workshop",
+  "source_commit": "af557b1cdb1dbd3ea33748a93f46d422a3a30baf",
+  "files": {
+    "docente/referencia/exercises/paso_0.py": "d5ddf25c77340ed31437f71bd31c18578fada261d6f45a9bb88f29300ba32798",
+    "docente/referencia/exercises/paso_1.py": "06a88fb96a6094a8841e55734ecdbd3540abc5afa81627e9e20d75df4fb3650a",
+    "docente/referencia/exercises/paso_2.py": "f8b3ffbc11d3954fe4ddbcc180a2838205504a32922163fed325da975effa671",
+    "docente/referencia/exercises/paso_3.py": "cd3f521ee6bc6e2cfda73d8c4e60731ff78729caec895e83a44cbbc65406f553",
+    "docente/referencia/exercises/paso_4.py": "7e909c6cc8e1238f745b3f9c921f2fd51d85c0acfc08e1e76807508147031d2c",
+    "docente/referencia/exercises/paso_5.py": "6ec761e7697c11c5203c4c0e8556eff63c509654a92f44d9eb44b2bce315cdae",
+    "docente/referencia/exercises/paso_6.py": "db08d23ccd31f3e79c11b669bee3e98b9b1671cf89447dad1641414085677e77",
+    "docente/referencia/exercises/paso_7.py": "3ae7a8c591092d8e08258d9eaa09111480ebc29c5c3525b69696c6a109173f67",
+    "docente/referencia/exercises2/paso_10.py": "91b741057ed1a180afbdf11ce30bcea87384f536591c02a53f5dfd82333ec773",
+    "docente/referencia/exercises2/paso_11.py": "75794ffa3b52789b88504671a7e3d67ad79c46ee495c28bdeb0b77495f95d937",
+    "docente/referencia/exercises2/paso_8.py": "b25917c4b918763d2a953c02e17a4c617644a7850e185e05f929c09fed729bf4",
+    "docente/referencia/exercises2/paso_9.py": "78b3a3dcca39c856703979d0517dc2bd2d70847ffd870ec6bc91b2ef09bc0694",
+    "docente/referencia/exercises3/paso_12.py": "c9028b7037ec836cdae97ad5428c3eabd12c8bbce4dd7fb067374eaf6b0101d8",
+    "docente/referencia/exercises3/paso_13.py": "58a8bded7abcb79a58706edabcc09c278218820d336f78afdc75efe9241738f3",
+    "docente/referencia/exercises3/paso_14.py": "45f5469cafdeed21762b8f2564b6ce6e78be54131e02439cb23e2c5e73e3101b",
+    "docente/referencia/exercises3/paso_15.py": "8cb155c659418db1c413c6538aaee0de81b4aeeff7b3337a1d6bae5a831420fd",
+    "docente/referencia/extras/opcional_analisis.py": "1bc51cfab61619ef31b891ea654899097cf819edd0fdc8f0bd1dcb480f339042",
+    "data/fitlife_context.csv": "bf5d4b73052eab1616e575653aded832d94ba6ad991530cdef4aa7320ebe6ad6",
+    "data/fitlife_members.csv": "def8ed3d18e39545bb503c6810d952ae15d5f161e03ec72eab6330597cce8b18"
+  }
+}

@@ -34,8 +34,6 @@ pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; margin:8px 0
 .code-line { display:block; padding:4px 6px; }
 .code-line.active { background:var(--soft); }
 .value { display:block; white-space:pre-wrap; overflow-wrap:anywhere; min-height:44px; padding:10px 12px; background:var(--bg); border-radius:4px; }
-.state { display:flex; flex-wrap:wrap; gap:16px; margin-top:18px; font-size:14px; }
-.state strong { font-variant-numeric:tabular-nums; }
 .detail { min-height:108px; padding:20px 0; }
 .detail p { margin-bottom:0; }
 .note { color:var(--muted); font-size:14px; }
@@ -49,7 +47,7 @@ footer { border-top:1px solid var(--line); padding-top:18px; margin-top:12px; }
 <div class="eyebrow">OMDA14 · SESIÓN 1 · PASO 0</div>
 <h1>¿Qué pasa al pulsar Intro?</h1>
 <p class="intro">Cambia una frase y sigue su recorrido. En tu ejercicio, el navegador y el servidor de Streamlit están en el mismo portátil. Python se ejecuta en ese servidor.</p>
-<p class="note">Simulación didáctica de la versión inicial del ejercicio. Este HTML no está conectado a tu app ni ejecuta Python. No hace llamadas a un LLM.</p>
+<p class="note">Simulación didáctica de la app que construimos en clase. Este HTML no está conectado a tu app ni ejecuta Python. No hace llamadas a un LLM.</p>
 </header>
 <ol class="steps" aria-label="Recorrido de una interacción">
 <li aria-current="step">1. Escribes</li><li>2. Envías</li><li>3. Python recibe</li><li>4. Python calcula</li><li>5. Ves el resultado</li>
@@ -67,10 +65,10 @@ footer { border-top:1px solid var(--line); padding-top:18px; margin-top:12px; }
 <h2 id="server-title">Servidor de Streamlit · Python</h2>
 <span class="label">Valor de mensaje dentro del script</span>
 <code class="value" id="received">'Hola, FitLife'</code>
-<pre aria-label="Código simplificado"><code><span class="code-line" id="read-line">mensaje = st.text_input("Mensaje", "Hola, FitLife")</span><span class="code-line" id="calculate-line">resultado = mensaje.upper()</span><span class="code-line" id="display-line">st.code(repr(resultado))</span></code></pre>
+<pre aria-label="Código simplificado"><code><span class="code-line" id="read-line">mensaje = st.text_input("Mensaje", "Hola, FitLife")</span><span class="code-line" id="calculate-line">resultado = mensaje.upper()</span><span class="code-line" id="display-line">st.write(resultado)</span></code></pre>
 <span class="label">Valor de resultado dentro del script</span>
 <code class="value" id="result">'HOLA, FITLIFE'</code>
-<div class="state"><span>Contador local: <strong id="local-count">1</strong></span><span>Contador de sesión: <strong id="session-count">1</strong></span></div>
+
 </section>
 </div>
 <section class="detail" aria-live="polite" aria-atomic="true">
@@ -84,7 +82,7 @@ footer { border-top:1px solid var(--line); padding-top:18px; margin-top:12px; }
 <span id="position" class="note">Paso 1 de 5</span>
 </div>
 <footer>
-<p>Ahora compruébalo en tu app: compara el navegador con las líneas <code>[paso_0]</code> de la terminal. Los contadores del HTML son ilustrativos; los de la app vienen de ejecuciones reales.</p>
+<p>Ahora compruébalo en tu app: compara el navegador con las líneas <code>Entrada:</code> y <code>Salida:</code> de la terminal. Los valores de este esquema son ilustrativos; la traza de tu programa viene de una ejecución real.</p>
 <p class="note">Los pasos están separados para poder examinarlos. En la app real, Streamlit puede enviar actualizaciones de la interfaz durante la ejecución. Escribir en un control de texto y confirmar un cambio no son lo mismo.</p>
 <p class="note">Referencias: <a href="https://docs.streamlit.io/develop/concepts/architecture/widget-behavior">controles y ejecuciones de Streamlit</a> · <a href="https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state">estado de sesión</a></p>
 </footer>
@@ -94,9 +92,9 @@ const elements = Object.fromEntries([...document.querySelectorAll("[id]")].map(e
 const stages = [
   ["1. Escribe y predice", "Cambia el mensaje de arriba. Antes de avanzar, predice si el resultado de la página cambia mientras solo estás escribiendo."],
   ["2. El navegador confirma el cambio", "En el ejercicio pulsas Intro. El navegador comunica el nuevo valor al servidor de Streamlit. El resultado anterior sigue visible en este punto del esquema."],
-  ["3. Python vuelve a ejecutar el script", "Streamlit actualiza el valor del control y ejecuta el script desde arriba. El contador local vuelve a 1. El contador guardado en la sesión aumenta. st.text_input devuelve el nuevo mensaje."],
-  ["4. Python transforma el texto", "La regla upper() convierte el mensaje a mayúsculas. Este resultado viene de una operación de Python. No se consulta un modelo ni se genera una respuesta de IA."],
-  ["5. Streamlit actualiza la página", "st.code muestra el resultado y Streamlit comunica la actualización al navegador. En el ejercicio, print escribe también los valores en la terminal. Compáralos con lo que ves en la página."]
+  ["3. Python vuelve a ejecutar el script", "Streamlit actualiza el valor del control y ejecuta el script desde arriba. st.text_input devuelve el nuevo mensaje."],
+  ["4. Python transforma el texto", "Este esquema usa upper(), que convierte el mensaje a mayúsculas. Si tu pareja eligió lower(), su programa tendrá otra salida. Este resultado viene de una operación de Python. No se consulta un modelo ni se genera una respuesta de IA."],
+  ["5. Streamlit actualiza la página", "st.write muestra el resultado y Streamlit comunica la actualización al navegador. En el ejercicio, print escribe también los valores en la terminal. Compáralos con lo que ves en la página."]
 ];
 let step = 0;
 let submitted = "";
@@ -107,7 +105,6 @@ function render() {
   elements.received.textContent = quote(input);
   elements.result.textContent = step === 2 ? "Aún no calculado" : quote(result);
   elements.screen.textContent = step >= 4 ? (result === "" ? "(cadena vacía)" : result) : "HOLA, FITLIFE";
-  elements["session-count"].textContent = step >= 2 ? "2" : "1";
   elements.message.disabled = step !== 0;
   elements.browser.classList.toggle("active", step <= 1 || step === 4);
   elements.server.classList.toggle("active", step === 2 || step === 3);
