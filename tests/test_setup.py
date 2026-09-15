@@ -78,7 +78,8 @@ class SetupTests(unittest.TestCase):
             self.assertEqual(main(), 1)
 
     def assert_inherited_content(self, root):
-        manifest = json.loads((ROOT / "material_base.json").read_text(encoding="utf-8"))
+        manifest = json.loads((ROOT / "docente" / "material_base.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(manifest["files"]), 19)
         for name, checksum in manifest["files"].items():
             with self.subTest(path=name):
                 self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), checksum)

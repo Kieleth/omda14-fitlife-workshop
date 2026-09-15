@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import unittest
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 GUIDES = ("README.md", "SETUP.md", "SESION1_CHECKLIST.md", "ACTUALIZAR.md")
@@ -19,3 +20,17 @@ class StudentDocsTests(unittest.TestCase):
         self.assertNotRegex(text, r"git\s+(?:checkout\s+--|reset\b|clean\b|restore\b)")
         self.assertIn("git status", text)
         self.assertIn("git pull --ff-only", text)
+
+    def test_student_route_has_no_editorial_history_or_unprepared_exercises(self):
+        paths = [ROOT / name for name in GUIDES]
+        paths += list((ROOT / "exercises").glob("*.py"))
+        paths += list(ROOT.glob("SESION1_PASO0.md"))
+        for path in paths:
+            with self.subTest(path=path.name):
+                self.assertNotRegex(path.read_text(encoding="utf-8"),
+                                    r"MDA13|mda13|material heredado|contenido original|pendiente de adapta|PLAN_DOCENTE")
+        tracked = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines()
+        for name in ("exercises2", "exercises3", "extras", "CONTENIDO_MDA13.md",
+                     "SESION1_REPASO.md", "SESION2_REPASO.md", "PLAN_DOCENTE.md", "VERIFICACION.md"):
+            self.assertFalse(any(path == name or path.startswith(name + "/") for path in tracked), name)
+        self.assertLessEqual({p.name for p in (ROOT / "exercises").glob("*.py")}, {"paso_0.py"})
