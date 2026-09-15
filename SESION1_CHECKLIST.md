@@ -1,48 +1,26 @@
-> Material heredado de MDA13, pendiente de adaptación a OMDA14. Para instalar y comprobar el entorno actual, sigue [SETUP.md](SETUP.md).
+# OMDA14 · Antes de la sesión 1
 
-# Sesión 1 — Checklist de inicio
+Completa [SETUP.md](SETUP.md) desde `main`. La preparación termina cuando puedes abrir la app y cambiar sus controles.
 
-Antes de empezar la sesión, verifica que todo funciona.
+## En tu portátil
 
-## Antes de clase (hazlo en casa)
+- [ ] Python 3.13 y Git responden en una terminal nueva.
+- [ ] VS Code abre la carpeta `omda14-fitlife-workshop` y tiene la extensión Python de Microsoft.
+- [ ] Has creado `.venv` y seleccionado su intérprete en VS Code.
+- [ ] Has instalado todas las dependencias desde `requirements.txt` con el Python de `.venv`.
+- [ ] `pip check` no detecta incompatibilidades y `check_setup.py` termina sin errores.
+- [ ] `test_app.py` abre en el navegador: al elegir 7 aparece 49 y al cambiar el plan cambia la tabla.
+- [ ] Has leído [el caso FitLife](ENUNCIADO.md).
+- [ ] Tienes una cuenta de GitHub para practicar Git durante el curso. La descarga pública no requiere iniciar sesión.
 
-- [ ] Entorno `mda13` creado y dependencias instaladas (ver `SETUP.md`)
-- [ ] VS Code instalado con extensión de Python, intérprete apuntando a `mda13`
-- [ ] Proyecto descargado (repositorio clonado o zip descomprimido)
-- [ ] `streamlit run test_app.py` muestra todos los checks en verde
-- [ ] Leído el enunciado del caso FitLife (`ENUNCIADO.md`)
+Los comandos completos para Windows y macOS están en [SETUP.md](SETUP.md). `requirements.in` y las herramientas de mantenimiento son para preparar las versiones del taller; el alumnado instala `requirements.txt`.
 
 ## Al empezar la clase
 
-- [ ] Abrir VS Code en la carpeta del proyecto
-- [ ] Abrir una terminal en VS Code
-- [ ] Ejecutar `streamlit run exercises/paso_0.py` — verás un error (es intencionado, lo arreglamos juntos)
+Abre el proyecto y su terminal. El profesor indicará la rama de la sesión. Guardarás tus ejercicios en una rama propia. El primer ejercicio parte de `paso_0.py`: leer un error, arreglar un import y observar cómo Streamlit ejecuta Python.
 
-## Lo que haremos en la sesión 1
+La instalación y el primer ejercicio no necesitan una API key ni un modelo descargado. El acceso al LLM se preparará cuando lleguemos a ese paso.
 
-1. Completar los ejercicios guiados (paso 0 a 6, más paso 7 bonus si hay tiempo)
-2. Conocer el caso FitLife y la pregunta clave
-3. Conectar un LLM a nuestra app
-4. Probar preguntas y documentar qué funciona y qué falla
-5. Descubrir por qué el LLM se inventa las respuestas
+## Si algo falla
 
-## Lo que necesitarás durante la clase
-
-- El profesor compartirá una API key de OpenAI al inicio de la sesión
-- Crea un archivo `.env` en la carpeta del proyecto con:
-
-```
-OPENAI_API_KEY=la-key-que-te-de-el-profesor
-```
-
-## Al final de la sesión deberás tener
-
-- [ ] App Streamlit funcionando con chat de IA integrado
-- [ ] Lista personal de preguntas probadas: cuáles funcionan, cuáles fallan, y por qué crees que fallan
-- [ ] Reflexión sobre las limitaciones de enviar datos directamente al LLM
-
-El profesor compartirá el código de referencia de la sesión 1 al final de la clase. Ese código es el punto de partida de la sesión 2.
-
-## Si algo no funciona
-
-Avisa al profesor antes de la sesión si puedes. Si no, al inicio de la clase verificaremos juntos.
+Comparte con el profesor el sistema operativo, el comando y el error completo. Conserva tu carpeta y tus cambios. [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo actualizar sin perder el trabajo.

@@ -46,6 +46,19 @@ Abre esa carpeta en VS Code con **File > Open Folder**. Abre **Terminal > New Te
 
 ## 3. Crear el entorno e instalar las librerías
 
+Antes de ejecutar los comandos, identifica qué hace cada pieza:
+
+| Pieza | Para qué sirve |
+| :--- | :--- |
+| Python 3.13 | Ejecuta el código; `.python-version` indica la serie usada en el taller. |
+| `venv` y `pip` | Vienen con Python: el primero crea el entorno y el segundo instala las librerías. |
+| `requirements.txt` | Fija todas las dependencias; es el único archivo que instala el alumnado. |
+| `pip check` | Detecta dependencias instaladas incompatibles o ausentes. |
+| `check_setup.py` | Comprueba Python, el entorno, Git, las librerías y los dos CSV. |
+| `test_app.py` | Comprueba en el navegador que Python y Streamlit responden a tus acciones. |
+
+La primera instalación necesita acceso a internet para descargar los paquetes. La comprobación local posterior no llama a una API.
+
 Un entorno es una carpeta que contiene su propio Python y sus librerías. Todos los comandos siguientes se ejecutan desde la carpeta del proyecto. Ejecútalos uno a uno; si alguno falla, corrige ese error antes de continuar.
 
 ### Windows · PowerShell
@@ -131,3 +144,5 @@ Si necesitas ayuda, indica tu sistema operativo, el comando que ejecutaste y el 
 La conexión al modelo, la clave de la API y cualquier instalación para ejecutar modelos locales se prepararán por separado. No son requisitos de esta primera comprobación.
 
 Referencias: [instalación de Streamlit](https://docs.streamlit.io/get-started/installation/command-line), [entornos virtuales de Python](https://docs.python.org/3.13/library/venv.html).
+
+Para actualizar el proyecto y conservar tus cambios, sigue [ACTUALIZAR.md](ACTUALIZAR.md). La lista de preparación está en [SESION1_CHECKLIST.md](SESION1_CHECKLIST.md).

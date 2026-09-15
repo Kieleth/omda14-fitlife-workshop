@@ -1,74 +1,73 @@
-> Material heredado de MDA13, pendiente de adaptación a OMDA14. Para instalar y comprobar el entorno actual, sigue [SETUP.md](SETUP.md).
+# OMDA14 · Actualizar y conservar tu trabajo
 
-# Cómo actualizar el proyecto
+Abre la carpeta `omda14-fitlife-workshop` y la terminal de VS Code. Antes de descargar o cambiar de rama, mira dónde estás y qué has cambiado:
 
-El profesor sube material nuevo al repositorio entre sesiones. Para descargarlo a tu ordenador, solo necesitas un comando.
-
----
-
-## Paso a paso
-
-1. **Abre VS Code** con el proyecto del taller (la carpeta `mda13-fitlife-workshop`).
-
-2. **Abre la terminal** de VS Code:
-   - Menú: `Terminal` → `New Terminal`
-   - O atajo: `` Ctrl+` `` (Windows) / `` Cmd+` `` (Mac)
-
-3. **Activa el entorno** (si no está activo):
-   ```
-   conda activate mda13
-   ```
-   Deberías ver `(mda13)` al principio de la línea.
-
-4. **Descarga las actualizaciones:**
-   ```
-   git pull
-   ```
-   Verás algo como:
-   ```
-   remote: Enumerating objects: ...
-   Updating abc1234..def5678
-   Fast-forward
-    extras/opcional_analisis.py  | 80 ++++++++++
-    exercises2/paso_8.py         | 90 +++++++++++
-    ...
-   ```
-   Eso significa que se han descargado archivos nuevos. Ya está.
-
-5. **Verifica** que ves las carpetas nuevas en el explorador de archivos de VS Code (panel izquierdo):
-   - `extras/` — ejercicios opcionales
-   - `exercises2/` — ejercicios de la sesión 2
-
----
-
-## ¿Y si da error?
-
-### "Already up to date"
-
-No es un error. Significa que ya tienes la última versión. Todo bien.
-
-### "Please commit your changes or stash them"
-
-Significa que has modificado archivos que el profesor también ha actualizado. Solución:
-
-1. Guarda tu trabajo: en el explorador de VS Code, copia la carpeta `exercises` y pégala como `mi_trabajo` (clic derecho → Copy, luego clic derecho → Paste).
-2. Ejecuta en la terminal:
-   ```
-   git checkout -- .
-   git pull
-   ```
-3. Ahora tienes: tu trabajo guardado en `mi_trabajo/` y el código actualizado en `exercises/`.
-
-### "fatal: not a git repository"
-
-Estás en la carpeta equivocada. Asegúrate de que VS Code tiene abierta la carpeta `mda13-fitlife-workshop` (no una carpeta padre ni una subcarpeta).
-
-### Otros errores
-
-Contacta al profesor. En el peor de los casos, puedes borrar la carpeta del proyecto y volver a clonar:
-
-```
-git clone https://github.com/Kieleth/mda13-fitlife-workshop.git
+```text
+git branch --show-current
+git status
 ```
 
-Luego recuerda volver a crear tu archivo `.env` con la API key.
+## Si tienes cambios sin guardar en Git
+
+Haz un commit antes de actualizar o cambiar de rama. Un commit guarda una versión en tu ordenador; no publica nada en GitHub.
+
+Si todavía estás en la rama del profesor, crea primero una rama propia. Por ejemplo, si `alumno/preparacion` no existe:
+
+```text
+git switch -c alumno/preparacion
+```
+
+Los cambios siguen en tu carpeta al crear esa rama. En VS Code, abre **Source Control**, revisa el diff de cada archivo, añade solo los archivos del ejercicio con **Stage Changes** y escribe un mensaje antes de pulsar **Commit**. No añadas claves, `.env` ni `.venv`.
+
+Si Git pide tu identidad, configúrala una vez para este repositorio, sustituyendo los ejemplos por tus datos:
+
+```text
+git config user.name "Tu nombre"
+git config user.email "tu-correo-de-GitHub"
+```
+
+Puedes usar la dirección privada que GitHub muestra en **Settings > Emails**. Después repite el commit y comprueba `git status`. Si no tienes claro qué guardar, conserva los archivos y pide ayuda al profesor antes de seguir.
+
+## Actualizar la preparación de main
+
+Cuando `git status` indique que no hay cambios pendientes:
+
+```text
+git switch main
+git pull --ff-only
+```
+
+`--ff-only` permite actualizar cuando no hace falta combinar historias distintas. Si falla, conserva el mensaje y pide ayuda; no borres cambios para forzar la actualización. `Already up to date` significa que no había novedades.
+
+## Entrar en una sesión
+
+Sigue los comandos de la guía de esa sesión: primero se descarga la rama docente y después se crea una rama de alumno a partir de ella. No hagas `git pull` a ciegas dentro de tu rama de ejercicios. Integrar material nuevo en una rama donde ya has trabajado se hará con el profesor.
+
+Para descargar la información de las ramas disponibles sin cambiar tus archivos:
+
+```text
+git fetch origin
+git branch --remotes
+```
+
+## Volver a comprobar las dependencias
+
+Tras actualizar o entrar en una sesión, ejecuta desde la carpeta del proyecto:
+
+Windows:
+
+```powershell
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe -m pip check
+.venv\Scripts\python.exe check_setup.py
+```
+
+macOS:
+
+```bash
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip check
+.venv/bin/python check_setup.py
+```
+
+La carpeta `.venv` sigue en tu ordenador al cambiar de rama. Las dependencias las declara cada versión de `requirements.txt`. Si falta el entorno, sigue [SETUP.md](SETUP.md) desde el paso de crear `.venv`.
