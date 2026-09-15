@@ -12,4 +12,4 @@ Construiremos juntos una aplicación para explorar los datos de FitLife y hacer 
 
 ## Durante la clase
 
-Espera a que Luis indique el comienzo de la práctica. Entonces abre [Construimos nuestra primera app](https://github.com/Kieleth/omda14-fitlife-workshop/blob/codex/sesion-1/SESION1_PASO0.md). Crearemos una rama para guardar tu trabajo y añadiremos una pieza cada vez.
+Espera a que Luis indique el comienzo de la práctica. Entonces abre [Paso 0: arranca tu primera app](https://github.com/Kieleth/omda14-fitlife-workshop/blob/codex/sesion-1/SESION1_PASO0.md). Crearemos una rama para guardar tu trabajo y haremos los ejercicios en orden.

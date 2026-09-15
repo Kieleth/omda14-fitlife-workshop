@@ -1,11 +1,11 @@
-# OMDA14: live teaching and novice review
+# OMDA14: improve the existing course
 
 Luis delivers the class live. Students have little experience with Git, Python, Streamlit or LLMs.
 
-- Main is preparation before class. Student pages describe OMDA14 and the next action. Keep course provenance, old material, plans, solutions and verification under docente, outside student navigation.
-- Start each exercise with the smallest useful program. Students add functionality alongside Luis. Do not replace a build exercise with an almost finished demo.
-- Introduce one concept when it solves the current problem. Predictions precede observations and answers. Include short pauses controlled by Luis.
-- Explain Git through what happens to the student's files. Specify where commands run and where code additions go. Preserve student work.
-- Before publishing a new exercise or a material change to student navigation, run a read-only novice subagent review. Prime the reviewer as a beginner following Luis, starting only from student entry pages. Ask for unclear actions, undefined terms, accidental prerequisites, spoilers, pause points and what the student actually builds. Apply relevant feedback and repeat a bounded review after substantive corrections.
+- MDA13 is the course baseline. Preserve the FitLife case, learning objectives, exercise order, intentional errors and optional challenges. Improve each existing exercise in place. Do not move later concepts forward or replace an exercise with a new lesson without Luis's approval.
+- Main is preparation before class. Session branches contain the corresponding course exercises. Material awaiting its session branch remains course material, not an obsolete alternative. Keep provenance and teacher notes outside student navigation.
+- Match each starter to its original exercise. Add concise predictions, observations and optional HTML explanations around the existing actions. Luis controls pacing and teaching format; do not prescribe a new classroom routine.
+- Explain Git through what happens to the student's files. Specify where commands run and preserve student work.
+- Before publishing a new exercise or a material change to student navigation, run a read-only novice subagent review. Prime the reviewer as a beginner following Luis. Ask for unclear actions, undefined terms, accidental prerequisites and spoilers. Give it the corresponding original exercise and require it to check course continuity, not propose a replacement curriculum. Repeat a bounded review after substantive corrections.
 - Keep a concise review record in docente. A simulated review is not feedback from real students.
-- Test the expected starter error and every cumulative build stage without credentials or network access. Runtime dependencies belong in requirements.txt.
+- Test intended exercise errors and the described corrections without credentials or network access. Check that unmodified lesson code stays aligned with the baseline. Runtime dependencies belong in requirements.txt.
