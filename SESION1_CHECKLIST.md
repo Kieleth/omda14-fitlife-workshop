@@ -17,7 +17,7 @@ Los comandos completos para Windows y macOS están en [SETUP.md](SETUP.md). `req
 
 ## Al empezar la clase
 
-Abre el proyecto y su terminal. El profesor indicará la rama de la sesión. Guardarás tus ejercicios en una rama propia. El primer ejercicio parte de `paso_0.py`: leer un error, arreglar un import y observar cómo Streamlit ejecuta Python.
+Abre el proyecto y su terminal. Sigue [la guía del paso 0](https://github.com/Kieleth/omda14-fitlife-workshop/blob/codex/sesion-1/SESION1_PASO0.md) para crear tu rama desde `codex/sesion-1`. Guardarás tus ejercicios en esa rama propia. El primer ejercicio parte de `paso_0.py`: leer un error, arreglar un import y observar cómo Streamlit ejecuta Python.
 
 La instalación y el primer ejercicio no necesitan una API key ni un modelo descargado. El acceso al LLM se preparará cuando lleguemos a ese paso.
 

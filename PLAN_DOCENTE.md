@@ -6,7 +6,7 @@ La prioridad de esta entrega es instalar y comprobar el entorno desde `main`. Lo
 
 Se ha importado el material comprometido en Git. Las modificaciones locales de `paso_6.py`, `paso_12.py` y `paso_13.py` no forman parte de esa base. Tampoco se han copiado claves, archivos privados, guiones del profesor ni código de referencia ignorado por Git.
 
-Las siguientes secciones son una **propuesta para discutir**. No hay ramas de sesión ni explicaciones HTML creadas todavía.
+El paso 0 aprobado está publicado en [`codex/sesion-1`](https://github.com/Kieleth/omda14-fitlife-workshop/tree/codex/sesion-1): reto de import, interacción con texto, trazas, contadores y explicación HTML de Streamlit. `main` conserva el material base y la instalación. Las siguientes secciones mantienen la propuesta para el resto del curso.
 
 ## Cuatro sesiones de 2 h 30 min
 

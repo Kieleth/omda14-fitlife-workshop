@@ -29,4 +29,6 @@ La rama `main` es el punto de entrada para instalar y comprobar el entorno. No t
 
 El contenido original está conservado en `exercises/`, `exercises2/`, `exercises3/`, `extras/` y las guías de repaso. Algunos ejercicios tienen errores y huecos intencionados. No se usan para verificar la instalación.
 
-Las ramas de las cuatro sesiones y las explicaciones HTML todavía no están publicadas. El profesor indicará qué rama usar cuando se prepare cada sesión. La propuesta docente está en [PLAN_DOCENTE.md](PLAN_DOCENTE.md).
+La primera práctica está en la rama [`codex/sesion-1`](https://github.com/Kieleth/omda14-fitlife-workshop/tree/codex/sesion-1). Sigue [la guía del paso 0](https://github.com/Kieleth/omda14-fitlife-workshop/blob/codex/sesion-1/SESION1_PASO0.md) para crear tu rama y observar la interacción entre navegador y Python. Incluye una explicación HTML que se abre desde tu copia local.
+
+Completa primero la instalación de esta página. El resto de la sesión 1 y las otras tres sesiones siguen pendientes de adaptación. La propuesta docente está en [PLAN_DOCENTE.md](PLAN_DOCENTE.md).
