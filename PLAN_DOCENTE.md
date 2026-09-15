@@ -58,7 +58,7 @@ python check_setup.py
 python -m unittest discover -s tests -v
 ```
 
-GitHub Actions incluye la misma instalación en Windows, macOS y Linux. Tener el fichero de configuración no demuestra que esos trabajos se hayan ejecutado: los resultados se deben verificar después de publicar el repositorio.
+GitHub Actions ejecutó correctamente la misma instalación y los trece tests en Windows, macOS y Linux. El commit comprobado, la ejecución y los límites de estas pruebas están registrados en [VERIFICACION.md](VERIFICACION.md).
 
 Las pruebas de Streamlit usan [AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest), que simula interacciones con la app. Complementan la comprobación manual en un navegador.
 

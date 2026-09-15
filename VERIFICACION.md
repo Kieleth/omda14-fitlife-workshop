@@ -22,8 +22,14 @@ El primer chequeo en Windows detectó que Git convertía los saltos de línea de
 
 El repositorio público es [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop). La guía [SETUP.md](SETUP.md) incluye los comandos para clonar `main` e instalar el taller.
 
-## Pendiente
+## Instalación en Windows, macOS y Linux
 
-La comprobación de las instalaciones en Windows, macOS y Linux mediante GitHub Actions está pendiente de finalizar. Los resultados deben verificarse antes de afirmar que la instalación ha pasado en los tres sistemas.
+[La ejecución de GitHub Actions](https://github.com/Kieleth/omda14-fitlife-workshop/actions/runs/34927723265) terminó correctamente en los tres sistemas para el commit `4e025bcad0e2e6c2405efcd187a85741da31ba9b`.
+
+En cada sistema se clonó el repositorio, se creó `.venv` con Python 3.13, se instalaron las dependencias desde `requirements.txt`, se ejecutaron `pip check` y `check_setup.py`, y pasaron los trece tests. Esto comprueba la instalación y las interacciones locales de Streamlit en los entornos de GitHub Actions. No sustituye la prueba de apertura en el navegador de cada portátil.
+
+El commit posterior que registra estos resultados solo cambia documentación; el código, los datos, las dependencias y la configuración comprobados siguen siendo los mismos.
+
+## Pendiente
 
 No se han probado llamadas a una API ni la ejecución de un modelo local. Los ejercicios originales se han conservado; eso no demuestra su compatibilidad completa con las versiones fijadas. Las ramas de las sesiones y las explicaciones HTML siguen pendientes de diseño y adaptación.
