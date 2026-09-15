@@ -1,12 +1,10 @@
-# Construimos nuestra primera app
+# Paso 0: arranca tu primera app
 
-**Esta actividad se hace en clase. Espera a que Luis indique cada ronda.** Partimos de tres líneas de Python y construiremos una app que recibe un mensaje, lo transforma y lo muestra.
+**Lo hacemos juntos en clase, cuando Luis lo indique.** El reto es leer un error, corregirlo y ver tu primera página web. Al aparecer el título y el mensaje, has completado el paso.
 
-Trabajad por parejas: una persona escribe y la otra predice qué ocurrirá. Cambiad los papeles en la siguiente ronda. Cuando lleguéis a «Pausa», contrastad lo observado con Luis antes de seguir.
+## Preparar nuestra rama
 
-## 1. Nuestro espacio de trabajo
-
-Una rama guarda una línea de trabajo en Git. La rama del profesor contiene los archivos de partida; tu rama guardará tus cambios. Al cambiar de rama pueden cambiar los archivos que ves en VS Code. Seguimos en la misma carpeta y usamos el mismo entorno `.venv`.
+Una rama guarda una línea de trabajo en Git. La rama de la clase contiene los archivos de partida; tu rama guardará tus cambios. Al cambiar de rama pueden cambiar los archivos que ves en VS Code. Seguimos en la misma carpeta y usamos el mismo entorno `.venv`.
 
 Abre `omda14-fitlife-workshop` en VS Code y **Terminal > New Terminal**. Si sigue abierta la app de instalación, pulsa `Ctrl+C` en su terminal para pararla. Comprueba el estado:
 
@@ -24,15 +22,13 @@ git switch -c alumno/sesion-1 origin/codex/sesion-1
 git branch --show-current
 ```
 
-`fetch` descarga los puntos de partida publicados. `switch -c` crea tu rama desde el de la clase. El último comando debe mostrar `alumno/sesion-1`. No necesitas permiso para escribir en el GitHub del profesor: trabajarás en tu copia local.
+`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama desde ese punto de partida. El último comando debe mostrar `alumno/sesion-1`. Trabajarás en tu copia local, sin necesidad de permiso para escribir en el GitHub del profesor.
 
-Si ya creaste tu rama antes, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
+Si ya creaste tu rama, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
 
-**Pausa:** localiza `exercises/paso_0.py` en el explorador de VS Code y ábrelo.
+## Arrancar, leer el error y corregirlo
 
-## 2. Leer el primer error
-
-Streamlit es la librería de Python que permite mostrar elementos en el navegador. `import` carga una librería; `as st` le da un nombre corto para usarla en este archivo.
+Abre `exercises/paso_0.py` en VS Code. Streamlit es una librería de Python que permite mostrar elementos en el navegador. `import` carga una librería; `as st` le da un nombre corto para utilizarla en este archivo.
 
 Desde la terminal del proyecto, ejecuta solo el comando de tu sistema:
 
@@ -48,89 +44,56 @@ macOS:
 .venv/bin/python -m streamlit run exercises/paso_0.py
 ```
 
-Abre la dirección local que aparezca en la terminal. Hay una errata intencionada: `ModuleNotFoundError` dice que Python no encuentra el módulo que intenta cargar. Compara su nombre con «Streamlit». Corrige solo ese nombre en la línea `import` y guarda con `Ctrl+S` o `Cmd+S`.
+Si no se abre el navegador, abre la dirección **Local URL** que aparece en la terminal. Mantén abierta esa terminal: está ejecutando la app.
 
-Si aparece **Rerun** en el navegador, púlsalo. **Always rerun** permite repetir automáticamente al guardar los siguientes cambios. Mantén abierta la terminal que ejecuta Streamlit.
+Hay una errata intencionada. Lee el error en el navegador o la terminal: `ModuleNotFoundError` indica que Python no encuentra un módulo. ¿Qué nombre está buscando? Compáralo con el nombre de la librería.
 
-**Pausa:** deberías ver un título y un mensaje. Señala qué línea produce cada uno.
+Corrige la errata en el import y guarda con `Ctrl+S` en Windows o `Cmd+S` en macOS. Si aparece **Rerun** en el navegador, púlsalo. **Always rerun** permite repetir automáticamente al guardar los siguientes cambios.
 
-## 3. Hacerla nuestra
+**Cuando veas «Hola Mundo» y el mensaje, has completado el paso 0.** Con Luis, señala qué línea genera el título y cuál genera el texto.
 
-**Predice:** si cambias un texto en el archivo, ¿qué parte de la página cambiará?
+## Si has terminado antes
 
-En `st.title("Hola, FitLife")`, cambia únicamente el texto entre comillas por el nombre de vuestro equipo. Conserva la función, los paréntesis y las comillas. En la última línea, escribe vuestro propio mensaje de bienvenida. Guarda y observa.
+Son pruebas opcionales del mismo programa. Luis indicará cuándo continuar con el siguiente paso.
 
-**Pausa:** enseña a tu pareja la relación entre una línea y lo que aparece en la página. Todavía no hemos añadido una entrada para el usuario.
+**A. Cambia un texto.** En `st.title("Hola Mundo")`, cambia solo el texto entre comillas por el nombre de tu equipo. Predice qué parte de la página cambiará. Guarda y compruébalo. Prueba también con el texto de `st.write`, manteniendo las comillas y los paréntesis.
 
-## 4. Recibir un mensaje
+**B. Añade un efecto.** Añade al final del archivo:
 
-Luis introducirá las variables: un nombre que permite utilizar un valor después. Añade estas dos líneas **al final del archivo**, debajo de la bienvenida:
-
-<!-- build:entrada -->
+<!-- optional:globos -->
 ```python
-mensaje = st.text_input("Mensaje", "Hola, FitLife")
-st.write(mensaje)
+st.balloons()
 ```
 
-**Antes de probar:** señala qué texto crees que aparecerá en la entrada y dónde se mostrará lo que escribas.
+Guarda y observa. Después sustituye esa misma línea por:
 
-Guarda. Escribe una frase distinta en **Mensaje** y pulsa Intro. Prueba también a borrar el texto.
-
-**Pausa:** explica qué valor guarda `mensaje`. La línea que crea la entrada debe ir antes de la que usa su valor.
-
-## 5. Cambiar lo que hace Python
-
-**Predice:** queremos mostrar el mensaje en mayúsculas. ¿Dónde pondrías esa transformación: antes o después de mostrarlo?
-
-Con Luis, sustituye **solo** la línea `st.write(mensaje)` que acabas de añadir por estas dos:
-
-<!-- build:transformacion -->
+<!-- optional:nieve -->
 ```python
-resultado = mensaje.upper()
-st.write(resultado)
+st.snow()
 ```
 
-Guarda y prueba una frase con mayúsculas y minúsculas. Después, cada pareja cambia `upper()` por `lower()` y explica qué ha cambiado en la regla. Conserva la versión que hayas probado.
+**C. Prueba un control.** Añade al final:
 
-**Pausa:** señala la entrada, la transformación y la salida en tu código. ¿Qué habéis construido que no estaba al arrancar?
-
-## 6. Ver la ejecución en la terminal
-
-**Predice antes de añadirlo:** ¿dónde aparecerá un `print`? ¿Es el mismo sitio que un `st.write`?
-
-Añade esta línea **al final del archivo**, después de mostrar el resultado:
-
-<!-- build:traza -->
+<!-- optional:slider -->
 ```python
-print("Entrada:", mensaje, "| Salida:", resultado)
+st.slider("Tu edad", 0, 100, 25)
 ```
 
-Guarda, cambia el mensaje y pulsa Intro. Mira el navegador y la terminal donde arrancaste Streamlit. Compara los valores con tu pareja.
+Guarda y mueve el control en el navegador. ¿Qué ha añadido esa línea a tu página?
 
-Ahora añade esta línea **justo después del import**, antes del título:
+## Ver qué ocurre y continuar
 
-<!-- build:arranque -->
-```python
-print("Se ejecuta paso_0")
-```
+Luis puede usar `explicaciones/streamlit.html` para explicar el cambio de título: editas el archivo, lo guardas, Streamlit ejecuta Python y actualiza el navegador. Si os pide abrirlo, localízalo en Finder o el Explorador de archivos y haz doble clic. Es una simulación, no está conectada a vuestra app.
 
-**Predice:** al cambiar el mensaje, ¿veremos otra vez esa línea aunque esté antes de la entrada? Haz la prueba y cuéntale a Luis qué has observado.
-
-**Pausa:** hemos construido entrada, transformación, salida y una traza. Una traza es un mensaje que nos ayuda a observar lo que ejecuta el programa.
-
-## 7. Explicarlo y guardar nuestro trabajo
-
-Luis utilizará `explicaciones/streamlit.html` para recorrer navegador → servidor de Streamlit → Python → navegador. Si os pide abrirlo, usa Finder o el Explorador de archivos y haz doble clic en el archivo. Es una simulación: compárala con lo que acabas de observar en tu programa.
-
-Para guardar la versión que has construido, abre **otra terminal** del proyecto con **Terminal > New Terminal**. La primera puede seguir ejecutando la app. Ejecuta:
+Para registrar tu versión en Git, abre **otra terminal** del proyecto con **Terminal > New Terminal**. La primera puede seguir ejecutando la app. Con Luis:
 
 ```text
 git diff -- exercises/paso_0.py
 git add exercises/paso_0.py
-git commit -m "Construyo mi primera app"
+git commit -m "Completo el paso 0"
 git status
 ```
 
 `diff` muestra tus cambios. Si ocupa una pantalla con `(END)`, pulsa `q` para volver a la terminal. `add` selecciona este archivo para guardarlo. `commit` registra esa versión en tu rama. `status` debe terminar con `nothing to commit, working tree clean`. Si Git pide nombre y correo, Luis os guiará con [ACTUALIZAR.md](ACTUALIZAR.md). El commit queda en tu ordenador; no hay que publicarlo para completar la práctica.
 
-**Cierre con Luis:** explica quién recibe el texto, qué línea lo transforma y dónde se ejecuta Python. Este programa aplica la regla que hemos escrito; aún no hemos conectado un modelo de lenguaje.
+**Siguiente: [paso_1.py](exercises/paso_1.py), mostrar título y texto.** Cuando Luis lo indique, pulsa `Ctrl+C` en la terminal de la app y repite el comando de arranque cambiando `paso_0.py` por `paso_1.py`.

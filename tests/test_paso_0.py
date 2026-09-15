@@ -1,8 +1,6 @@
-"""Test the starter and each cumulative addition from the live-class guide."""
+"""Preserve the original exercise and verify its described corrections."""
 
 import ast
-from contextlib import redirect_stdout
-from io import StringIO
 import os
 from pathlib import Path
 import re
@@ -16,22 +14,11 @@ SOURCE = (ROOT / "exercises/paso_0.py").read_text(encoding="utf-8")
 GUIDE = (ROOT / "SESION1_PASO0.md").read_text(encoding="utf-8")
 
 
-def block(name):
-    matches = re.findall(r"<!-- build:" + name + r" -->\s*```python\n(.*?)```", GUIDE, re.S)
+def optional(name):
+    matches = re.findall(r"<!-- optional:" + name + r" -->\s*```python\n(.*?)```", GUIDE, re.S)
     if len(matches) != 1:
-        raise ValueError(f"La guía debe contener exactamente un bloque build:{name}.")
+        raise ValueError(f"La guía debe contener exactamente un bloque optional:{name}.")
     return matches[0].strip()
-
-
-def stages():
-    repaired = SOURCE.replace("import streamlt as st", "import streamlit as st")
-    entry = repaired + "\n" + block("entrada") + "\n"
-    if entry.count("st.write(mensaje)") != 1:
-        raise ValueError("La etapa de entrada debe mostrar mensaje una sola vez.")
-    transform = entry.replace("st.write(mensaje)", block("transformacion"))
-    trace = transform + "\n" + block("traza") + "\n"
-    rerun = trace.replace("import streamlit as st", "import streamlit as st\n" + block("arranque"))
-    return repaired, entry, transform, trace, rerun
 
 
 class Paso0Tests(unittest.TestCase):
@@ -40,43 +27,52 @@ class Paso0Tests(unittest.TestCase):
             key: value for key, value in os.environ.items() if key != "OPENAI_API_KEY"
         }, clear=True))
         self.enterContext(patch("socket.socket.connect", side_effect=AssertionError("Unexpected network access")))
-        self.output = self.enterContext(redirect_stdout(StringIO()))
+        self.repaired = SOURCE.replace("import streamlt as st", "import streamlit as st")
 
-    def test_starter_is_minimal_and_has_only_the_expected_import_error(self):
-        self.assertEqual(len(ast.parse(SOURCE).body), 3, "Keep the starter small; students must add the interactive pieces.")
+    def test_session_keeps_the_original_exercise_code_and_order(self):
+        self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")},
+                         {f"paso_{i}.py" for i in range(8)})
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        positions = []
+        for number in range(8):
+            with self.subTest(step=number):
+                name = f"exercises/paso_{number}.py"
+                current = (ROOT / name).read_text(encoding="utf-8")
+                baseline = (ROOT / "docente/referencia" / name).read_text(encoding="utf-8")
+                self.assertEqual(ast.dump(ast.parse(current)), ast.dump(ast.parse(baseline)),
+                                 "An exercise changed beyond its instructions. Review its scope with Luis.")
+                positions.append(readme.index(f"]({name})"))
+        self.assertEqual(positions, sorted(positions))
+
+    def test_import_error_then_title_and_message_complete_the_exercise(self):
         app = AppTest.from_file(str(ROOT / "exercises/paso_0.py")).run()
         self.assertEqual(len(app.exception), 1)
         self.assertIn("No module named 'streamlt'", app.exception[0].message)
-        repaired = AppTest.from_string(stages()[0]).run()
-        self.assertEqual(len(repaired.exception), 0)
-        self.assertEqual(len(repaired.title), 1)
-        self.assertEqual(len(repaired.markdown), 1)
-        self.assertEqual(len(repaired.text_input), 0)
-        self.assertEqual(len(repaired.metric), 0)
-
-    def test_every_addition_from_the_student_guide_runs(self):
-        for number, code in enumerate(stages()):
-            with self.subTest(stage=number):
-                app = AppTest.from_string(code).run()
-                self.assertEqual(len(app.exception), 0)
-                if number == 0:
-                    continue
-                app.text_input[0].set_value("Hola, Madrid").run()
-                expected = "Hola, Madrid" if number == 1 else "HOLA, MADRID"
-                self.assertEqual(app.markdown[-1].value, expected)
-                self.assertEqual(len(app.exception), 0)
-                if number >= 3:
-                    self.assertIn("Entrada: Hola, Madrid | Salida: HOLA, MADRID", self.output.getvalue())
-
-    def test_code_changes_empty_input_and_rerun_trace(self):
-        code = stages()[-1].replace('st.title("Hola, FitLife")', 'st.title("Equipo Madrid")').replace("mensaje.upper()", "mensaje.lower()")
-        app = AppTest.from_string(code).run()
-        self.assertEqual(app.title[0].value, "Equipo Madrid")
-        before = self.output.getvalue().count("Se ejecuta paso_0")
-        app.text_input[0].set_value("OTRO MENSAJE").run()
-        self.assertEqual(app.markdown[-1].value, "otro mensaje")
-        self.assertEqual(self.output.getvalue().count("Se ejecuta paso_0"), before + 1)
-        app.text_input[0].set_value("").run()
-        self.assertEqual(app.text_input[0].value, "")
-        self.assertIn("Entrada:  | Salida: ", self.output.getvalue())
+        app = AppTest.from_string(self.repaired).run()
         self.assertEqual(len(app.exception), 0)
+        self.assertEqual(app.title[0].value, "Hola Mundo")
+        self.assertEqual(app.markdown[0].value, "Si ves esto en el navegador, tu primer app web funciona.")
+        self.assertEqual(len(app.text_input), 0)
+        self.assertEqual(len(app.slider), 0)
+
+    def test_editing_the_existing_text_changes_the_page(self):
+        code = self.repaired.replace('"Hola Mundo"', '"Equipo Madrid"').replace(
+            '"Si ves esto en el navegador, tu primer app web funciona."', '"Nuestra primera app"')
+        app = AppTest.from_string(code).run()
+        self.assertEqual(len(app.exception), 0)
+        self.assertEqual(app.title[0].value, "Equipo Madrid")
+        self.assertEqual(app.markdown[0].value, "Nuestra primera app")
+
+    def test_original_optional_experiments_from_the_guide(self):
+        for name in ("globos", "nieve", "slider"):
+            with self.subTest(experiment=name):
+                app = AppTest.from_string(self.repaired + "\n" + optional(name)).run()
+                self.assertEqual(len(app.exception), 0)
+                if name == "slider":
+                    self.assertEqual(app.slider[0].value, 25)
+                    app.slider[0].set_value(42).run()
+                    self.assertEqual(app.slider[0].value, 42)
+                    self.assertEqual(app.title[0].value, "Hola Mundo")
+                    self.assertEqual(len(app.exception), 0)
+                else:
+                    self.assertEqual(len(app.get("balloons" if name == "globos" else "snow")), 1)

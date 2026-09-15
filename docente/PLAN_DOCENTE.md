@@ -1,32 +1,29 @@
 # Preparación docente
 
-## Forma de trabajar
+## Criterio de mejora
 
-Luis introduce una pieza y deja que el alumnado la añada a su programa. Cada ronda termina en una observación concreta y una pausa antes de avanzar: predecir, construir, ejecutar, comparar y explicar.
+Mantenemos el caso FitLife, los objetivos, la secuencia y los retos de MDA13. Las mejoras aclaran las instrucciones y permiten observar lo que ocurre al ejecutar el mismo ejercicio. Luis decide cuándo explicar, experimentar y avanzar.
 
-Los alumnos no reciben toda la solución al corregir una errata. El HTML se utiliza después de la experiencia para explicar lo observado y se identifica como simulación.
+La preparación y su comprobación viven en main. Cada rama de sesión reúne los ejercicios correspondientes. La copia del material base permite comprobar los cambios; no sustituye al curso ni implica que haya que rediseñarlo.
 
-## Recorrido
+## Secuencia del material base
 
-Cuatro sesiones de 2 h 30 min, con el caso FitLife.
-
-| Sesión | Contenido |
+| Sesión | Pasos y contenido |
 | :--- | :--- |
-| 1 | Interfaz, datos, chat, primera llamada al modelo y límites de responder a partir de una muestra. |
-| 2 | Generación de código, cálculo con Python, errores y autocorrección. |
-| 3 | Historial, interpretación y ejemplos en el prompt. |
-| 4 | Caso completo, comprobación de resultados y aplicación compartida. |
+| 1 | 0: arranque; 1: título y texto; 2 y 3: datos; 4: chat eco; 5: API; 6: preguntas sobre una muestra; 7: contexto adicional, opcional. |
+| 2 | 8: generar código; 9: ejecutarlo; 10: errores y transparencia; 11: autocorrección, opcional. |
+| 3 | 12: memoria; 13: interpretación; 14: ejemplos en el prompt; 15: analista completo, opcional. |
 
-La instalación vive en main. La primera práctica vive en codex/sesion-1. El reparto de las siguientes actividades entre ramas se concretará al prepararlas.
+Luis ha indicado cuatro sesiones de 2 h 30 min. El README base detalla ejercicios para las tres primeras; esta revisión no asigna un temario nuevo a la cuarta.
 
 ## Paso 0
 
-Arranque mínimo: un import con una errata, un título y un mensaje. La clase añade texto propio, una entrada, su salida, una transformación y una traza en la terminal. Cada alumno guarda lo construido en su rama.
+Se completa al corregir el import y ver el título y el mensaje. Conserva sus ampliaciones opcionales: cambiar textos, probar globos o nieve y añadir el slider. La explicación HTML muestra el efecto de editar el título, guardar el archivo y volver a ejecutar Python. Después se continúa con paso_1.
 
-La persistencia con session_state se introduce cuando surja una necesidad de conservar información. No es requisito del primer programa. Las soluciones y observaciones esperadas van en la guía docente, separadas de las predicciones del alumno.
+No se añade al paso 0 una práctica de entrada y transformación de texto. El eco y sus transformaciones siguen en paso_4. La memoria sigue en paso_12.
 
-## Por preparar
+## Preparación posterior
 
-El acceso al proveedor de LLM, el modelo y una demostración local siguen por concretar. No hay llamadas a un modelo en el paso 0. Las prácticas posteriores necesitan verificación con las dependencias fijadas.
+Los ejercicios posteriores mantienen su código base. Su comprobación con las dependencias actuales, el acceso al modelo para el aula y la demostración local se prepararán sobre esos mismos ejercicios. La instalación no demuestra que una llamada al proveedor funcione.
 
 Aplicar la revisión de principiante de AGENTS.md antes de publicar cambios. Registro: [REVISION_PRINCIPIANTE.md](REVISION_PRINCIPIANTE.md).

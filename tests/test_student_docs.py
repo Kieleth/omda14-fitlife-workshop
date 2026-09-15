@@ -21,7 +21,7 @@ class StudentDocsTests(unittest.TestCase):
         self.assertIn("git status", text)
         self.assertIn("git pull --ff-only", text)
 
-    def test_student_route_has_no_editorial_history_or_unprepared_exercises(self):
+    def test_student_route_has_no_editorial_history_or_teacher_notes(self):
         paths = [ROOT / name for name in GUIDES]
         paths += list((ROOT / "exercises").glob("*.py"))
         paths += list(ROOT.glob("SESION1_PASO0.md"))
@@ -33,4 +33,5 @@ class StudentDocsTests(unittest.TestCase):
         for name in ("exercises2", "exercises3", "extras", "CONTENIDO_MDA13.md",
                      "SESION1_REPASO.md", "SESION2_REPASO.md", "PLAN_DOCENTE.md", "VERIFICACION.md"):
             self.assertFalse(any(path == name or path.startswith(name + "/") for path in tracked), name)
-        self.assertLessEqual({p.name for p in (ROOT / "exercises").glob("*.py")}, {"paso_0.py"})
+        self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")},
+                         {f"paso_{i}.py" for i in range(8)})

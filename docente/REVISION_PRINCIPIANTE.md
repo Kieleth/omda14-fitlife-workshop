@@ -1,13 +1,17 @@
 # Revisión de la experiencia del alumno
 
-## Revisión simulada, 14 de septiembre de 2026
+## Corrección de alcance, 14 de septiembre de 2026
 
-Un subagente revisó la preparación y el paso 0 con el papel de una persona con poca experiencia en Git y programación. No es feedback de alumnos reales.
+Luis ha aclarado que OMDA14 mejora MDA13, conserva su contenido y no reinventa el curso. Las revisiones previas comprobaron la claridad de una práctica ampliada, pero no detectaron que adelantaba conceptos del paso 4. Esa ampliación se ha retirado.
 
-Hallazgos: una errata desbloqueaba una app casi terminada; referencias editoriales confundían la ruta; faltaba una parada antes de clase; session_state llegaba demasiado pronto; la tabla revelaba las respuestas; Git aparecía sin explicar su efecto; la instrucción para cambiar el título era ambigua.
+Un subagente con el papel de principiante volvió a leer el paso 0 y el README originales. Confirmó el cierre al corregir el import y ver título y mensaje, y las ampliaciones opcionales originales: textos, globos o nieve y slider.
 
-Correcciones: separar la referencia docente, starter mínimo, construcción acumulativa, pausas con Luis, predicciones antes de respuestas y explicación concreta de los comandos. La segunda revisión encontró clara la entrada y pidió concretar la carpeta de descarga y el instalador de Python. Se corrigieron ambos puntos. La revisión final de la secuencia no encontró problemas materiales: comprobó el starter mínimo, las incorporaciones acumulativas, la posición del código, las pausas y los comandos de Git. Fue una revisión de instrucciones, no una observación de alumnos reales.
+Después revisó README, guía de clase, código y HTML corregidos. No encontró desviaciones del paso 0: comandos con .venv, finalización clara, experimentos opcionales y progresión controlada por Luis. Comparó también el código ejecutable de los pasos 1 a 7 con el original y encontró equivalencia.
+
+Se anotó una preparación docente pendiente: pasos 1, 3, 4, 5 y 7 describen huecos ya resueltos en el código base. Esta revisión no introduce otros retos ni borra soluciones sin revisarlo con Luis.
+
+Es una revisión simulada de instrucciones, no feedback de alumnos reales ni una prueba de ejecución. Las comprobaciones técnicas se registran en [VERIFICACION.md](VERIFICACION.md).
 
 ## Repetir la revisión
 
-Empezar solo desde el README. Señalar la primera acción confusa, términos sin explicar, requisitos ocultos, soluciones adelantadas y qué código crea realmente el alumno. Distinguir fallos de instalación del error intencionado del ejercicio.
+Empezar desde el README y dar al revisor el ejercicio original correspondiente. Comprobar tanto claridad como continuidad: objetivo, posición en la secuencia, reto y ampliaciones opcionales. Señalar acciones confusas, términos sin explicar, requisitos ocultos y soluciones adelantadas. Proponer aclaraciones del mismo ejercicio, no otra estructura de curso.

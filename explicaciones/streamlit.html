@@ -3,112 +3,108 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OMDA14 · Del navegador a Python</title>
+<title>OMDA14 · Editar, guardar y ver el cambio</title>
 <style>
 :root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; }
 @media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; } }
 * { box-sizing:border-box; }
 body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
-main { max-width:1060px; margin:auto; padding:36px 24px; }
+main { max-width:1180px; margin:auto; padding:36px 24px; }
 a { color:var(--accent); }
 .eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
-h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; letter-spacing:-.03em; }
+h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
 h2 { font-size:20px; margin:0 0 12px; }
 p { margin:8px 0 18px; }
-.intro { max-width:760px; color:var(--muted); }
+.intro { max-width:800px; }
 .steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
-.steps li { font-size:14px; color:var(--muted); }
+.steps li,.note { color:var(--muted); font-size:14px; }
 .steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
-.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:18px 0; }
+.flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.station.active { border-color:var(--accent); background:var(--soft); }
+label { display:block; font-size:14px; margin:14px 0 6px; }
 button,input { font:inherit; }
+input { width:100%; padding:10px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:4px; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; }
+.preview-title { font-size:24px; font-weight:700; overflow-wrap:anywhere; white-space:pre-wrap; }
+.detail { padding:24px 0 8px; min-height:140px; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
 button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
 button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
 button:disabled { opacity:.45; cursor:default; }
-input { display:block; width:100%; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--ink); }
-input:disabled { opacity:.8; }
-.flow { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
-.station { min-width:0; padding:24px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
-.station.active { border-color:var(--accent); }
-label,.label { display:block; color:var(--muted); font-size:14px; margin:16px 0 6px; }
-pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; margin:8px 0; }
-.code-line { display:block; padding:4px 6px; }
-.code-line.active { background:var(--soft); }
-.value { display:block; white-space:pre-wrap; overflow-wrap:anywhere; min-height:44px; padding:10px 12px; background:var(--bg); border-radius:4px; }
-.detail { min-height:108px; padding:20px 0; }
-.detail p { margin-bottom:0; }
-.note { color:var(--muted); font-size:14px; }
-footer { border-top:1px solid var(--line); padding-top:18px; margin-top:12px; }
-@media(max-width:650px) { main { padding:24px 16px; } .flow { grid-template-columns:1fr; } .station { padding:18px; } .detail { min-height:0; } }
+footer { border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:850px) { .flow { grid-template-columns:1fr; } main { padding:24px 16px; } .detail { min-height:0; } }
 </style>
 </head>
 <body>
 <main>
 <header>
 <div class="eyebrow">OMDA14 · SESIÓN 1 · PASO 0</div>
-<h1>¿Qué pasa al pulsar Intro?</h1>
-<p class="intro">Cambia una frase y sigue su recorrido. En tu ejercicio, el navegador y el servidor de Streamlit están en el mismo portátil. Python se ejecuta en ese servidor.</p>
-<p class="note">Simulación didáctica de la app que construimos en clase. Este HTML no está conectado a tu app ni ejecuta Python. No hace llamadas a un LLM.</p>
+<h1>¿Qué pasa cuando guardas el archivo?</h1>
+<p class="intro">La app ya arranca y muestra «Hola Mundo». Ahora cambias el título en VS Code. Sigue ese mismo cambio desde el editor hasta el navegador.</p>
+<p class="note">Simulación didáctica. Este HTML no modifica tu archivo ni ejecuta Python. En el ejercicio real, el editor, el servidor de Streamlit y el navegador están en tu portátil.</p>
 </header>
-<ol class="steps" aria-label="Recorrido de una interacción">
-<li aria-current="step">1. Escribes</li><li>2. Envías</li><li>3. Python recibe</li><li>4. Python calcula</li><li>5. Ves el resultado</li>
+<ol class="steps" aria-label="Recorrido de un cambio de código">
+<li aria-current="step">1. Editas</li><li>2. Guardas</li><li>3. Python ejecuta</li><li>4. Ves el cambio</li>
 </ol>
 <div class="flow">
-<section class="station active" id="browser" aria-labelledby="browser-title">
-<h2 id="browser-title">Tu navegador</h2>
-<label for="message">Mensaje que vas a enviar</label>
-<input id="message" value="Hola, Madrid" autocomplete="off">
-<span class="label">Resultado que muestra la página</span>
-<output class="value" id="screen">HOLA, FITLIFE</output>
-<p class="note">Antes de esta interacción, la app ya mostraba el resultado de «Hola, FitLife».</p>
+<section class="station active" id="editor" aria-labelledby="editor-title">
+<h2 id="editor-title">Editor · VS Code</h2>
+<label for="title-input">Nuevo texto entre comillas en st.title</label>
+<input id="title-input" value="Equipo Madrid" autocomplete="off">
+<pre><code id="editor-code"></code></pre>
+<p class="note" id="file-status">Cambio sin guardar en este esquema.</p>
 </section>
 <section class="station" id="server" aria-labelledby="server-title">
-<h2 id="server-title">Servidor de Streamlit · Python</h2>
-<span class="label">Valor de mensaje dentro del script</span>
-<code class="value" id="received">'Hola, FitLife'</code>
-<pre aria-label="Código simplificado"><code><span class="code-line" id="read-line">mensaje = st.text_input("Mensaje", "Hola, FitLife")</span><span class="code-line" id="calculate-line">resultado = mensaje.upper()</span><span class="code-line" id="display-line">st.write(resultado)</span></code></pre>
-<span class="label">Valor de resultado dentro del script</span>
-<code class="value" id="result">'HOLA, FITLIFE'</code>
-
+<h2 id="server-title">Servidor · Streamlit</h2>
+<p class="note">El proceso que arrancaste en la terminal ejecuta el código Python.</p>
+<pre><code id="server-code"></code></pre>
+<p class="note" id="execution-status">La ejecución anterior usó «Hola Mundo».</p>
+</section>
+<section class="station" id="browser" aria-labelledby="browser-title">
+<h2 id="browser-title">Navegador · Tu app</h2>
+<div class="preview-title" id="screen-title">Hola Mundo</div>
+<p>Si ves esto en el navegador, tu primer app web funciona.</p>
+<p class="note">Aquí ves los elementos que crea Streamlit.</p>
 </section>
 </div>
 <section class="detail" aria-live="polite" aria-atomic="true">
-<h2 id="step-title">1. Escribe y predice</h2>
-<p id="step-detail">Cambia el mensaje de arriba. Antes de avanzar, predice si el resultado de la página cambia mientras solo estás escribiendo.</p>
+<h2 id="step-title"></h2>
+<p id="step-detail"></p>
 </section>
 <div class="controls">
 <button id="previous" type="button" disabled>Anterior</button>
-<button id="next" class="primary" type="button">Simular Intro</button>
+<button id="next" class="primary" type="button">Simular guardar</button>
 <button id="restart" type="button">Reiniciar recorrido</button>
-<span id="position" class="note">Paso 1 de 5</span>
+<span id="position" class="note">Paso 1 de 4</span>
 </div>
 <footer>
-<p>Ahora compruébalo en tu app: compara el navegador con las líneas <code>Entrada:</code> y <code>Salida:</code> de la terminal. Los valores de este esquema son ilustrativos; la traza de tu programa viene de una ejecución real.</p>
-<p class="note">Los pasos están separados para poder examinarlos. En la app real, Streamlit puede enviar actualizaciones de la interfaz durante la ejecución. Escribir en un control de texto y confirmar un cambio no son lo mismo.</p>
-<p class="note">Referencias: <a href="https://docs.streamlit.io/develop/concepts/architecture/widget-behavior">controles y ejecuciones de Streamlit</a> · <a href="https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state">estado de sesión</a></p>
+<p>Compruébalo en tu app: cambia solo el título, guarda con Ctrl+S o Cmd+S y observa. Si aparece <strong>Rerun</strong>, púlsalo. <strong>Always rerun</strong> permite ejecutar al guardar.</p>
+<p class="note">Separamos los pasos para examinarlos. En la app real las actualizaciones pueden llegar durante la ejecución. Con Auto Save, VS Code puede guardar sin que pulses el atajo. Aquí todavía no interviene un modelo de lenguaje.</p>
+<p class="note">Fuente: <a href="https://docs.streamlit.io/get-started/fundamentals/main-concepts">ciclo de edición y ejecución de Streamlit</a>.</p>
 </footer>
 </main>
 <script>
 const elements = Object.fromEntries([...document.querySelectorAll("[id]")].map(element => [element.id, element]));
 const stages = [
-  ["1. Escribe y predice", "Cambia el mensaje de arriba. Antes de avanzar, predice si el resultado de la página cambia mientras solo estás escribiendo."],
-  ["2. El navegador confirma el cambio", "En el ejercicio pulsas Intro. El navegador comunica el nuevo valor al servidor de Streamlit. El resultado anterior sigue visible en este punto del esquema."],
-  ["3. Python vuelve a ejecutar el script", "Streamlit actualiza el valor del control y ejecuta el script desde arriba. st.text_input devuelve el nuevo mensaje."],
-  ["4. Python transforma el texto", "Este esquema usa upper(), que convierte el mensaje a mayúsculas. Si tu pareja eligió lower(), su programa tendrá otra salida. Este resultado viene de una operación de Python. No se consulta un modelo ni se genera una respuesta de IA."],
-  ["5. Streamlit actualiza la página", "st.write muestra el resultado y Streamlit comunica la actualización al navegador. En el ejercicio, print escribe también los valores en la terminal. Compáralos con lo que ves en la página."]
+  ["1. Edita y predice", "Cambia el texto del título en el editor de este esquema. ¿Qué parte de la página cambiará? El navegador todavía muestra la ejecución anterior."],
+  ["2. Guardas paso_0.py", "El cambio queda guardado en el archivo. Streamlit detecta el cambio. En la app real, pulsa Rerun si lo pide o activa Always rerun."],
+  ["3. Python ejecuta el archivo", "Streamlit vuelve a ejecutar el script desde arriba. El import carga la librería; st.title y st.write describen los elementos que se mostrarán."],
+  ["4. Ves el nuevo título", "Streamlit comunica los elementos al navegador. Cambia el título porque editaste st.title; el mensaje sigue igual. El navegador muestra la página, el servidor ejecuta Python."]
 ];
 let step = 0;
-let submitted = "";
-const quote = text => JSON.stringify(text);
+let savedTitle = "Hola Mundo";
+const codeFor = title => `import streamlit as st\n\nst.title(${JSON.stringify(title)})\nst.write("Si ves esto en el navegador, tu primer app web funciona.")`;
 function render() {
-  const input = step >= 2 ? submitted : "Hola, FitLife";
-  const result = step >= 3 ? submitted.toUpperCase() : "HOLA, FITLIFE";
-  elements.received.textContent = quote(input);
-  elements.result.textContent = step === 2 ? "Aún no calculado" : quote(result);
-  elements.screen.textContent = step >= 4 ? (result === "" ? "(cadena vacía)" : result) : "HOLA, FITLIFE";
-  elements.message.disabled = step !== 0;
-  elements.browser.classList.toggle("active", step <= 1 || step === 4);
-  elements.server.classList.toggle("active", step === 2 || step === 3);
-  ["read-line", "calculate-line", "display-line"].forEach((id,index) => elements[id].classList.toggle("active", step === index + 2));
+  elements["editor-code"].textContent = codeFor(step === 0 ? elements["title-input"].value : savedTitle);
+  elements["server-code"].textContent = codeFor(step >= 2 ? savedTitle : "Hola Mundo");
+  elements["screen-title"].textContent = step >= 3 ? savedTitle : "Hola Mundo";
+  elements["file-status"].textContent = step === 0 ? "Cambio sin guardar en este esquema." : "Archivo guardado en este esquema.";
+  elements["execution-status"].textContent = step >= 2 ? "Python ejecuta el código guardado." : "La ejecución anterior usó «Hola Mundo».";
+  elements["title-input"].disabled = step !== 0;
+  elements.editor.classList.toggle("active", step <= 1);
+  elements.server.classList.toggle("active", step === 2);
+  elements.browser.classList.toggle("active", step === 3);
   document.querySelectorAll(".steps li").forEach((element,index) => {
     if (index === step) element.setAttribute("aria-current", "step");
     else element.removeAttribute("aria-current");
@@ -118,20 +114,17 @@ function render() {
   elements.position.textContent = `Paso ${step + 1} de ${stages.length}`;
   elements.previous.disabled = step === 0;
   elements.next.disabled = step === stages.length - 1;
-  elements.next.textContent = step === 0 ? "Simular Intro" : "Siguiente paso";
+  elements.next.textContent = step === 0 ? "Simular guardar" : "Siguiente paso";
 }
-function next() {
+elements.next.addEventListener("click", () => {
   if (step === stages.length - 1) return;
-  if (step === 0) submitted = elements.message.value;
+  if (step === 0) savedTitle = elements["title-input"].value;
   step += 1;
   render();
-}
-elements.next.addEventListener("click", next);
+});
 elements.previous.addEventListener("click", () => { if (step > 0) { step -= 1; render(); } });
 elements.restart.addEventListener("click", () => { step = 0; render(); });
-elements.message.addEventListener("keydown", event => {
-  if (event.key === "Enter") { event.preventDefault(); next(); }
-});
+elements["title-input"].addEventListener("input", render);
 render();
 </script>
 </body>
