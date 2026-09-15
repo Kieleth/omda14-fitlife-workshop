@@ -30,9 +30,19 @@ Python debe mostrar `3.13.x`. Si un comando falla, resuélvelo antes de continua
 
 ## 2. Obtener el proyecto
 
-**La dirección de GitHub se añadirá cuando el profesor confirme y publique el repositorio.** No clones el repositorio antiguo de MDA13 para preparar OMDA14.
+El repositorio es público: [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop).
 
-Cuando tengas la dirección, abre en VS Code la carpeta clonada, llamada `omda14-fitlife-workshop`. Abre `Terminal > New Terminal`. Comprueba que ves `requirements.txt`, `check_setup.py`, `test_app.py` y `data/` en el explorador de archivos.
+En la terminal, sitúate en la carpeta donde quieras guardar el proyecto y ejecuta:
+
+```text
+git clone https://github.com/Kieleth/omda14-fitlife-workshop.git
+cd omda14-fitlife-workshop
+git branch --show-current
+```
+
+El último comando debe mostrar `main`. Clonar un repositorio público por HTTPS no requiere contraseña ni token.
+
+Abre esa carpeta en VS Code con **File > Open Folder**. Abre **Terminal > New Terminal**. Comprueba que ves `requirements.txt`, `check_setup.py`, `test_app.py` y `data/` en el explorador de archivos. Desde esa terminal puedes seguir los comandos de instalación de tu sistema.
 
 ## 3. Crear el entorno e instalar las librerías
 

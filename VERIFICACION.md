@@ -18,7 +18,7 @@ Los archivos se ejecutaron desde el nuevo repositorio, usando un entorno tempora
 
 ## Pendiente
 
-El repositorio de GitHub todavía no se ha creado. Su visibilidad está pendiente de decisión. La guía de instalación necesita la dirección de clonación final antes de enviarla al alumnado.
+El repositorio [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop) se ha creado como público. La guía incluye su dirección de clonación. La comprobación de las instalaciones en GitHub Actions está pendiente de finalizar.
 
 Las instalaciones de Windows y Linux no se han ejecutado. La configuración de GitHub Actions incluye ambas y macOS, pero sus resultados solo se podrán comprobar después de publicar.
 
