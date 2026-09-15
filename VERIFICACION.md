@@ -18,7 +18,9 @@ Los archivos se ejecutaron desde el nuevo repositorio, usando un entorno tempora
 
 ## Pendiente
 
-El repositorio [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop) se ha creado como público. La guía incluye su dirección de clonación. La comprobación de las instalaciones en GitHub Actions está pendiente de finalizar.
+El repositorio [Kieleth/omda14-fitlife-workshop](https://github.com/Kieleth/omda14-fitlife-workshop) se ha creado como público. Por ahora solo contiene el README de inicialización. Los archivos preparados de OMDA14 todavía están en el repositorio local.
+
+GitHub devolvió un error 403 de permisos al intentar publicar mediante el conector. La revisión automática también rechazó una llamada a Git desde Node porque las instrucciones del proyecto exigen el flujo MCP de GitHub. Hace falta habilitar escritura del conector en este repositorio o aprobar expresamente el uso de Git CLI para publicarlo. La guía local ya incluye la dirección final, pero no se debe distribuir como instalación publicada hasta que los archivos estén en GitHub.
 
 Las instalaciones de Windows y Linux no se han ejecutado. La configuración de GitHub Actions incluye ambas y macOS, pero sus resultados solo se podrán comprobar después de publicar.
 
