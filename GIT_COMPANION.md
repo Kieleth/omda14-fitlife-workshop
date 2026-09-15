@@ -401,13 +401,13 @@ No pasa nada. No se ha roto nada. Git simplemente te dice: "Hay dos versiones de
 
 Abre `notas.txt`. Veras algo asi:
 
-```
-<<<<<<< HEAD
-Version de main
-=======
-Version de otra-idea
->>>>>>> otra-idea
-```
+> ```
+> <<<<<<< HEAD
+> Version de main
+> =======
+> Version de otra-idea
+> >>>>>>> otra-idea
+> ```
 
 Las marcas son de Git:
 - Lo que hay entre `<<<<<<< HEAD` y `=======` es la version de `main` (donde estas ahora)
