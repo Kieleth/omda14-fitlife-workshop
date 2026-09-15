@@ -21,7 +21,7 @@ Los dieciocho tests locales pasaron con Python 3.13.3 en macOS ARM64. Incluyen:
 
 El paso 0 está adaptado. `material_base.json` conserva su hash original y el motivo del cambio. El original sigue disponible en el repositorio MDA13 y en `main` de OMDA14.
 
-La comprobación de esta rama en GitHub Actions está pendiente de finalizar.
+[GitHub Actions comprobó esta rama](https://github.com/Kieleth/omda14-fitlife-workshop/actions/runs/34928858698) en el commit `9f486a8155e77d1f70db44aa583875b7044eac27`: instalación desde cero y dieciocho tests correctos en Windows, macOS y Linux. El commit posterior que registra este resultado solo modifica este documento.
 
 ## Observado en un navegador real
 
