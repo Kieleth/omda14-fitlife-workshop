@@ -1,0 +1,5 @@
+# Dependencias directas. requirements.txt fija también las transitivas.
+streamlit==1.63.0
+openai==3.14.0
+pandas==2.3.3
+python-dotenv==1.2.3

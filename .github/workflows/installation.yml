@@ -1,0 +1,40 @@
+name: Student installation
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  installation:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+          cache: pip
+      - name: Create student environment
+        run: python -m venv .venv
+      - name: Install and check (macOS and Linux)
+        if: runner.os != 'Windows'
+        run: |
+          .venv/bin/python -m pip install -r requirements.txt
+          .venv/bin/python -m pip check
+          .venv/bin/python check_setup.py
+          .venv/bin/python -m unittest discover -s tests -v
+      - name: Install and check (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          .venv\Scripts\python.exe -m pip install -r requirements.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .venv\Scripts\python.exe -m pip check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .venv\Scripts\python.exe check_setup.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .venv\Scripts\python.exe -m unittest discover -s tests -v
+          exit $LASTEXITCODE
