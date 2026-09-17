@@ -3,69 +3,163 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OMDA14 · Editar, guardar y ver el cambio</title>
+<title>OMDA14 · ¿Qué pasa cuando guardas?</title>
 <style>
-:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; }
+:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; --term:#152420; --term-ink:#d3e2db; --term-dim:#8aa197; --term-accent:#9bdac1; }
 @media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; } }
 * { box-sizing:border-box; }
+[hidden] { display:none !important; }
 body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
-main { max-width:1180px; margin:auto; padding:36px 24px; }
+main { max-width:1280px; margin:auto; padding:36px 24px; }
 a { color:var(--accent); }
 .eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
 h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
 h2 { font-size:20px; margin:0 0 12px; }
 p { margin:8px 0 18px; }
 .intro { max-width:800px; }
+.note { color:var(--muted); font-size:14px; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 8px; }
+.tabs button { min-height:40px; font-size:14px; }
+.tabs [aria-selected="true"] { background:var(--accent); color:var(--bg); border-color:var(--accent); }
 .steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
-.steps li,.note { color:var(--muted); font-size:14px; }
+.steps li { color:var(--muted); font-size:14px; }
 .steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
-.flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
-.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
-.station.active { border-color:var(--accent); background:var(--soft); }
-label { display:block; font-size:14px; margin:14px 0 6px; }
-button,input { font:inherit; }
-input { width:100%; padding:10px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:4px; }
-pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; }
-.preview-title { font-size:24px; font-weight:700; overflow-wrap:anywhere; white-space:pre-wrap; }
+.laptop { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr); gap:8px; padding:24px 10px 10px; border:2px solid var(--line); border-radius:18px; }
+.laptop .tag { position:absolute; top:-11px; left:18px; padding:0 8px; background:var(--bg); color:var(--muted); font-size:12px; font-weight:650; letter-spacing:.1em; }
+.box { min-width:0; padding:10px; background:var(--paper); border:1px solid var(--line); border-radius:8px; font-size:13px; transition:box-shadow .3s; }
+.box.active { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
+.box h2 { display:flex; align-items:center; gap:8px; font-size:15px; margin:0 0 10px; }
+.box h2 svg { width:16px; height:16px; flex:none; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.box .note { font-size:12px; margin:10px 0 0; }
+code, pre, .term, .url { font-family:ui-monospace,Menlo,Consolas,monospace; }
+.tab { display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border:1px solid var(--line); border-bottom:0; border-radius:6px 6px 0 0; font-size:12px; background:var(--bg); }
+.unsaved { color:var(--accent); font-size:15px; line-height:1; }
+pre { margin:0; padding:8px; border:1px solid var(--line); border-radius:0 6px 6px 6px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; line-height:1.6; background:var(--bg); }
+button, input { font:inherit; }
+.nw { white-space:nowrap; }
+pre input { max-width:calc(100% - 3ch); padding:0 3px; margin:0; color:var(--accent); font-weight:700; background:var(--paper); border:1px solid var(--accent); border-radius:3px; }
+pre input:disabled { color:var(--ink); background:transparent; border-color:transparent; padding:0; }
+.doc { display:flex; gap:10px; align-items:flex-start; }
+.doc svg { width:40px; height:48px; flex:none; fill:var(--bg); stroke:var(--muted); stroke-width:1.4; stroke-linejoin:round; }
+.doc code { font-size:12px; overflow-wrap:anywhere; }
+#saved { font-weight:700; transition:color .3s; }
+#saved.flash { color:var(--accent); }
+.term { background:var(--term); color:var(--term-ink); border-color:#0b1512; font-size:12px; line-height:1.55; }
+.term h2 { font-family:system-ui,sans-serif; }
+.tline { color:var(--term-dim); overflow-wrap:anywhere; }
+.tline b { color:var(--term-ink); font-weight:600; }
+.watch { display:flex; gap:6px; align-items:center; margin:8px 0 4px; color:var(--term-accent); }
+.watch svg { width:16px; height:16px; flex:none; fill:none; stroke:currentColor; stroke-width:1.6; }
+.watch.pulse svg { animation:pulse .5s ease-in-out 3; }
+.code { margin:0 0 6px; padding:5px 0; border-block:1px dashed #34483f; }
+.line { min-height:1.55em; padding:0 6px; border-radius:3px; white-space:pre-wrap; overflow-wrap:anywhere; transition:background .2s; }
+.line.done { background:rgba(155,218,193,.16); }
+.running .line.done { background:transparent; }
+.line.lit, .running .line.lit { background:var(--term-accent); color:var(--term); }
+.tokens { display:flex; flex-wrap:wrap; gap:4px; min-height:22px; margin:6px 0; }
+.chip { padding:0 8px; border:1px solid var(--term-accent); border-radius:12px; color:var(--term-accent); animation:leave .4s ease-out both; }
+.chip:nth-child(2) { animation-delay:.15s; } .chip:nth-child(3) { animation-delay:.3s; }
+.running .tokens { visibility:hidden; }
+.cursor { display:inline-block; width:.6em; height:1.1em; vertical-align:text-bottom; background:var(--term-ink); animation:blink 1s steps(1) infinite; }
+.term.dead .tline, .term.dead .code, .term.dead .watch { opacity:.35; }
+.term.dead .cursor { display:none; }
+#dead-msg { color:var(--term-ink); }
+.win { position:relative; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--paper); }
+.bar { display:flex; align-items:center; gap:6px; padding:6px 8px; border-bottom:1px solid var(--line); background:var(--bg); }
+.bar i { width:8px; height:8px; border-radius:50%; background:var(--line); }
+.url { flex:1; margin-left:4px; padding:1px 8px; border:1px solid var(--line); border-radius:10px; font-size:12px; }
+.page { padding:12px; min-height:120px; transition:background .3s; }
+.page.paint { background:var(--soft); }
+.bt { font-size:22px; font-weight:750; line-height:1.2; overflow-wrap:anywhere; }
+.page p { margin:6px 0 10px; font-size:13px; }
+.slider { font-size:12px; }
+.track { position:relative; height:4px; margin:14px 8px 8px; border-radius:2px; background:var(--line); }
+.knob { position:absolute; top:-6px; width:16px; height:16px; margin-left:-8px; border-radius:50%; background:var(--accent); transition:left .5s ease; }
+.overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; background:rgba(110,120,116,.88); color:#fff; text-align:center; font-size:13px; }
+.overlay b { font-size:16px; }
+.cell { align-self:center; color:var(--muted); font-size:11px; overflow:visible; }
+.cell text { fill:currentColor; }
+.cell .small { font-size:10px; opacity:.85; }
+.arrow line { stroke:currentColor; stroke-width:1.6; }
+.arrow path { fill:currentColor; }
+.arrow.on { color:var(--accent); font-weight:700; }
+.arrow.on line { stroke-width:2.4; }
+.dot { fill:var(--accent); stroke:var(--paper); stroke-width:2.5; opacity:0; }
+.hop .dot { opacity:1; }
+.laptop.dead .arrow { opacity:.3; }
 .detail { padding:24px 0 8px; min-height:140px; }
 .controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
 button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
 button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
 button:disabled { opacity:.45; cursor:default; }
 footer { border-top:1px solid var(--line); padding-top:18px; }
-@media(max-width:850px) { .flow { grid-template-columns:1fr; } main { padding:24px 16px; } .detail { min-height:0; } }
+@keyframes blink { 50% { opacity:0; } }
+@keyframes pulse { 50% { transform:scale(1.4); } }
+@keyframes leave { from { transform:translateX(-16px); opacity:0; } }
+@media(max-width:1150px) { .laptop { grid-template-columns:1fr; } .cell { width:100%; max-width:340px; height:auto; justify-self:center; } }
+@media(max-width:850px) { main { padding:24px 16px; } .detail { min-height:0; } }
+@media(prefers-reduced-motion:reduce) { *, ::before, ::after { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
 <main>
 <header>
 <div class="eyebrow">OMDA14 · SESIÓN 1 · PASO 0</div>
-<h1>¿Qué pasa cuando guardas el archivo?</h1>
-<p class="intro">La app ya arranca y muestra «Hola Mundo». Ahora cambias el título en VS Code. Sigue ese mismo cambio desde el editor hasta el navegador.</p>
-<p class="note">Simulación didáctica. Este HTML no modifica tu archivo ni ejecuta Python. En el ejercicio real, el editor, el servidor de Streamlit y el navegador están en tu portátil.</p>
+<h1>¿Qué pasa cuando guardas?</h1>
+<p class="intro">Tu app ya muestra «Hola Mundo». Este esquema es tu portátil: sigue un cambio desde VS Code hasta el navegador y mira quién hace qué en cada paso.</p>
+<p class="note">Simulación didáctica. Esta página no toca tu archivo ni ejecuta Python; enseña lo que ocurre en tu portátil.</p>
+<div class="tabs" role="tablist" aria-label="Escenario">
+<button type="button" role="tab" data-s="A" aria-selected="true">A · Cambias el título y guardas</button>
+<button type="button" role="tab" data-s="B" aria-selected="false">B · Mueves un control</button>
+<button type="button" role="tab" data-s="C" aria-selected="false">C · Pulsas Ctrl+C en la terminal</button>
+</div>
 </header>
-<ol class="steps" aria-label="Recorrido de un cambio de código">
-<li aria-current="step">1. Editas</li><li>2. Guardas</li><li>3. Python ejecuta</li><li>4. Ves el cambio</li>
-</ol>
-<div class="flow">
-<section class="station active" id="editor" aria-labelledby="editor-title">
-<h2 id="editor-title">Editor · VS Code</h2>
-<label for="title-input">Nuevo texto entre comillas en st.title</label>
-<input id="title-input" value="Equipo Madrid" autocomplete="off">
-<pre><code id="editor-code"></code></pre>
-<p class="note" id="file-status">Cambio sin guardar en este esquema.</p>
+<ol class="steps" id="steps" aria-label="Pasos del escenario"></ol>
+<div class="laptop" id="lab" role="group" aria-label="Esquema de tu portátil: editor, archivo, proceso de Python y navegador">
+<span class="tag">TU PORTÁTIL</span>
+<section class="box" id="editor" aria-labelledby="editor-title">
+<h2 id="editor-title"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3 1 8l4 5M11 3l4 5-4 5"/></svg>Editor · VS Code</h2>
+<div class="tab">paso_0.py <span id="unsaved" class="unsaved" hidden title="sin guardar">●</span></div>
+<pre>import streamlit as st
+
+st.title(<span class="nw">"<input id="title" value="Hola Mundo" autocomplete="off" aria-label="Texto de st.title" style="width:11ch">")</span>
+st.write("Si ves esto en el navegador, tu primera app web funciona.")<span id="editor-slider" hidden>
+st.slider("Tu edad", 0, 100, 25)</span></pre>
+<p class="note">Aquí escribes. El punto de la pestaña avisa de cambios sin guardar.</p>
 </section>
-<section class="station" id="server" aria-labelledby="server-title">
-<h2 id="server-title">Servidor · Streamlit</h2>
-<p class="note">El proceso que arrancaste en la terminal ejecuta el código Python.</p>
-<pre><code id="server-code"></code></pre>
-<p class="note" id="execution-status">La ejecución anterior usó «Hola Mundo».</p>
+<svg class="cell" id="c1" role="img"></svg>
+<section class="box" id="disk" aria-labelledby="disk-title">
+<h2 id="disk-title"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1h7l4 4v10H3zM10 1v4h4"/></svg>Archivo en disco</h2>
+<div class="doc">
+<svg viewBox="0 0 40 48" aria-hidden="true"><path d="M2 2h24l12 12v32H2z"/><path d="M26 2v12h12M9 24h22M9 31h22M9 38h14"/></svg>
+<div><code>exercises/<wbr>paso_0.py</code><br><span class="note" id="saved"></span><br><code id="disk-line"></code></div>
+</div>
+<p class="note">El editor y el proceso solo se encuentran aquí.</p>
 </section>
-<section class="station" id="browser" aria-labelledby="browser-title">
-<h2 id="browser-title">Navegador · Tu app</h2>
-<div class="preview-title" id="screen-title">Hola Mundo</div>
+<svg class="cell" id="c2" role="img"></svg>
+<section class="box term" id="proc" aria-labelledby="proc-title">
+<h2 id="proc-title"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="2" width="14" height="12" rx="2"/><path d="M4 6l2.5 2L4 10M8 10h4"/></svg>Proceso de Python · streamlit run</h2>
+<div class="tline">$ <b>.venv/bin/python -m streamlit run exercises/paso_0.py</b></div>
+<div class="tline">Local URL: <b>http://localhost:8501</b></div>
+<div class="watch" id="watch"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>vigilante: mira paso_0.py</div>
+<div class="code" id="proc-code"></div>
+<div class="tline">ejecución nº <b id="exec">1</b> <span id="proc-note"></span></div>
+<div class="tokens" id="tokens" aria-label="Elementos producidos"></div>
+<div class="tline"><b id="dead-msg" hidden>^C  proceso terminado</b><span class="cursor"></span></div>
+</section>
+<svg class="cell" id="c3" role="img"></svg>
+<section class="box" id="browser" aria-labelledby="browser-title">
+<h2 id="browser-title"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="2" width="14" height="12" rx="2"/><path d="M1 6h14M4 4h.01M6.5 4h.01"/></svg>Navegador · localhost:8501</h2>
+<div class="win">
+<div class="bar"><i></i><i></i><i></i><span class="url">localhost:8501</span></div>
+<div class="page" id="page">
+<div class="bt" id="shown">Hola Mundo</div>
 <p>Si ves esto en el navegador, tu primera app web funciona.</p>
-<p class="note">Aquí ves los elementos que crea Streamlit.</p>
+<div class="slider" id="slider" hidden>Tu edad <b id="sval">25</b><div class="track"><span class="knob" id="knob"></span></div></div>
+</div>
+<div class="overlay" id="overlay" hidden><b>Connection error</b><span>la app ya no responde</span></div>
+</div>
+<p class="note">Solo pinta lo que recibe. Nunca ejecuta Python.</p>
 </section>
 </div>
 <section class="detail" aria-live="polite" aria-atomic="true">
@@ -74,57 +168,149 @@ footer { border-top:1px solid var(--line); padding-top:18px; }
 </section>
 <div class="controls">
 <button id="previous" type="button" disabled>Anterior</button>
-<button id="next" class="primary" type="button">Simular guardar</button>
-<button id="restart" type="button">Reiniciar recorrido</button>
+<button id="next" class="primary" type="button">Siguiente</button>
+<button id="restart" type="button">Reiniciar</button>
 <span id="position" class="note">Paso 1 de 4</span>
 </div>
 <footer>
-<p>Compruébalo en tu app: cambia solo el título, guarda con Ctrl+S o Cmd+S y observa. Si aparece <strong>Rerun</strong>, púlsalo. <strong>Always rerun</strong> permite ejecutar al guardar.</p>
-<p class="note">Separamos los pasos para examinarlos. En la app real las actualizaciones pueden llegar durante la ejecución. Con Auto Save, VS Code puede guardar sin que pulses el atajo. Aquí todavía no interviene un modelo de lenguaje.</p>
-<p class="note">Fuente: <a href="https://docs.streamlit.io/get-started/fundamentals/main-concepts">ciclo de edición y ejecución de Streamlit</a>.</p>
+<p><strong>Guardar es ejecutar. Cada cambio, todo el archivo de arriba abajo.</strong></p>
+<p class="note">Compruébalo en tu app: cambia solo el título, guarda con Ctrl+S o Cmd+S y mira la terminal y el navegador. Si aparece Rerun, púlsalo; con Always rerun ocurre solo a partir de entonces.</p>
+<p class="note">Fuente: <a href="https://docs.streamlit.io/get-started/fundamentals/main-concepts">conceptos básicos de Streamlit</a>.</p>
 </footer>
 </main>
 <script>
-const elements = Object.fromEntries([...document.querySelectorAll("[id]")].map(element => [element.id, element]));
-const stages = [
-  ["1. Edita y predice", "Cambia el texto del título en el editor de este esquema. ¿Qué parte de la página cambiará? El navegador todavía muestra la ejecución anterior."],
-  ["2. Guardas paso_0.py", "El cambio queda guardado en el archivo. Streamlit detecta el cambio. En la app real, pulsa Rerun si lo pide o activa Always rerun."],
-  ["3. Python ejecuta el archivo", "Streamlit vuelve a ejecutar el script desde arriba. El import carga la librería; st.title y st.write describen los elementos que se mostrarán."],
-  ["4. Ves el nuevo título", "Streamlit comunica los elementos al navegador. Cambia el título porque has editado st.title; el mensaje sigue igual. El navegador muestra la página, el servidor ejecuta Python."]
-];
-let step = 0;
-let savedTitle = "Hola Mundo";
-const codeFor = title => `import streamlit as st\n\nst.title(${JSON.stringify(title)})\nst.write("Si ves esto en el navegador, tu primera app web funciona.")`;
-function render() {
-  elements["editor-code"].textContent = codeFor(step === 0 ? elements["title-input"].value : savedTitle);
-  elements["server-code"].textContent = codeFor(step >= 2 ? savedTitle : "Hola Mundo");
-  elements["screen-title"].textContent = step >= 3 ? savedTitle : "Hola Mundo";
-  elements["file-status"].textContent = step === 0 ? "Cambio sin guardar en este esquema." : "Archivo guardado en este esquema.";
-  elements["execution-status"].textContent = step >= 2 ? "Python ejecuta el código guardado." : "La ejecución anterior usó «Hola Mundo».";
-  elements["title-input"].disabled = step !== 0;
-  elements.editor.classList.toggle("active", step <= 1);
-  elements.server.classList.toggle("active", step === 2);
-  elements.browser.classList.toggle("active", step === 3);
-  document.querySelectorAll(".steps li").forEach((element,index) => {
-    if (index === step) element.setAttribute("aria-current", "step");
-    else element.removeAttribute("aria-current");
-  });
-  elements["step-title"].textContent = stages[step][0];
-  elements["step-detail"].textContent = stages[step][1];
-  elements.position.textContent = `Paso ${step + 1} de ${stages.length}`;
-  elements.previous.disabled = step === 0;
-  elements.next.disabled = step === stages.length - 1;
-  elements.next.textContent = step === 0 ? "Simular guardar" : "Siguiente paso";
+const $ = id => document.getElementById(id);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NARROW = matchMedia("(max-width: 1150px)");
+const now = () => new Date().toTimeString().slice(0, 8);
+const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);
+const LINES = title => ["import streamlit as st", "", `st.title(${JSON.stringify(title)})`, 'st.write("Si ves esto en el navegador, tu primera app web funciona.")'];
+const SLIDER_LINE = 'st.slider("Tu edad", 0, 100, 25)';
+const SCEN = {
+  A: { steps: ["1. Editas", "2. Guardas", "3. Python ejecuta", "4. El navegador pinta"], run: 2, focus: ["editor", "disk", "proc", "browser"], arrow: [null, "a1", "a2", "a3"], detail: [
+    ["1. Editas", "Cambias el texto de st.title en VS Code. En la pestaña aparece el punto de «sin guardar». El archivo en disco sigue con el título anterior, y el navegador también: todavía nadie se ha enterado."],
+    ["2. Guardas con Ctrl+S o Cmd+S", "VS Code escribe el archivo en disco y el punto desaparece. El disco es el único punto de encuentro entre el editor y el proceso de Python: lo que no está guardado no existe para Streamlit."],
+    ["3. Python ejecuta el archivo de arriba abajo", "El vigilante de Streamlit ve que paso_0.py ha cambiado y vuelve a ejecutar el archivo entero, desde el import hasta la última línea. Cada línea st.algo produce un elemento y el contador de ejecuciones sube. En la app real, si aparece Rerun, púlsalo; con Always rerun ocurre solo."],
+    ["4. El navegador pinta", "El proceso envía los elementos al navegador por la red local, localhost:8501. El navegador dibuja la página con el nuevo título. El navegador no ejecuta Python: pinta lo que recibe."]] },
+  B: { steps: ["1. Mueves el control", "2. El navegador avisa", "3. Python ejecuta todo", "4. El navegador pinta"], run: 2, focus: ["browser", "proc", "proc", "browser"], arrow: [null, "a4", null, "a3"], detail: [
+    ["1. Mueves el control", "En el navegador arrastras el slider «Tu edad». Solo ha cambiado un control de la página: el editor y el archivo siguen exactamente igual."],
+    ["2. El navegador envía el nuevo valor", "El navegador manda al proceso el valor nuevo del slider por la misma conexión local. Esta vez el aviso no viene del disco, viene de tu acción en la página."],
+    ["3. Python ejecuta el archivo entero otra vez", "No hay botón de recalcular: cada interacción vuelve a ejecutar todo el archivo, de arriba abajo, aunque solo cambió el slider. Por eso el contador sube. En esta ejecución st.slider devuelve el valor nuevo."],
+    ["4. El navegador pinta la página de nuevo", "Llegan los elementos otra vez y el navegador vuelve a dibujar la página entera, título incluido, aunque parezca la misma. Cada vez que el contador sube, ha pasado esto."]] },
+  C: { steps: ["1. Ctrl+C en la terminal"], run: -1, focus: ["proc"], arrow: [null], detail: [
+    ["1. Pulsas Ctrl+C en la terminal", "El proceso de Python termina. El navegador sigue abierto, pero ya no hay nadie al otro lado. Vuelve a ejecutar el comando para arrancarlo."]] }
+};
+const ARROWS = { a1: ["guardar", "Ctrl+S / Cmd+S"], a2: ["Streamlit detecta", "el cambio"], a3: ["envía los elementos", "por la red local,", "localhost"], a4: ["tu acción:", "un control cambia"] };
+const state = { scenario: "A", step: 0, savedAt: now(), base: { disk: "Hola Mundo", ran: "Hola Mundo", shown: "Hola Mundo", exec: 1, savedAt: now(), slider: 25 } };
+const typed = () => $("title").value;
+const lastStep = s => SCEN[s.scenario].steps.length - 1;
+const nextSlider = v => v >= 85 ? 25 : v + 15;
+function derive(s, t) {
+  const { scenario: k, step, base } = s, w = { ...base, alive: k !== "C", moved: base.slider, ranSlider: base.slider };
+  if (k === "A") {
+    if (step >= 1) { w.disk = t; w.savedAt = s.savedAt; }
+    if (step >= 2) { w.ran = t; w.exec = base.exec + 1; }
+    if (step >= 3) w.shown = t;
+  }
+  if (k === "B") {
+    w.moved = nextSlider(base.slider);
+    if (step >= 2) { w.exec = base.exec + 1; w.ranSlider = w.moved; }
+  }
+  return w;
 }
-elements.next.addEventListener("click", () => {
-  if (step === stages.length - 1) return;
-  if (step === 0) savedTitle = elements["title-input"].value;
-  step += 1;
-  render();
-});
-elements.previous.addEventListener("click", () => { if (step > 0) { step -= 1; render(); } });
-elements.restart.addEventListener("click", () => { step = 0; render(); });
-elements["title-input"].addEventListener("input", render);
+function commit(s, t) {
+  if (s.step !== lastStep(s)) return s.base;
+  const w = derive(s, t);
+  return { disk: w.disk, ran: w.ran, shown: w.shown, exec: w.exec, savedAt: w.savedAt, slider: w.moved };
+}
+function render() {
+  const s = state, k = s.scenario, sc = SCEN[k], t = typed(), w = derive(s, t);
+  const lines = k === "B" ? [...LINES(w.ran), SLIDER_LINE] : LINES(w.ran), ran = sc.run >= 0 && s.step >= sc.run;
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.s === k)));
+  $("steps").innerHTML = sc.steps.map((x, i) => `<li${i === s.step ? ' aria-current="step"' : ""}>${x}</li>`).join("");
+  $("title").disabled = !(k === "A" && s.step === 0);
+  $("title").style.width = `${t.length + ($("title").disabled ? 0 : 1)}ch`;
+  $("unsaved").hidden = t === w.disk;
+  $("editor-slider").hidden = k !== "B";
+  $("saved").textContent = `guardado ${w.savedAt}`;
+  $("disk-line").textContent = `st.title(${JSON.stringify(w.disk)})`;
+  $("proc-code").innerHTML = lines.map(l => `<div class="line${ran && l ? " done" : ""}">${esc(l)}</div>`).join("");
+  $("exec").textContent = w.exec;
+  $("proc-note").textContent = k === "B" && ran ? `· st.slider devolvió ${w.ranSlider}` : "";
+  $("tokens").innerHTML = s.step === sc.run ? ["título", "texto", ...(k === "B" ? ["slider"] : [])].map(x => `<span class="chip">${x}</span>`).join("") : "";
+  $("proc").classList.toggle("dead", !w.alive); $("lab").classList.toggle("dead", !w.alive); $("dead-msg").hidden = w.alive;
+  $("shown").textContent = w.shown;
+  $("slider").hidden = k !== "B";
+  $("knob").style.left = `${w.moved}%`; $("sval").textContent = w.moved;
+  $("overlay").hidden = w.alive;
+  ["editor", "disk", "proc", "browser"].forEach(id => $(id).classList.toggle("active", id === sc.focus[s.step]));
+  document.querySelectorAll(".arrow").forEach(g => g.classList.toggle("on", g.dataset.key === sc.arrow[s.step]));
+  $("step-title").textContent = sc.detail[s.step][0]; $("step-detail").textContent = sc.detail[s.step][1];
+  $("position").textContent = `Paso ${s.step + 1} de ${sc.steps.length}`;
+  $("previous").disabled = s.step === 0; $("next").disabled = s.step === lastStep(s);
+  $("next").textContent = k === "A" && s.step === 0 ? "Simular guardar" : "Siguiente";
+}
+let timers = [];
+const after = (ms, fn) => timers.push(setTimeout(fn, ms));
+function stopAll() {
+  timers.forEach(clearTimeout); timers = [];
+  document.querySelectorAll(".hop,.running,.paint,.pulse,.lit,.flash").forEach(e => e.classList.remove("hop", "running", "paint", "pulse", "lit", "flash"));
+}
+function hop(key) {
+  const g = document.querySelector(`[data-key="${key}"]`);
+  g.classList.add("hop"); g.querySelector("animateMotion").beginElement();
+  after(700, () => g.classList.remove("hop"));
+}
+function play() {
+  if (REDUCED) return;
+  const { scenario: k, step } = state, prev = step ? derive({ ...state, step: step - 1 }, typed()) : null;
+  const run = t0 => {
+    const lines = [...$("proc-code").children].filter(l => l.textContent);
+    $("proc").classList.add("running");
+    lines.forEach((l, i) => after(t0 + 300 * i, () => l.classList.add("lit")));
+    after(t0 + 300 * lines.length + 250, () => { $("proc").classList.remove("running"); lines.forEach(l => l.classList.remove("lit")); });
+  };
+  const paint = () => {
+    $("shown").textContent = prev.shown;
+    after(600, () => { $("shown").textContent = derive(state, typed()).shown; $("page").classList.add("paint"); });
+    after(1500, () => $("page").classList.remove("paint"));
+  };
+  const watch = at => after(at, () => $("watch").classList.add("pulse"));
+  const seq = {
+    A: [null, () => { hop("a1"); after(600, () => $("saved").classList.add("flash")); }, () => { hop("a2"); watch(500); run(1000); }, () => { hop("a3"); paint(); }],
+    B: [() => { $("knob").style.left = `${state.base.slider}%`; $("sval").textContent = state.base.slider; after(200, render); }, () => { hop("a4"); watch(500); }, () => run(150), () => { hop("a3"); paint(); }],
+    C: [null]
+  };
+  if (seq[k][step]) seq[k][step]();
+}
+function go(step) { stopAll(); state.step = step; render(); play(); }
+function setScenario(k) { state.base = commit(state, typed()); state.scenario = k; go(0); }
+const arrow = (key, v, pos, back) => {
+  const [a, b] = v ? (back ? [92, 8] : [8, 92]) : (back ? [104, 8] : [8, 104]), tip = back ? 10 : -10;
+  const line = v ? `x1="${pos}" y1="${a}" x2="${pos}" y2="${b + tip}"` : `x1="${a}" y1="${pos}" x2="${b + tip}" y2="${pos}"`;
+  const head = v ? `M${pos},${b} l-5,${tip} h10 z` : `M${b},${pos} l${tip},-5 v10 z`;
+  const path = v ? `M${pos},${a} L${pos},${b + tip / 5}` : `M${a},${pos} L${b + tip / 5},${pos}`;
+  const labels = ARROWS[key].map((x, i) => v ? `<text x="${pos + 14}" y="${44 + 13 * i}"${i > 1 ? ' class="small"' : ""}>${x}</text>` : `<text x="56" y="${pos + 17 + 13 * i}" text-anchor="middle"${i > 1 ? ' class="small"' : ""}>${x}</text>`).join("");
+  return `<g class="arrow" data-key="${key}"><line ${line}/><path d="${head}"/>${labels}<circle class="dot" r="6"><animateMotion dur="0.6s" begin="indefinite" path="${path}"/></circle></g>`;
+};
+function drawArrows() {
+  const v = NARROW.matches, cell = (id, label, inner) => {
+    const el = $(id);
+    el.setAttribute("viewBox", v ? "0 0 340 100" : "0 0 112 116"); el.setAttribute("width", v ? 340 : 112); el.setAttribute("height", v ? 100 : 116);
+    el.setAttribute("aria-label", label); el.innerHTML = inner;
+  };
+  cell("c1", "Flecha del editor al archivo: guardar", arrow("a1", v, v ? 60 : 64, false));
+  cell("c2", "Flecha del archivo al proceso: Streamlit detecta el cambio", arrow("a2", v, v ? 60 : 64, false));
+  cell("c3", "Flechas entre el proceso y el navegador: el proceso envía los elementos; el navegador devuelve tu acción", arrow("a3", v, v ? 60 : 64, false) + arrow("a4", v, v ? 200 : 14, true));
+}
+$("next").onclick = () => { if (state.step < lastStep(state)) { if (state.scenario === "A" && state.step === 0) state.savedAt = now(); go(state.step + 1); } };
+$("previous").onclick = () => { if (state.step > 0) go(state.step - 1); };
+$("restart").onclick = () => { state.base = commit(state, typed()); go(0); };
+$("title").oninput = render;
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => setScenario(b.dataset.s));
+NARROW.addEventListener("change", () => { drawArrows(); render(); });
+window.sim = { state, derive, commit, go, setScenario, render };
+drawArrows();
 render();
 </script>
 </body>

@@ -137,7 +137,7 @@ Corrige la errata en el import y guarda con `Ctrl+S` en Windows o `Cmd+S` en mac
 
 ### Ver qué ocurre entre guardar y ver el cambio
 
-**Simulación 1: `explicaciones/streamlit.html`.** Localízalo en Finder o el Explorador de archivos y haz doble clic. Recorre el cambio de título desde el editor hasta el navegador: editas el archivo, lo guardas, Streamlit ejecuta Python y actualiza la página. Es una simulación, no está conectada a tu app.
+**Simulación 1: `explicaciones/streamlit.html`.** Localízalo en Finder o el Explorador de archivos y haz doble clic. Dibuja lo que corre en tu portátil: el editor, el archivo en disco, el proceso de Python que arrancaste con `streamlit run` y el navegador. Sigue los tres escenarios: cambias el título y guardas; mueves un control; pulsas `Ctrl+C`. Fíjate en el contador de ejecuciones: cada cambio vuelve a ejecutar el archivo entero. Es una simulación, no está conectada a tu app.
 
 ### Si has terminado antes
 
