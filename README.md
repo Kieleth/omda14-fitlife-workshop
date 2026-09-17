@@ -12,7 +12,7 @@ Construiremos juntos una aplicación para explorar los datos de FitLife y hacer 
 
 ## Durante la clase
 
-Espera a que Luis indique el comienzo de la práctica. Entonces abre [Paso 0: arranca tu primera app](SESION1_PASO0.md). Crearemos una rama para guardar tu trabajo y haremos los ejercicios en orden.
+Espera a que Luis indique el comienzo de la práctica. Entonces abre [Paso 0: arranca tu primera app](SESION1_PASO0.md). Crearemos una rama para guardar tu trabajo y haremos los ejercicios en orden. Con esa rama, el material de la sesión 2 llegará sin pisar lo que hagas hoy.
 
 ## Ejercicios de la sesión
 
@@ -28,3 +28,5 @@ Luis indicará cuándo abrir cada archivo. No tienes que resolverlos antes de cl
 | [5](exercises/paso_5.py) | Conectar con un modelo mediante una API. |
 | [6](exercises/paso_6.py) | Preguntar sobre los datos y comprobar las respuestas. |
 | [7, opcional](exercises/paso_7.py) | Añadir contexto y comparar. |
+
+Las 12 preguntas con las que evaluaremos el sistema en todas las sesiones están en [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md).

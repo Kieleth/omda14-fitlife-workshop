@@ -10,3 +10,11 @@ __pycache__/
 .pytest_cache/
 .streamlit/secrets.toml
 .DS_Store
+
+# Material del profesor: solo en el portátil de Luis. Se conservan la copia de referencia,
+# el manifiesto de hashes y la demo, que usan los tests.
+AGENTS.md
+docente/*
+!docente/referencia/
+!docente/material_base.json
+!docente/demo_peticion.py

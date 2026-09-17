@@ -4,7 +4,9 @@
 
 ## Preparar nuestra rama
 
-Una rama guarda una línea de trabajo en Git. La rama de la clase contiene los archivos de partida; tu rama guardará tus cambios. Al cambiar de rama pueden cambiar los archivos que ves en VS Code. Seguimos en la misma carpeta y usamos el mismo entorno `.venv`.
+Una rama guarda una línea de trabajo en Git. Vamos a usar tres. `main` trae la preparación que instalaste en casa. La rama de la clase la publica Luis antes de cada sesión con los ejercicios de ese día. Tu rama, `alumno/sesion-1`, la creas ahora a partir de la de la clase, y en ella quedan tus cambios.
+
+¿Por qué no editar directamente los archivos de `main`? Porque en la sesión 2 Luis publicará otra rama con archivos nuevos y querrás descargarla sin perder lo que escribas hoy. Con tu rama, lo de hoy queda guardado en tu ordenador y la sesión 2 empieza desde su propia rama. Al cambiar de rama pueden cambiar los archivos que ves en VS Code. Seguimos en la misma carpeta y usamos el mismo entorno `.venv`.
 
 Abre `omda14-fitlife-workshop` en VS Code y **Terminal > New Terminal**. Si sigue abierta la app de instalación, pulsa `Ctrl+C` en su terminal para pararla. Comprueba el estado:
 
@@ -18,13 +20,13 @@ Cuando Luis lo indique:
 
 ```text
 git fetch origin
-git switch -c alumno/sesion-1 origin/codex/sesion-1
+git switch -c alumno/sesion-1 origin/clase/sesion-1
 git branch --show-current
 ```
 
-`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama desde ese punto de partida. El último comando debe mostrar `alumno/sesion-1`. Trabajarás en tu copia local, sin necesidad de permiso para escribir en el GitHub del profesor.
+`fetch` descarga lo publicado para la clase; `origin/clase/sesion-1` es el nombre de la rama de la clase en GitHub. `switch -c` crea tu rama desde ese punto de partida. El último comando debe mostrar `alumno/sesion-1`. Trabajarás en tu copia local, sin necesidad de permiso para escribir en el GitHub del profesor.
 
-Si ya creaste tu rama, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
+Si ya has creado tu rama, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
 
 ## Arrancar, leer el error y corregirlo
 

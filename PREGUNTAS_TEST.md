@@ -1,4 +1,4 @@
-# Preguntas de test — FitLife
+# Preguntas de test: FitLife
 
 Estas preguntas las usaremos durante las sesiones para evaluar cómo responde el sistema.
 Las mismas preguntas se repiten en cada sesión para ver la mejora.
