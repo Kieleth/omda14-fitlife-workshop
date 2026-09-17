@@ -43,5 +43,6 @@ class StudentDocsTests(unittest.TestCase):
         for name in ("exercises2", "exercises3", "extras", "CONTENIDO_MDA13.md",
                      "SESION1_REPASO.md", "SESION2_REPASO.md", "PLAN_DOCENTE.md", "VERIFICACION.md"):
             self.assertFalse(any(path == name or path.startswith(name + "/") for path in tracked), name)
-        self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")},
-                         {f"paso_{i}.py" for i in range(8)})
+        if (ROOT / "exercises").is_dir():  # main carries only the preparation files
+            self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")},
+                             {f"paso_{i}.py" for i in range(8)})
