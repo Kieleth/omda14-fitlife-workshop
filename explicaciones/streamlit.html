@@ -64,7 +64,7 @@ footer { border-top:1px solid var(--line); padding-top:18px; }
 <section class="station" id="browser" aria-labelledby="browser-title">
 <h2 id="browser-title">Navegador · Tu app</h2>
 <div class="preview-title" id="screen-title">Hola Mundo</div>
-<p>Si ves esto en el navegador, tu primer app web funciona.</p>
+<p>Si ves esto en el navegador, tu primera app web funciona.</p>
 <p class="note">Aquí ves los elementos que crea Streamlit.</p>
 </section>
 </div>
@@ -90,11 +90,11 @@ const stages = [
   ["1. Edita y predice", "Cambia el texto del título en el editor de este esquema. ¿Qué parte de la página cambiará? El navegador todavía muestra la ejecución anterior."],
   ["2. Guardas paso_0.py", "El cambio queda guardado en el archivo. Streamlit detecta el cambio. En la app real, pulsa Rerun si lo pide o activa Always rerun."],
   ["3. Python ejecuta el archivo", "Streamlit vuelve a ejecutar el script desde arriba. El import carga la librería; st.title y st.write describen los elementos que se mostrarán."],
-  ["4. Ves el nuevo título", "Streamlit comunica los elementos al navegador. Cambia el título porque editaste st.title; el mensaje sigue igual. El navegador muestra la página, el servidor ejecuta Python."]
+  ["4. Ves el nuevo título", "Streamlit comunica los elementos al navegador. Cambia el título porque has editado st.title; el mensaje sigue igual. El navegador muestra la página, el servidor ejecuta Python."]
 ];
 let step = 0;
 let savedTitle = "Hola Mundo";
-const codeFor = title => `import streamlit as st\n\nst.title(${JSON.stringify(title)})\nst.write("Si ves esto en el navegador, tu primer app web funciona.")`;
+const codeFor = title => `import streamlit as st\n\nst.title(${JSON.stringify(title)})\nst.write("Si ves esto en el navegador, tu primera app web funciona.")`;
 function render() {
   elements["editor-code"].textContent = codeFor(step === 0 ? elements["title-input"].value : savedTitle);
   elements["server-code"].textContent = codeFor(step >= 2 ? savedTitle : "Hola Mundo");

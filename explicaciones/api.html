@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMDA14 · ¿Qué pasa cuando pulsas Enter?</title>
+<style>
+:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; }
+@media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
+main { max-width:1180px; margin:auto; padding:36px 24px; }
+a { color:var(--accent); }
+.eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
+h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
+h2 { font-size:20px; margin:0 0 12px; }
+p { margin:8px 0 18px; }
+.intro { max-width:800px; }
+.setup { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:0 20px; align-items:end; max-width:800px; }
+.steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
+.steps li,.note { color:var(--muted); font-size:14px; }
+.steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
+.flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.station.active { border-color:var(--accent); background:var(--soft); }
+.station:not(.reached) .body, .station.reached .wait { display:none; }
+label { display:block; font-size:14px; margin:14px 0 6px; }
+button,input { font:inherit; }
+input { width:100%; padding:10px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:4px; }
+input[type=checkbox] { width:auto; margin-right:8px; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; max-height:320px; overflow:auto; margin:8px 0; }
+summary { cursor:pointer; }
+.bubble { padding:12px 14px; border-radius:12px; background:var(--paper); border:1px solid var(--line); overflow-wrap:anywhere; }
+.chip { display:inline-block; margin:2px; padding:1px 8px; border:1px solid var(--line); border-radius:12px; background:var(--paper); font-family:monospace; font-size:13px; }
+.chip.out { border-color:var(--accent); }
+.scale { position:relative; height:14px; margin:8px 0; border:1px solid var(--line); border-radius:7px; background:var(--paper); overflow:hidden; }
+.scale .fill { position:absolute; inset:0 auto 0 0; min-width:3px; background:var(--accent); }
+.scale .tick { position:absolute; inset:0 auto; width:3px; background:var(--muted); }
+mark { background:transparent; color:inherit; }
+mark.on { background:var(--accent); color:var(--bg); border-radius:3px; }
+.path button, button.small { min-height:0; padding:3px 10px; font-size:14px; margin:2px; }
+.path button { font-family:monospace; }
+.path button.on { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+.detail { padding:24px 0 8px; min-height:140px; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
+button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
+button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+button:disabled { opacity:.45; cursor:default; }
+footer { border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:850px) { .flow,.setup { grid-template-columns:1fr; } main { padding:24px 16px; } .detail { min-height:0; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">OMDA14 · SESIÓN 1 · PASOS 5 Y 6</div>
+<h1>¿Qué pasa cuando pulsas Enter?</h1>
+<p class="intro">Escribes una pregunta en el chat de tu app y pulsas Enter. Sigue ese texto desde tu portátil hasta OpenAI y de vuelta, campo a campo.</p>
+<p class="note">Simulación didáctica. Este HTML no llama a ninguna API ni lee tu .env. Los JSON son los que construye tu código del paso 5 y del paso 6; los tokens y la respuesta son ejemplos.</p>
+<div class="setup">
+<div><label for="question">Tu pregunta (editable en el paso 1)</label><input id="question" value="¿Cuál es la tasa de churn del plan básico?" autocomplete="off"></div>
+<label><input id="ctx" type="checkbox">Con contexto (paso 6)</label>
+</div>
+</header>
+<ol class="steps" aria-label="Recorrido de una pregunta al modelo">
+<li aria-current="step">1. Tu app</li><li>2. Python construye el JSON</li><li>3. Viaja por internet</li><li>4. El modelo lee tokens</li><li>5. Devuelve un JSON</li><li>6. Tu app extrae un campo</li>
+</ol>
+<div class="flow">
+<section class="station active reached" id="s0" aria-labelledby="t0">
+<h2 id="t0">Tu app · Streamlit</h2>
+<div class="body">
+<pre><code id="chat-line">prompt = st.chat_input("Pregunta lo que quieras...")</code></pre>
+<div class="bubble" id="user-bubble"></div>
+<p class="note" id="prompt-note"></p>
+<details id="ctx-source">
+<summary class="note"><code>context = f"""Eres un analista de datos. ..."""</code> (pulsa para ver)</summary>
+<pre><code>context = f"""Eres un analista de datos. Tienes acceso a datos de FitLife,
+una red de gimnasios.
+
+Dataset 1 - Socios (muestra de 5 filas de {len(df_members)} totales):
+{df_members.head().to_string()}
+
+Columnas: {list(df_members.columns)}
+
+Dataset 2 - Contexto mensual (muestra de 5 filas de {len(df_context)} totales):
+{df_context.head().to_string()}
+
+Columnas: {list(df_context.columns)}"""</code></pre>
+<p class="note">1.265 caracteres de tabla dentro de los 2.675 del contexto dentro del texto: eso es lo que devuelve df_members.head().to_string().</p>
+</details>
+</div>
+</section>
+<section class="station" id="s1" aria-labelledby="t1">
+<h2 id="t1">Python construye el JSON</h2>
+<div class="body">
+<p class="note">En Python, una lista de diccionarios:</p>
+<pre><code id="py-messages"></code></pre>
+<p class="note">Convertido a JSON:</p>
+<pre><code id="json-request"></code></pre>
+<p class="note" id="content-count"></p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" id="s2" aria-labelledby="t2">
+<h2 id="t2">Viaja por internet</h2>
+<div class="body">
+<pre><code>POST https://api.openai.com/v1/chat/completions
+content-type: application/json
+authorization: Bearer sk-••••••••   ← la clave de .env
+user-agent: OpenAI/Python 3.14.0   (3.14.0 es la versión de la librería openai, no de Python)</code></pre>
+<p class="note">Cuerpo tal cual viaja, sin espacios ni saltos de línea:</p>
+<pre><code id="wire-body"></code></pre>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" id="s3" aria-labelledby="t3">
+<h2 id="t3">El modelo lee tokens</h2>
+<div class="body">
+<p class="note">Tu pregunta, en trozos:</p>
+<div id="chips-in"></div>
+<p class="note">Aproximación: el recuento exacto llega en usage.prompt_tokens.</p>
+<div class="scale" aria-hidden="true"><span class="fill" id="scale-req"></span><span class="tick" id="scale-csv"></span></div>
+<p class="note" id="scale-notes"></p>
+<p class="note" id="ctx-only">Busca en el content del system qué planes y qué centros aparecen en las 5 filas. Para el modelo no existe ningún otro.</p>
+<p class="note">Generación, trozo a trozo (respuesta de ejemplo de esta simulación):</p>
+<div id="chips-out"></div>
+<button id="generate" class="small" type="button">Generar siguiente trozo</button>
+<p class="note">Misma entrada, siguiente trozo elegido por probabilidad. Con temperature=0 casi siempre igual; con 1.5 cambia.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" id="s4" aria-labelledby="t4">
+<h2 id="t4">Devuelve un JSON</h2>
+<div class="body">
+<pre><code id="json-response"></code></pre>
+<p class="note">id, created y usage son números de ejemplo. Los reales los verás en el desplegable de tu app.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" id="s5" aria-labelledby="t5">
+<h2 id="t5">Tu app extrae un campo</h2>
+<div class="body">
+<pre><code>st.write(response.choices[0].message.content)</code></pre>
+<p class="note">Pulsa cada trozo de la ruta y mira qué se ilumina en el JSON de la estación 5:</p>
+<div class="path" id="path"></div>
+<p class="note">Lo que ve quien usa la app:</p>
+<div class="bubble" id="assistant-bubble"></div>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+</div>
+<section class="detail" aria-live="polite" aria-atomic="true">
+<h2 id="step-title"></h2>
+<p id="step-detail"></p>
+</section>
+<div class="controls">
+<button id="previous" type="button" disabled>Anterior</button>
+<button id="next" class="primary" type="button">Pulsar Enter</button>
+<button id="restart" type="button">Reiniciar recorrido</button>
+<span id="position" class="note">Paso 1 de 6</span>
+</div>
+<footer>
+<p>Compruébalo en tu app con el desplegable «Lo que enviamos» del paso 5.</p>
+<p class="note">Los trozos de esta página son una aproximación a los tokens reales. Los números de id, created y usage son ejemplos, y la respuesta también. La clave de .env no aparece aquí ni debe aparecer en ningún sitio. Esta página no llama a ninguna API.</p>
+<p class="note">Fuentes: <a href="https://platform.openai.com/docs/api-reference/chat/create">referencia de chat/completions</a> · <a href="https://docs.streamlit.io/develop/api-reference/chat/st.chat_input">st.chat_input</a>.</p>
+</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const MODEL = "gpt-4.1-mini";
+const ANSWER = "La tasa de churn del plan básico es aproximadamente del 12 %.";
+const LIMIT = 1047576, CSV_CHARS = 3528359, CSV_TOKENS = 882000, TOK_PER_CHAR = CSV_TOKENS / CSV_CHARS;
+const PARTS = ["response", ".choices", "[0]", ".message", ".content"];
+const CONTEXT = `Eres un analista de datos. Tienes acceso a datos de FitLife,
+una red de gimnasios.
+
+Dataset 1 - Socios (muestra de 5 filas de 16334 totales):
+  member_id    month     center     plan  price_paid signup_date acquisition_channel  tenure_months  visits_this_month  group_classes_attended  uses_app  has_personal_trainer  cost_to_serve  status churn_reason
+0     M0001  2022-01  westfield  premium        44.1  2020-07-27           corporate             18                 19                       6      True                 False          26.02  active          NaN
+1     M0001  2022-02  westfield  premium        44.1  2020-07-27           corporate             19                 18                       4      True                 False          22.39  active          NaN
+2     M0001  2022-03  westfield  premium        44.1  2020-07-27           corporate             20                 15                       5      True                 False          21.29  active          NaN
+3     M0001  2022-04  westfield  premium        44.1  2020-07-27           corporate             21                 21                       4      True                 False          24.83  active          NaN
+4     M0001  2022-05  westfield  premium        44.1  2020-07-27           corporate             22                 20                       5      True                 False          25.45  active          NaN
+
+Columnas: ['member_id', 'month', 'center', 'plan', 'price_paid', 'signup_date', 'acquisition_channel', 'tenure_months', 'visits_this_month', 'group_classes_attended', 'uses_app', 'has_personal_trainer', 'cost_to_serve', 'status', 'churn_reason']
+
+Dataset 2 - Contexto mensual (muestra de 5 filas de 36 totales):
+     month  competitor_lowcost_price campaign_active service_incident  monthly_fixed_costs  avg_occupancy_rate  acquisition_cost_avg
+0  2022-01                      25.0   january_promo              NaN                16699                0.55                  54.4
+1  2022-02                      25.0             NaN              NaN                16878                0.49                  31.6
+2  2022-03                      25.0             NaN              NaN                15846                0.44                  36.0
+3  2022-04                      25.0             NaN              NaN                16366                0.38                  39.7
+4  2022-05                      25.0             NaN              NaN                16465                0.39                  31.8
+
+Columnas: ['month', 'competitor_lowcost_price', 'campaign_active', 'service_incident', 'monthly_fixed_costs', 'avg_occupancy_rate', 'acquisition_cost_avg']`;
+const stages = [
+  ["1. Tu app · Streamlit", "prompt es texto. Hasta aquí no ha pasado nada distinto del eco del paso 4."],
+  ["2. Python construye el JSON", "Dos campos: model y messages. messages es una lista; cada entrada es un rol y un texto. El CSV no viaja; viaja lo que pegamos en el texto."],
+  ["3. Viaja por internet", "Una API es esto: una URL, unas cabeceras y un JSON con texto. Nada más sale del portátil."],
+  ["4. El modelo lee tokens", "No busca en una tabla ni calcula. Predice el siguiente trozo de texto a partir de lo que tiene delante. Lo que no está delante, no existe para él. El número de la respuesta sale del mismo mecanismo que las palabras: no es un cálculo."],
+  ["5. Devuelve un JSON", "La respuesta es un campo entre varios. usage cuenta los tokens que ha leído y los que ha escrito."],
+  ["6. Tu app extrae un campo", "st.write muestra ese campo. Todo lo demás lo tiras si no lo miras. En el ejercicio, los desplegables lo enseñan."]
+];
+const es = n => String(n).replace(/\B(?=(\d{3})+$)/g, ".");
+const chunks = text => text.match(/\s*[\p{L}\p{N}]+|\s*[^\s\p{L}\p{N}]/gu) || [];
+const escapeHtml = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);
+const chips = (list, cls) => list.map(c => `<span class="chip ${cls}">${escapeHtml(c.trim())}</span>`).join("");
+const messages = (q, ctxOn) => (ctxOn ? [{role:"system", content:CONTEXT}] : []).concat([{role:"user", content:q}]);
+const pyMessages = ctxOn => `messages=[\n${ctxOn ? '    {"role": "system", "content": context},\n' : ""}    {"role": "user", "content": prompt}\n]`;
+const wire = (q, ctxOn) => JSON.stringify({messages: messages(q, ctxOn), model: MODEL});
+const OUT = chunks(ANSWER);
+const responseJson = promptTokens => `<mark data-p="0">{
+  "id": "chatcmpl-ejemplo",
+  "object": "chat.completion",
+  "created": 1757980800,
+  "model": "${MODEL}",
+  <mark data-p="1">"choices": [
+    <mark data-p="2">{
+      "index": 0,
+      <mark data-p="3">"message": {
+        "role": "assistant",
+        <mark data-p="4">"content": ${escapeHtml(JSON.stringify(ANSWER))}</mark>
+      }</mark>,
+      "finish_reason": "stop"
+    }</mark>
+  ]</mark>,
+  "usage": {
+    "prompt_tokens": ${promptTokens},
+    "completion_tokens": ${OUT.length},
+    "total_tokens": ${promptTokens + OUT.length}
+  }
+}</mark>`;
+let step = 0, generated = 0, part = 0;
+function render() {
+  const q = $("question").value, ctxOn = $("ctx").checked, body = wire(q, ctxOn);
+  const reqChars = ctxOn ? body.length : q.length;
+  $("user-bubble").textContent = q;
+  $("prompt-note").textContent = `prompt es un str de ${q.length} caracteres.`;
+  $("ctx-source").hidden = !ctxOn;
+  $("py-messages").textContent = pyMessages(ctxOn);
+  $("json-request").textContent = JSON.stringify({messages: messages(q, ctxOn), model: MODEL}, null, 2);
+  $("chat-line").textContent = `prompt = st.chat_input("${ctxOn ? "Pregunta sobre los datos de FitLife..." : "Pregunta lo que quieras..."}")`;
+  $("content-count").textContent = ctxOn ? `${es(CONTEXT.length)} caracteres en content (system) + ${q.length} (user).` : `${q.length} caracteres en content.`;
+  $("wire-body").textContent = body;
+  $("chips-in").innerHTML = chips(chunks(q), "");
+  $("scale-req").style.width = `${reqChars * TOK_PER_CHAR / LIMIT * 100}%`;
+  $("scale-csv").style.left = `${CSV_TOKENS / LIMIT * 100}%`;
+  $("scale-notes").textContent = `Relleno verde = esta petición: ${ctxOn ? "~" + es(Math.round(reqChars / 100) * 100) : reqChars} caracteres. Barra completa = límite de ${MODEL}: ${es(LIMIT)} tokens. Marca gris = CSV completo de socios: ${es(CSV_CHARS)} caracteres, ~${es(CSV_TOKENS)} tokens (unos ${(CSV_CHARS / CSV_TOKENS).toFixed(1).replace(".", ",")} caracteres por token en esta tabla).`;
+  $("ctx-only").hidden = !ctxOn;
+  $("chips-out").innerHTML = chips(OUT.slice(0, generated), "out") + (generated < OUT.length ? '<span class="chip">?</span>' : "");
+  $("generate").disabled = step !== 3 || generated >= OUT.length;
+  $("json-response").innerHTML = responseJson(Math.round(body.length * TOK_PER_CHAR));
+  const lit = step === 5 ? part : 4;
+  document.querySelectorAll("#json-response mark").forEach(m => m.classList.toggle("on", +m.dataset.p === lit));
+  $("path").innerHTML = PARTS.map((p, i) => `<button type="button" class="${i === part ? "on" : ""}" data-i="${i}">${escapeHtml(p)}</button>`).join("");
+  $("assistant-bubble").textContent = ANSWER;
+  $("question").disabled = $("ctx").disabled = step !== 0;
+  document.querySelectorAll(".station").forEach((s, i) => { s.classList.toggle("active", i === step); s.classList.toggle("reached", i <= step); });
+  document.querySelectorAll(".steps li").forEach((li, i) => i === step ? li.setAttribute("aria-current", "step") : li.removeAttribute("aria-current"));
+  $("step-title").textContent = stages[step][0];
+  $("step-detail").textContent = stages[step][1];
+  $("position").textContent = `Estación ${step + 1} de ${stages.length}`;
+  $("previous").disabled = step === 0;
+  $("next").disabled = step === stages.length - 1;
+  $("next").textContent = step === 0 ? "Pulsar Enter" : "Siguiente";
+}
+$("next").addEventListener("click", () => {
+  if (step === stages.length - 1) return;
+  if (step === 3) generated = OUT.length;
+  step += 1;
+  render();
+});
+$("previous").addEventListener("click", () => { if (step > 0) { step -= 1; render(); } });
+$("restart").addEventListener("click", () => { step = 0; generated = 0; part = 0; render(); });
+$("generate").addEventListener("click", () => { if (generated < OUT.length) { generated += 1; render(); } });
+$("path").addEventListener("click", event => { if (event.target.dataset.i) { part = +event.target.dataset.i; render(); } });
+$("question").addEventListener("input", render);
+$("ctx").addEventListener("change", render);
+render();
+</script>
+</body>
+</html>
