@@ -19,7 +19,7 @@ git fetch origin
 git switch -c alumno/sesion-1 origin/clase/sesion-1
 ```
 
-`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama, `alumno/sesion-1`, a partir de la rama de la clase; en ella quedan tus cambios, en tu ordenador. Al cambiar de rama aparecen en la carpeta `exercises/`, `explicaciones/` y la guía `SESION1.md`. Ábrela y sigue desde «Preparar tu rama»: explica qué es una rama, propone un experimento para verlo y acompaña los ejercicios uno a uno.
+`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama, `alumno/sesion-1`, a partir de la rama de la clase; en ella quedan tus cambios, en tu ordenador. Al cambiar de rama aparecen en la carpeta `exercises/`, `explicaciones/`, `PREGUNTAS_TEST.md` y la guía `SESION1.md`, y el README cambia por el de la sesión. Ábrela y sigue desde «Preparar tu rama»: explica qué es una rama, propone un experimento para verlo y acompaña los ejercicios uno a uno.
 
 Puedes leer la guía antes en GitHub: [guía de la sesión 1](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-1/SESION1.md).
 
@@ -35,3 +35,4 @@ Si `git status` muestra archivos modificados antes de cambiar de rama, [ACTUALIZ
 | [ACTUALIZAR.md](ACTUALIZAR.md) | Cómo actualizar el proyecto y conservar tu trabajo entre sesiones. |
 | `test_app.py`, `check_setup.py` | La app y la comprobación que verifican tu instalación. |
 | `data/` | Los dos CSV de FitLife. |
+| `docente/`, `tests/` | Copia de referencia y pruebas automáticas del curso. No hace falta abrirlos. |

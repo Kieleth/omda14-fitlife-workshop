@@ -77,7 +77,7 @@ def check_dataset(root: Path, filename: str, expected_rows: int, columns: set[st
         return Check(filename, False, f"No se puede leer data/{filename}: {error}. Recupera el CSV del repositorio.")
     if rows != expected_rows:
         return Check(filename, False, f"Se esperaban {expected_rows} filas y hay {rows}. Recupera el CSV original.")
-    return Check(filename, True, f"{rows:,} filas y {len(columns)} columnas verificadas.")
+    return Check(filename, True, f"{format(rows, ',').replace(',', '.')} filas y {len(columns)} columnas verificadas.")
 
 
 def run_checks(root: Path = ROOT) -> list[Check]:
