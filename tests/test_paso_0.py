@@ -13,7 +13,7 @@ from streamlit.testing.v1 import AppTest
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "exercises/paso_0.py").read_text(encoding="utf-8")
-GUIDE = (ROOT / "SESION1_PASO0.md").read_text(encoding="utf-8")
+GUIDE = (ROOT / "SESION1.md").read_text(encoding="utf-8")
 
 # Huecos ___ de cada ejercicio y la solución documentada en sus comentarios.
 # El archivo del alumno más estas soluciones debe ser el código de referencia.

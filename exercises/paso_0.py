@@ -27,7 +27,7 @@
 # C. Añade al final: st.slider("Tu edad", 0, 100, 25)
 #    Guarda y mueve el control. ¿Qué has añadido a la página?
 #
-# Instrucciones de clase y Git: SESION1_PASO0.md.
+# Guía de la sesión y Git: SESION1.md.
 # Siguiente: exercises/paso_1.py.
 
 import streamlt as st
