@@ -44,7 +44,7 @@ Abre `omda14-fitlife-workshop` en VS Code y **Terminal > New Terminal**. Si sigu
 git status
 ```
 
-Si aparece `nothing to commit, working tree clean`, no hay cambios pendientes. Si aparece una lista de archivos modificados, haz un commit antes de cambiar de rama; [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo.
+Si aparece `nothing to commit, working tree clean`, no hay cambios pendientes. Si aparece una lista de archivos modificados, haz un commit antes de cambiar de rama (un commit guarda una versión de tus archivos en tu ordenador); [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo.
 
 Crea tu rama:
 
@@ -88,6 +88,10 @@ Corrige la errata en el import y guarda con `Ctrl+S` en Windows o `Cmd+S` en mac
 
 **Cuando veas «Hola Mundo» y el mensaje, has completado el paso 0.** Señala qué línea genera el título y cuál genera el texto.
 
+### Ver qué ocurre entre guardar y ver el cambio
+
+**Simulación 1: `explicaciones/streamlit.html`.** Localízalo en Finder o el Explorador de archivos y haz doble clic. Recorre el cambio de título desde el editor hasta el navegador: editas el archivo, lo guardas, Streamlit ejecuta Python y actualiza la página. Es una simulación, no está conectada a tu app.
+
 ### Si has terminado antes
 
 Son pruebas opcionales del mismo programa; las mismas están en la cabecera del archivo.
@@ -116,10 +120,6 @@ st.slider("Tu edad", 0, 100, 25)
 ```
 
 Guarda y mueve el control en el navegador. ¿Qué ha añadido esa línea a tu página?
-
-### Ver qué ocurre entre guardar y ver el cambio
-
-**Simulación 1: `explicaciones/streamlit.html`.** Localízalo en Finder o el Explorador de archivos y haz doble clic. Recorre el cambio de título desde el editor hasta el navegador: editas el archivo, lo guardas, Streamlit ejecuta Python y actualiza la página. Es una simulación, no está conectada a tu app.
 
 ### Guardar el paso en Git
 
@@ -152,13 +152,13 @@ git status
 
 **Qué hay detrás.** Una ruta es relativa a la carpeta desde la que arrancaste la app, que es la raíz del proyecto, no la carpeta `exercises/` donde está el archivo. `pd.read_csv` convierte el CSV en un DataFrame: una tabla con filas y columnas.
 
-**Puerta.** La tabla en pantalla y el texto «16.334 filas y 15 columnas».
+**Puerta.** La tabla en pantalla y el texto «16334 filas y 15 columnas», con el número tal cual lo escribe Python, sin punto de miles.
 
 **Si has terminado antes.** `df.head(10)`, `df.describe()` y `df["plan"].value_counts()` están en la cabecera. Fíjate en lo que devuelve `value_counts`: lo vas a necesitar.
 
 ## Paso 3: los dos datasets
 
-**Qué haces.** El primer dataset ya está cargado. Dos huecos para cargar el segundo y describirlo, siguiendo el patrón de las líneas de arriba.
+**Qué haces.** El primer dataset ya está cargado. Tres huecos: uno para cargar el segundo archivo y dos para describirlo, siguiendo el patrón de las líneas de arriba.
 
 **Qué hay detrás.** Cada fila de `fitlife_members.csv` es un socio en un mes concreto: 16.334 filas de 940 socios. `fitlife_context.csv` tiene una fila por mes, 36 en total. La columna `month` permite unirlos.
 
@@ -168,11 +168,12 @@ git status
 
 ```python
 st.write(df_members["status"].value_counts())
+st.write(df_members["plan"].value_counts())
 st.write(df_members["center"].value_counts())
 st.write(df_members[df_members["plan"] == "basic"]["status"].value_counts())
 ```
 
-La primera línea cuenta activos y bajas. La segunda, filas por centro. La tercera cruza plan y estado: las bajas del plan básico entre el total de filas del básico es su tasa de churn. Apunta los tres resultados. Son la referencia contra la que juzgarás al modelo en los pasos 6 y 7.
+La primera línea cuenta activos y bajas. La segunda, filas por plan. La tercera, filas por centro: son filas, no socios distintos, y aquí importa la diferencia. La cuarta cruza plan y estado: las bajas del plan básico entre el total de filas del básico es su tasa de churn por registro. Apunta los cuatro resultados. Son la referencia contra la que juzgarás al modelo en los pasos 6 y 7.
 
 ## Paso 4: un chat que repite
 
@@ -200,7 +201,7 @@ Si al arrancar aparece «Missing credentials», el archivo `.env` no existe o no
 
 ## Paso 6: pregunta por los datos
 
-**Qué haces.** Nada está roto. Antes de ejecutar, lee la variable `context` en el código: es lo que la app añade a cada petición, con rol `system`. Fíjate en cuántas filas de la tabla incluye. Después haz las cinco preguntas de la cabecera y anota, para cada una, si la respuesta es correcta, parcial o inventada, y cómo lo sabes. Tus números del paso 3 son la referencia.
+**Qué haces.** Nada está roto. Antes de ejecutar, lee la variable `context` en el código: es lo que la app añade a cada petición, con rol `system`. Fíjate en cuántas filas de la tabla incluye. Después haz las cinco preguntas de la cabecera y anota, para cada una, si la respuesta es correcta, parcial o inventada, y cómo lo sabes. Tus números del paso 3 son la referencia. La quinta pregunta no tiene una respuesta correcta: anota si el modelo usa datos concretos o generalidades.
 
 **Mira exactamente lo que ve el modelo.** Pega las seis líneas de la sección de la cabecera, como en el paso 5. Abre «Lo que enviamos» y lee el `content` del `system` hasta el final. ¿Cuántos socios distintos aparecen en las filas? ¿Cuántos planes? ¿Cuántos centros? Vuelve a la pregunta del centro con más socios con eso delante.
 
@@ -212,15 +213,15 @@ Si al arrancar aparece «Missing credentials», el archivo `.env` no existe o no
 
 **Puerta.** Tu tabla de cinco preguntas rellena y la respuesta a «¿cuántos socios distintos ve el modelo?».
 
-## Paso 7: contexto de verdad
+## Paso 7 (opcional): contexto de verdad
 
-**Qué haces.** Cuatro huecos entre llaves en el prompt: cada uno es una variable ya calculada más arriba en el código. Después repite las cinco preguntas y compara con el paso 6, pregunta por pregunta.
+**Qué haces.** Cuatro huecos entre llaves dentro del texto de `context` (en el código, `prompt` es tu pregunta y `context` es el texto largo que va como `system`): cada uno es una variable ya calculada más arriba. Después repite las cinco preguntas y compara con el paso 6, pregunta por pregunta.
 
-**Qué hay detrás.** Ahora el `system` lleva las distribuciones por plan, centro, estado y canal, y el contexto mensual completo. Responde a esto con tus resultados delante: ¿qué preguntas contesta ahora que antes no? ¿Estaba la respuesta escrita en el prompt? ¿Qué pregunta sigue sin poder contestar, y qué cruce de columnas le faltaría? Lee las últimas líneas del prompt y compáralas con lo que de verdad le hemos dado.
+**Qué hay detrás.** Ahora el `system` lleva las distribuciones por plan, centro, estado y canal, y el contexto mensual completo. Responde a esto con tus resultados delante: ¿qué preguntas contesta ahora que antes no? ¿Estaba la respuesta escrita en el contexto? ¿Qué pregunta sigue sin poder contestar, y qué cruce de columnas le faltaría? Lee las últimas líneas de `context` y compáralas con lo que de verdad le hemos dado.
 
-**Reto E: el límite.** Con el bloque del paso 6 pegado aquí, anota `prompt_tokens` con `head()`. Cambia `head()` por `head(50)`, repite la pregunta y anota de nuevo. Resta, divide entre 45 y tienes los tokens por fila; multiplica por 16.334. Compara con el límite del modelo que da la cabecera. Si pruebas `df_members.to_string()`, la petición falla con «Request too large» y el error te dice cuántos tokens contó: con la clave del curso no cuesta nada probarlo.
+**Reto E: el límite.** Con el bloque del paso 6 pegado aquí, anota `prompt_tokens` con `head()`. Cambia `head()` por `head(50)`, repite la pregunta y anota de nuevo. Resta, divide entre 45 y tienes los tokens por fila; multiplica por 16.334. Compara con el límite del modelo que da la cabecera; vuelve a la estación 4 de la simulación 3 para verlo a escala. Si pruebas `df_members.to_string()`, la petición falla con «Request too large» aunque quepa en la ventana del modelo: cada clave tiene además un límite de tokens por minuto, más bajo, y el error te dice cuántos tokens contó. Con la clave del curso no cuesta nada probarlo.
 
-**Retos A a D.** Temperatura, persona, inyección de instrucciones y memoria. Son opcionales; el D abre una pregunta que se trabaja en la sesión 3.
+**Retos A a D.** Temperatura, persona, inyección de instrucciones (prompt injection) y memoria. Son opcionales; el D abre una pregunta que se trabaja en la sesión 3.
 
 **Puerta.** Tu comparación paso 6 frente a paso 7 rellena.
 
@@ -230,7 +231,7 @@ Responde por escrito, con tus palabras, sin abrir nada:
 
 - ¿Qué sale de tu portátil cuando pulsas Enter en el chat? ¿En qué formato y con qué campos?
 - ¿Qué tiene delante el modelo cuando responde? ¿Qué no tiene?
-- ¿Por qué inventa una tasa de churn y no inventa un NPS?
+- ¿Por qué inventa un número para la tasa de churn? ¿Hubo alguna pregunta a la que no respondió con un número inventado, y qué la diferenciaba?
 - ¿Qué es un token y dónde está el límite de lo que puedes enviar?
 
 Si puedes contestar las cuatro, puedes dibujar en una pizarra lo que ha pasado en esta sesión.
@@ -245,4 +246,4 @@ git status
 
 `add exercises` selecciona los archivos de esa carpeta que has cambiado. Ni `.env` ni `.venv` entran: Git los ignora.
 
-Las doce preguntas de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) se repiten en cada sesión para medir cómo mejora el sistema. En la sesión 2, en vez de pedirle al modelo la respuesta, le pediremos el código que la calcula.
+Hoy no hace falta abrirlo, pero [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) tiene las doce preguntas que repetiremos en cada sesión para medir cómo mejora el sistema. En la sesión 2, en vez de pedirle al modelo la respuesta, le pediremos el código que la calcula.
