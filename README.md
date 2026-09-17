@@ -12,7 +12,7 @@ Construirás paso a paso una aplicación para explorar los datos de FitLife y ha
 
 ## Durante la clase
 
-Abre la [guía de la sesión 1](SESION1.md). Crearás una rama para guardar tu trabajo y harás los ejercicios en orden. Con esa rama, el material de la sesión 2 llegará sin pisar lo que hagas hoy.
+Abre la [guía de la sesión 1](SESION1.md). Empieza por crear tu rama y hacer el experimento de ramas que propone; después vienen los ejercicios en orden. Con tu rama, el material de la sesión 2 llegará sin pisar lo que hagas hoy.
 
 ## Ejercicios de la sesión
 

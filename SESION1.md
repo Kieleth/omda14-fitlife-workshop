@@ -58,6 +58,53 @@ git branch --show-current
 
 Si ya has creado tu rama, usa `git switch alumno/sesion-1` para volver a ella. Crear y volver a una rama son acciones distintas.
 
+### Experimento: qué hace una rama
+
+Antes de tocar los ejercicios, prueba las ramas con un archivo que no importa. Estás en `alumno/sesion-1`; compruébalo con `git branch --show-current`.
+
+**1. Crea un archivo y mira qué ve Git.** En VS Code, crea en la raíz del proyecto un archivo llamado `mis_notas.md`, escribe una línea (la fecha de hoy vale) y guárdalo. En la terminal:
+
+```text
+git status
+```
+
+Aparece `mis_notas.md` como archivo sin seguimiento: Git lo ve, pero todavía no guarda ninguna versión.
+
+**2. Guarda una versión.**
+
+```text
+git add mis_notas.md
+git commit -m "Mis notas de la sesión 1"
+git log --oneline -3
+```
+
+`log` muestra tu commit el primero, encima de los de la rama de la clase. Un commit es una foto de tus archivos guardada en tu rama, en tu ordenador.
+
+**3. Haz que el cambio desaparezca y vuelva.** Crea una rama de prueba y cámbiate a ella:
+
+```text
+git switch -c alumno/prueba
+```
+
+Añade una segunda línea a `mis_notas.md`, guarda y repite `git add` y `git commit` con otro mensaje. Ahora vuelve a tu rama de trabajo:
+
+```text
+git switch alumno/sesion-1
+```
+
+Abre `mis_notas.md`: la segunda línea no está. No se ha perdido: está en `alumno/prueba`. Cambia con `git switch alumno/prueba` y reaparece. Al cambiar de rama, Git deja en la carpeta los archivos tal como estaban en el último commit de esa rama. VS Code refresca solo; si una pestaña se queda abierta con contenido viejo, ciérrala y vuelve a abrir el archivo.
+
+**4. Termina en tu rama de trabajo.**
+
+```text
+git switch alumno/sesion-1
+git branch
+```
+
+`branch` lista tus ramas locales y marca con `*` la actual. Puedes dejar `alumno/prueba` ahí: no molesta. Si intentas borrarla con `git branch -d alumno/prueba`, Git se niega, porque tiene un commit que no está en ninguna otra rama. Eso es Git protegiendo trabajo que podrías querer.
+
+Tres cosas para quedarse: `.venv` y `.env` no cambian al cambiar de rama, porque Git los ignora. Si cambiaras a `main`, desaparecerían también `exercises/` y esta guía, porque `main` no los tiene; por eso trabajamos desde la rama de la clase. Y `mis_notas.md` es tuyo: apunta ahí las observaciones que la guía te pide durante la sesión.
+
 ## Paso 0: arranca tu primera app
 
 El reto es leer un error, corregirlo y ver tu primera página web. Al aparecer el título y el mensaje, has completado el paso.
@@ -239,11 +286,11 @@ Si puedes contestar las cuatro, puedes dibujar en una pizarra lo que ha pasado e
 Guarda tu trabajo en Git desde la terminal del proyecto:
 
 ```text
-git add exercises
+git add exercises mis_notas.md
 git commit -m "Completo la sesión 1"
 git status
 ```
 
-`add exercises` selecciona los archivos de esa carpeta que has cambiado. Ni `.env` ni `.venv` entran: Git los ignora.
+`add exercises mis_notas.md` selecciona los archivos de esa carpeta que has cambiado y tus notas. Ni `.env` ni `.venv` entran: Git los ignora.
 
 Hoy no hace falta abrirlo, pero [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) tiene las doce preguntas que repetiremos en cada sesión para medir cómo mejora el sistema. En la sesión 2, en vez de pedirle al modelo la respuesta, le pediremos el código que la calcula.
