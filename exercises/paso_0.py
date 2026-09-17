@@ -10,7 +10,7 @@
 # 2. Ejecuta solo el comando de tu sistema:
 #    Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_0.py
 #    macOS:   .venv/bin/python -m streamlit run exercises/paso_0.py
-# 3. Abre la dirección Local URL que aparece en la terminal.
+# 3. Abre la dirección URL que aparece en la terminal.
 #    Lee el error en el navegador o la terminal. ¿Qué módulo
 #    intenta importar? Compara su nombre con Streamlit.
 # 4. Corrige la errata y guarda con Ctrl+S o Cmd+S.

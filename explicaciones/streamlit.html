@@ -140,7 +140,7 @@ st.slider("Tu edad", 0, 100, 25)</span></pre>
 <section class="box term" id="proc" aria-labelledby="proc-title">
 <h2 id="proc-title"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="2" width="14" height="12" rx="2"/><path d="M4 6l2.5 2L4 10M8 10h4"/></svg>Proceso de Python · streamlit run</h2>
 <div class="tline">$ <b>.venv/bin/python -m streamlit run exercises/paso_0.py</b></div>
-<div class="tline">Local URL: <b>http://localhost:8501</b></div>
+<div class="tline">URL: <b>http://localhost:8501</b></div>
 <div class="watch" id="watch"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>vigilante: mira paso_0.py</div>
 <div class="code" id="proc-code"></div>
 <div class="tline">ejecución nº <b id="exec">1</b> <span id="proc-note"></span></div>
@@ -169,7 +169,7 @@ st.slider("Tu edad", 0, 100, 25)</span></pre>
 <div class="controls">
 <button id="previous" type="button" disabled>Anterior</button>
 <button id="next" class="primary" type="button">Siguiente</button>
-<button id="restart" type="button">Reiniciar</button>
+<button id="restart" type="button">Volver al paso 1</button>
 <span id="position" class="note">Paso 1 de 4</span>
 </div>
 <footer>
@@ -193,7 +193,7 @@ const SCEN = {
     ["3. Python ejecuta el archivo de arriba abajo", "El vigilante de Streamlit ve que paso_0.py ha cambiado y vuelve a ejecutar el archivo entero, desde el import hasta la última línea. Cada línea st.algo produce un elemento y el contador de ejecuciones sube. En la app real, si aparece Rerun, púlsalo; con Always rerun ocurre solo."],
     ["4. El navegador pinta", "El proceso envía los elementos al navegador por la red local, localhost:8501. El navegador dibuja la página con el nuevo título. El navegador no ejecuta Python: pinta lo que recibe."]] },
   B: { steps: ["1. Mueves el control", "2. El navegador avisa", "3. Python ejecuta todo", "4. El navegador pinta"], run: 2, focus: ["browser", "proc", "proc", "browser"], arrow: [null, "a4", null, "a3"], detail: [
-    ["1. Mueves el control", "En el navegador arrastras el slider «Tu edad». Solo ha cambiado un control de la página: el editor y el archivo siguen exactamente igual."],
+    ["1. Mueves el control", "Suponemos que hiciste la prueba C del paso 0 y tu archivo ya tiene el slider «Tu edad». En el navegador lo arrastras. Solo ha cambiado un control de la página: el editor y el archivo siguen exactamente igual."],
     ["2. El navegador envía el nuevo valor", "El navegador manda al proceso el valor nuevo del slider por la misma conexión local. Esta vez el aviso no viene del disco, viene de tu acción en la página."],
     ["3. Python ejecuta el archivo entero otra vez", "No hay botón de recalcular: cada interacción vuelve a ejecutar todo el archivo, de arriba abajo, aunque solo cambió el slider. Por eso el contador sube. En esta ejecución st.slider devuelve el valor nuevo."],
     ["4. El navegador pinta la página de nuevo", "Llegan los elementos otra vez y el navegador vuelve a dibujar la página entera, título incluido, aunque parezca la misma. Cada vez que el contador sube, ha pasado esto."]] },

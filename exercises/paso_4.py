@@ -30,7 +30,7 @@
 #
 #   st.write("fuera")        ← esto ya NO está en el bocadillo
 #
-# VS Code indenta automáticamente cuando pulsáis Enter después
+# VS Code indenta automáticamente cuando pulsas Enter después
 # de una línea que termina en ":"
 #
 # ── Tu reto ─────────────────────────────────────────────────
@@ -83,7 +83,8 @@ if prompt:
         st.write(prompt)
 
     # 2. Muestra una respuesta del "asistente" (por ahora, un eco)
-    #    ↓ Borra ___ y escribe: st.write(f"Has dicho: {prompt}")
+    #    ↓ Sustituye ___ por st.write(f"Has dicho: {prompt}"),
+    #      en la misma línea y con los mismos espacios delante.
     #    Importante: debe ir indentado (con espacios) dentro del with
     with st.chat_message("assistant"):
         ___

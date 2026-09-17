@@ -5,7 +5,7 @@
 # ── ¿Qué es pandas? ────────────────────────────────────────
 #
 # pandas es una librería de Python para trabajar con tablas de
-# datos. Pensad en Excel, pero en código: filas, columnas, y
+# datos. Piensa en Excel, pero en código: filas, columnas, y
 # funciones para filtrar, agrupar y calcular.
 #
 # La función clave:
@@ -13,12 +13,12 @@
 #   pd.read_csv("ruta/al/archivo.csv")
 #
 # Carga un archivo CSV y lo convierte en un DataFrame, una
-# tabla con filas y columnas que podéis explorar y manipular.
+# tabla con filas y columnas que puedes explorar y manipular.
 #
 # ── ¿Qué es una ruta de archivo? ───────────────────────────
 #
 # Una ruta es la dirección de un archivo, como una dirección
-# postal. Ejecutad el ejercicio desde la raíz del proyecto,
+# postal. Ejecuta el ejercicio desde la raíz del proyecto,
 # con el comando de vuestro sistema al final de estas
 # instrucciones. Las rutas son relativas a esa raíz.
 #

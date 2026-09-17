@@ -59,7 +59,7 @@ footer { border-top:1px solid var(--line); padding-top:18px; }
 <p class="note">Simulación didáctica. Este HTML no llama a ninguna API ni lee tu .env. Los JSON son los que construye tu código del paso 5 y del paso 6; los tokens y la respuesta son ejemplos.</p>
 <div class="setup">
 <div><label for="question">Tu pregunta (editable en el paso 1)</label><input id="question" value="¿Cuál es la tasa de churn del plan básico?" autocomplete="off"></div>
-<label><input id="ctx" type="checkbox">Con contexto (paso 6)</label>
+<label><input id="ctx" type="checkbox">Con contexto (paso 6): al cambiarla vuelves al principio</label>
 </div>
 </header>
 <ol class="steps" aria-label="Recorrido de una pregunta al modelo">
@@ -118,7 +118,7 @@ user-agent: OpenAI/Python 3.14.0   (3.14.0 es la versión de la librería openai
 <div class="body">
 <p class="note">Tu pregunta, en trozos:</p>
 <div id="chips-in"></div>
-<p class="note">Aproximación: el recuento exacto llega en usage.prompt_tokens.</p>
+<p class="note">Aproximación: aquí salen 12 trozos; el tokenizador real cuenta 18 para esta pregunta. El recuento exacto llega en usage.prompt_tokens.</p>
 <div class="scale" aria-hidden="true"><span class="fill" id="scale-req"></span><span class="tick" id="scale-csv"></span></div>
 <p class="note" id="scale-notes"></p>
 <p class="note" id="ctx-only">Busca en el content del system qué planes y qué centros aparecen en las 5 filas. Para el modelo no existe ningún otro.</p>
@@ -169,7 +169,7 @@ user-agent: OpenAI/Python 3.14.0   (3.14.0 es la versión de la librería openai
 const $ = id => document.getElementById(id);
 const MODEL = "gpt-4.1-mini";
 const ANSWER = "La tasa de churn del plan básico es aproximadamente del 12 %.";
-const LIMIT = 1047576, CSV_CHARS = 3528359, CSV_TOKENS = 882000, TOK_PER_CHAR = CSV_TOKENS / CSV_CHARS;
+const LIMIT = 1047576, CSV_CHARS = 3528359, CSV_TOKENS = 883929, TOK_PER_CHAR = CSV_TOKENS / CSV_CHARS;
 const PARTS = ["response", ".choices", "[0]", ".message", ".content"];
 const CONTEXT = `Eres un analista de datos. Tienes acceso a datos de FitLife,
 una red de gimnasios.
@@ -207,6 +207,7 @@ const escapeHtml = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&
 const chips = (list, cls) => list.map(c => `<span class="chip ${cls}">${escapeHtml(c.trim())}</span>`).join("");
 const messages = (q, ctxOn) => (ctxOn ? [{role:"system", content:CONTEXT}] : []).concat([{role:"user", content:q}]);
 const pyMessages = ctxOn => `messages=[\n${ctxOn ? '    {"role": "system", "content": context},\n' : ""}    {"role": "user", "content": prompt}\n]`;
+const DEFAULT_Q = "¿Cuál es la tasa de churn del plan básico?";
 const wire = (q, ctxOn) => JSON.stringify({messages: messages(q, ctxOn), model: MODEL});
 const OUT = chunks(ANSWER);
 const responseJson = promptTokens => `<mark data-p="0">{
@@ -234,6 +235,7 @@ let step = 0, generated = 0, part = 0;
 function render() {
   const q = $("question").value, ctxOn = $("ctx").checked, body = wire(q, ctxOn);
   const reqChars = ctxOn ? body.length : q.length;
+  const reqTokens = ctxOn ? 2151 : (q === DEFAULT_Q ? 18 : Math.max(1, Math.round(q.length / 2.3)));
   $("user-bubble").textContent = q;
   $("prompt-note").textContent = `prompt es un str de ${q.length} caracteres.`;
   $("ctx-source").hidden = !ctxOn;
@@ -243,9 +245,9 @@ function render() {
   $("content-count").textContent = ctxOn ? `${es(CONTEXT.length)} caracteres en content (system) + ${q.length} (user).` : `${q.length} caracteres en content.`;
   $("wire-body").textContent = body;
   $("chips-in").innerHTML = chips(chunks(q), "");
-  $("scale-req").style.width = `${reqChars * TOK_PER_CHAR / LIMIT * 100}%`;
+  $("scale-req").style.width = `${reqTokens / LIMIT * 100}%`;
   $("scale-csv").style.left = `${CSV_TOKENS / LIMIT * 100}%`;
-  $("scale-notes").textContent = `Relleno verde = esta petición: ${ctxOn ? "~" + es(Math.round(reqChars / 100) * 100) : reqChars} caracteres. Barra completa = límite de ${MODEL}: ${es(LIMIT)} tokens. Marca gris = CSV completo de socios: ${es(CSV_CHARS)} caracteres, ~${es(CSV_TOKENS)} tokens (unos ${(CSV_CHARS / CSV_TOKENS).toFixed(1).replace(".", ",")} caracteres por token en esta tabla).`;
+  $("scale-notes").textContent = `Relleno verde = esta petición: ${ctxOn ? "2.151 tokens, medidos (2.835 caracteres)" : (q === DEFAULT_Q ? "18 tokens, medidos (42 caracteres)" : "~" + es(reqTokens) + " tokens, aproximados (" + q.length + " caracteres)")}. Barra completa = límite de ${MODEL}: ${es(LIMIT)} tokens. Marca gris = la tabla completa de socios en el prompt: ${es(CSV_TOKENS)} tokens, contados por OpenAI (${es(CSV_CHARS)} caracteres).`;
   $("ctx-only").hidden = !ctxOn;
   $("chips-out").innerHTML = chips(OUT.slice(0, generated), "out") + (generated < OUT.length ? '<span class="chip">?</span>' : "");
   $("generate").disabled = step !== 3 || generated >= OUT.length;
@@ -254,7 +256,7 @@ function render() {
   document.querySelectorAll("#json-response mark").forEach(m => m.classList.toggle("on", +m.dataset.p === lit));
   $("path").innerHTML = PARTS.map((p, i) => `<button type="button" class="${i === part ? "on" : ""}" data-i="${i}">${escapeHtml(p)}</button>`).join("");
   $("assistant-bubble").textContent = ANSWER;
-  $("question").disabled = $("ctx").disabled = step !== 0;
+  $("question").disabled = step !== 0;
   document.querySelectorAll(".station").forEach((s, i) => { s.classList.toggle("active", i === step); s.classList.toggle("reached", i <= step); });
   document.querySelectorAll(".steps li").forEach((li, i) => i === step ? li.setAttribute("aria-current", "step") : li.removeAttribute("aria-current"));
   $("step-title").textContent = stages[step][0];
@@ -265,17 +267,19 @@ function render() {
   $("next").textContent = step === 0 ? "Pulsar Enter" : "Siguiente";
 }
 $("next").addEventListener("click", () => {
+  if (step === 0 && !$("question").value.trim()) { $("step-detail").textContent = "st.chat_input devuelve None cuando no escribes nada: la app no envía ninguna petición. Escribe una pregunta."; return; }
   if (step === stages.length - 1) return;
   if (step === 3) generated = OUT.length;
   step += 1;
   render();
 });
 $("previous").addEventListener("click", () => { if (step > 0) { step -= 1; render(); } });
-$("restart").addEventListener("click", () => { step = 0; generated = 0; part = 0; render(); });
+const restart = () => { step = 0; generated = 0; part = 0; render(); };
+$("restart").addEventListener("click", restart);
 $("generate").addEventListener("click", () => { if (generated < OUT.length) { generated += 1; render(); } });
 $("path").addEventListener("click", event => { if (event.target.dataset.i) { part = +event.target.dataset.i; render(); } });
 $("question").addEventListener("input", render);
-$("ctx").addEventListener("change", render);
+$("ctx").addEventListener("change", restart);
 render();
 </script>
 </body>

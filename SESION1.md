@@ -6,7 +6,7 @@ Esta guía acompaña los ejercicios `exercises/paso_0.py` a `paso_7.py`. Puedes 
 
 Una app web en tu portátil que carga los datos de FitLife, tiene un chat y envía tus preguntas a un modelo de lenguaje. Por el camino verás qué sale exactamente de tu ordenador cuando pulsas Enter, qué recibe el modelo, qué devuelve y dónde están sus límites. Al terminar sabrás qué puede hacer un modelo con una tabla de datos, qué no, y por qué.
 
-Necesitas la instalación de [SETUP.md](SETUP.md) y, a partir del paso 5, la clave del curso. Las dos páginas de `explicaciones/` son simulaciones que se abren con doble clic y no tocan tu app; la guía indica cuándo abrirlas.
+Necesitas la instalación de [SETUP.md](SETUP.md) y, a partir del paso 5, la clave del curso. Las tres páginas de `explicaciones/` son simulaciones que se abren con doble clic y no tocan tu app; la guía indica cuándo abrirlas.
 
 ## Cómo se trabaja cada paso
 
@@ -25,10 +25,12 @@ Necesitas la instalación de [SETUP.md](SETUP.md) y, a partir del paso 5, la cla
    .venv/bin/python -m streamlit run exercises/paso_1.py
    ```
 
-3. Lee lo que aparece. Un error es información: la terminal dice qué falta y en qué línea.
-4. Corrige o completa, guarda con `Ctrl+S` o `Cmd+S` y mira el navegador. Si aparece **Rerun**, púlsalo; **Always rerun** lo hace solo a partir de entonces.
+3. Lee lo que aparece. Un error es información: la terminal dice qué falta y en qué línea. Si aparece una ventana «Script execution error», ese es el error actual; lo que se ve detrás es la pantalla anterior. En los errores de pandas la línea útil es la primera; debajo van tripas de la librería.
+4. Corrige o completa, guarda con `Ctrl+S` o `Cmd+S` y mira el navegador. Si aparece **Rerun**, púlsalo; **Always rerun** lo hace solo a partir de entonces, en esa app; al arrancar el siguiente paso vuelve a preguntar.
 5. Cada paso tiene una **puerta**: lo que debes ver en pantalla para darlo por terminado. Las pruebas opcionales de la cabecera son para quien quiera más.
 6. Para el siguiente paso, pulsa `Ctrl+C` en la terminal de la app y repite el comando con el archivo nuevo.
+
+La terminal avisa al arrancar de que puedes instalar Watchdog: ignóralo, no hace falta para el taller.
 
 Los huecos `___` son código que falta. Borra el hueco y escribe lo que pide el comentario que tiene encima. Cuando el hueco va entre llaves, `{___}`, las llaves se quedan y solo cambia lo de dentro.
 
@@ -78,7 +80,7 @@ git commit -m "Mis notas de la sesión 1"
 git log --oneline -3
 ```
 
-`log` muestra tu commit el primero, encima de los de la rama de la clase. Un commit es una foto de tus archivos guardada en tu rama, en tu ordenador.
+`log` muestra tu commit el primero, encima de los de la rama de la clase. Un commit es una foto de tus archivos guardada en tu rama, en tu ordenador. Si Git sugiere `git push`, ignóralo: no hace falta y no tienes permiso para escribir en el repositorio del curso.
 
 **3. Haz que el cambio desaparezca y vuelva.** Crea una rama de prueba y cámbiate a ella:
 
@@ -127,7 +129,7 @@ macOS:
 .venv/bin/python -m streamlit run exercises/paso_0.py
 ```
 
-Si no se abre el navegador, abre la dirección **Local URL** que aparece en la terminal. Mantén abierta esa terminal: está ejecutando la app.
+Si no se abre el navegador, abre la dirección **URL** que aparece en la terminal. Si además ves `Network URL` y `External URL`, has arrancado desde otra carpeta: vuelve a la raíz del proyecto y repite el comando. Mantén abierta esa terminal: está ejecutando la app.
 
 Hay una errata intencionada. Lee el error en el navegador o la terminal: `ModuleNotFoundError` indica que Python no encuentra un módulo. ¿Qué nombre está buscando? Compáralo con el nombre de la librería.
 
@@ -199,7 +201,7 @@ git status
 
 **Qué hay detrás.** Una ruta es relativa a la carpeta desde la que arrancaste la app, que es la raíz del proyecto, no la carpeta `exercises/` donde está el archivo. `pd.read_csv` convierte el CSV en un DataFrame: una tabla con filas y columnas.
 
-**Puerta.** La tabla en pantalla y el texto «16334 filas y 15 columnas», con el número tal cual lo escribe Python, sin punto de miles.
+**Puerta.** La tabla en pantalla y el texto «16334 filas y 15 columnas», con el número tal cual lo escribe Python, sin punto de miles. Si la ruta ya está bien y sigue fallando, o la terminal muestra `Network URL` y `External URL`, has arrancado desde otra carpeta: vuelve a la raíz del proyecto y repite el comando.
 
 **Si has terminado antes.** `df.head(10)`, `df.describe()` y `df["plan"].value_counts()` están en la cabecera. Fíjate en lo que devuelve `value_counts`: lo vas a necesitar.
 
@@ -228,7 +230,7 @@ La primera línea cuenta activos y bajas. La segunda, filas por plan. La tercera
 
 **Qué hay detrás.** `st.chat_input` devuelve el texto escrito o `None` si no hay nada. `st.chat_message` crea un bocadillo, y todo lo indentado bajo su `with` se pinta dentro. Con tres piezas tienes la interfaz completa de un chat. Lo único que va a cambiar de aquí en adelante es lo que ocurre dentro del bocadillo del asistente.
 
-**Puerta.** Escribes algo y el asistente lo repite.
+**Puerta.** Escribes algo y el asistente lo repite. Solo se ve el último mensaje: cada envío vuelve a ejecutar el archivo y el anterior desaparece. La memoria del chat llega en la sesión 3.
 
 ## Paso 5: conectar un modelo
 

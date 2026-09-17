@@ -134,6 +134,7 @@ Conserva `.venv` en tu portátil. Git la ignora; no se sube al repositorio.
 | La versión de un paquete no coincide | Repite la instalación de `requirements.txt` en `.venv`. |
 | Faltan datos o columnas | Recupera los CSV del repositorio. No inventes filas ni cambies la comprobación para que pase. |
 | `Address already in use` | Puede haber otra app abierta. Busca su terminal y párala con `Ctrl+C`, o usa la URL que ya está abierta. |
+| La ruta a `data/` es correcta y sigue fallando, o la terminal muestra `Network URL` y `External URL` | Has arrancado la app desde otra carpeta. Vuelve a la raíz del proyecto (`cd ..` si estás en `exercises/`) y repite el comando. |
 | La página deja de responder | Comprueba que la terminal que ejecuta Streamlit sigue abierta y no muestra un error. |
 
 Si necesitas ayuda, indica tu sistema operativo, el comando que ejecutaste y el texto completo del error. No compartas claves ni el contenido de `.env`.

@@ -14,6 +14,8 @@ Ofrecen tres planes de suscripción mensual:
 | premium | 49 EUR/mes |
 | family | 69 EUR/mes |
 
+`price_paid` es lo que pagó el socio ese mes y puede ser menor que el precio de lista: hay descuentos, y el mínimo observado es el 80 % del precio.
+
 Su principal competidor es una cadena low-cost que opera en la misma zona con espacios más grandes pero sin clases ni atención personalizada. Este competidor cobraba 25 EUR en 2022 y ha ido bajando precios progresivamente hasta 19 EUR en 2024.
 
 **Posicionamiento:** FitLife está en tierra de nadie. No es low-cost (29 EUR > 19 EUR del competidor), pero tampoco es premium. Su propuesta de valor es proximidad + comunidad + clases grupales, pero el plan básico no incluye gran parte de eso, lo que lo deja expuesto a la comparación directa con el low-cost.
