@@ -20,7 +20,7 @@
 # Completa las 4 líneas marcadas con ___ en el prompt de
 # abajo. Cada ___ corresponde a una variable que ya está
 # calculada más arriba en el código (planes, centros, status,
-# canales). Mira las líneas 150-153.
+# canales). Mira las líneas 151-154.
 # Ojo con los nombres: en el código, prompt es tu pregunta y
 # context es el texto largo con los datos (el prompt de sistema).
 #
@@ -65,7 +65,7 @@
 # No tienes que hacer ninguna: son para curiosos.
 #
 #   A. TEMPERATURA
-#      En la llamada a la API (línea 222), añade temperature=0:
+#      En la llamada a la API (línea 223), añade temperature=0:
 #        response = client.chat.completions.create(
 #            model="gpt-4.1-mini",
 #            temperature=0,
@@ -105,7 +105,7 @@
 #      16.334 filas de socios? Antes de probarlo, mide. Pega
 #      aquí el bloque del paso 6 (los dos desplegables y el
 #      st.caption) y anota el prompt_tokens del caption con
-#      head(). En la línea 203 cambia head() por head(50),
+#      head(). En la línea 204 cambia head() por head(50),
 #      repite la misma pregunta y anota prompt_tokens. Resta
 #      los dos números y divide entre 45: son los tokens por
 #      fila. Multiplica por 16.334.
@@ -117,7 +117,8 @@
 #      "Request too large ... Limit 400000, Requested 883929".
 #      Lee el error: OpenAI ha contado los tokens por ti.
 #      Con una cuenta de más nivel funcionaría y costaría unos
-#      0,35 $ cada pregunta. Con Luis decidimos si lo probamos.
+#      0,35 $ cada pregunta. Pruébalo si quieres ver el error:
+#      con la clave del curso no cuesta nada.
 #
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_7.py

@@ -30,8 +30,8 @@
 #
 # Una contraseña que os identifica. Cada petición cuesta dinero
 # (fracciones de céntimo), así que OpenAI necesita saber quién
-# pide qué. El profesor os da una clave para el taller, no la
-# compartáis fuera de clase.
+# pide qué. El curso te da una clave para el taller; no la
+# compartas fuera de clase.
 #
 # ── Cómo crear el archivo .env ──────────────────────────────
 #
@@ -46,7 +46,7 @@
 #   4. Escribe exactamente:  .env
 #      (sí, empieza con un punto, sin extensión)
 #   5. Dentro del archivo, escribe esta línea:
-#      OPENAI_API_KEY=aquí-pega-la-clave-del-profesor
+#      OPENAI_API_KEY=aquí-pega-la-clave-del-curso
 #   6. Guarda el archivo: Ctrl+S (Windows) o Cmd+S (Mac)
 #
 #   ¿No ves el archivo en el explorador? A veces VS Code
@@ -82,7 +82,7 @@
 #
 # ── Mira lo que viaja ───────────────────────────────────────
 #
-# Cuando Luis lo indique. Copia estas cinco líneas al final
+# Copia estas cinco líneas al final
 # del archivo y quita el "# " del principio de cada una.
 # Deben quedar con 4 espacios delante de with, igual que la
 # línea "with st.chat_message" de arriba: así siguen dentro
@@ -115,8 +115,8 @@
 # un trozo de palabra. prompt_tokens es lo que ha leído;
 # completion_tokens, lo que ha escrito.
 #
-# Luis puede usar explicaciones/api.html para seguir el viaje
-# de la petición desde tu app hasta el modelo y de vuelta.
+# explicaciones/api.html recorre el viaje de la petición desde
+# tu app hasta el modelo y de vuelta. Ábrelo con doble clic.
 #
 # ── Si has terminado antes ──────────────────────────────────
 #

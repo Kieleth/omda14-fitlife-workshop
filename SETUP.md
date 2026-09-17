@@ -4,7 +4,7 @@ Al terminar tendrás el proyecto en tu portátil, las librerías instaladas en u
 
 ## 1. Herramientas
 
-Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13.15](https://www.python.org/downloads/release/python-31315/#files). En la tabla **Files**, elige **Windows installer (64-bit)** para un PC habitual o **macOS installer** para Mac. Si tu PC utiliza Windows ARM, consulta a Luis antes de instalar. El taller fija la versión de Python en `.python-version`.
+Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13.15](https://www.python.org/downloads/release/python-31315/#files). En la tabla **Files**, elige **Windows installer (64-bit)** para un PC habitual o **macOS installer** para Mac. Si tu PC utiliza Windows ARM, pregunta en el chat del curso antes de instalar. El taller fija la versión de Python en `.python-version`.
 
 En Windows, el instalador de Python debe incluir el lanzador `py`. En macOS, el instalador oficial permite ejecutar `python3.13`. Si ya tienes otra versión o Anaconda, puedes conservarla: el entorno del taller estará en la carpeta `.venv`.
 
@@ -103,7 +103,7 @@ Has probado que el navegador, Streamlit, Python y los archivos locales trabajan 
 
 Para parar la app, vuelve a la terminal y pulsa `Ctrl+C`.
 
-**Ya estás preparado. Para aquí y espera a la clase para construir la aplicación con Luis.**
+**Ya estás preparado. La aplicación se construye en clase, siguiendo el README.**
 
 ## 5. Volver otro día
 

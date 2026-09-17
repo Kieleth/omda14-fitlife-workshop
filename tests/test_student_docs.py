@@ -15,6 +15,16 @@ class StudentDocsTests(unittest.TestCase):
                 text = (ROOT / name).read_text(encoding="utf-8")
                 self.assertNotRegex(text, r"conda\s+activate|mda13-fitlife-workshop|`mda13`")
 
+    def test_student_text_is_self_paced_and_does_not_name_the_teacher(self):
+        paths = [ROOT / name for name in GUIDES + ("SESION1_PASO0.md", "ENUNCIADO.md", "PREGUNTAS_TEST.md",
+                                                    "test_app.py", "check_setup.py")]
+        paths += list((ROOT / "exercises").glob("*.py")) + list((ROOT / "explicaciones").glob("*.html"))
+        for path in paths:
+            with self.subTest(path=path.name):
+                self.assertNotRegex(path.read_text(encoding="utf-8"),
+                                    r"\bLuis\b|profesor|cuando .{0,20}lo indique",
+                                    "El texto del alumno debe poder seguirse solo, sin nombrar al profesor.")
+
     def test_update_guide_does_not_discard_student_work(self):
         text = (ROOT / "ACTUALIZAR.md").read_text(encoding="utf-8")
         self.assertNotRegex(text, r"git\s+(?:checkout\s+--|reset\b|clean\b|restore\b)")

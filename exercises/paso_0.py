@@ -19,7 +19,7 @@
 #
 # Cuando veas el título y el mensaje, has completado el paso.
 #
-# Si has terminado antes, prueba con Luis:
+# Si has terminado antes:
 # A. Cambia el texto del título o de st.write. Antes de guardar,
 #    predice qué elemento cambiará. Guarda y compruébalo.
 # B. Añade al final: st.balloons()
@@ -28,7 +28,7 @@
 #    Guarda y mueve el control. ¿Qué has añadido a la página?
 #
 # Instrucciones de clase y Git: SESION1_PASO0.md.
-# Continuamos con exercises/paso_1.py cuando Luis lo indique.
+# Siguiente: exercises/paso_1.py.
 
 import streamlt as st
 

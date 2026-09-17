@@ -1,6 +1,6 @@
 # OMDA14 · Analítica conversacional con IA
 
-Construiremos juntos una aplicación para explorar los datos de FitLife y hacer preguntas a un modelo de lenguaje. Luis guiará la clase paso a paso: añadirás código, probarás lo que cambia y explicarás qué has observado.
+Construirás paso a paso una aplicación para explorar los datos de FitLife y hacer preguntas a un modelo de lenguaje: añadirás código, probarás lo que cambia y explicarás qué has observado. Las instrucciones sirven para seguirlas en clase o por tu cuenta.
 
 ## Antes de clase
 
@@ -8,15 +8,15 @@ Construiremos juntos una aplicación para explorar los datos de FitLife y hacer 
 2. Comprueba que la app de prueba abre y responde a sus controles.
 3. Lee [el caso FitLife](ENUNCIADO.md).
 
-**Cuando termines la comprobación, ya estás preparado. Para aquí; construiremos los ejercicios juntos en clase.** No necesitas una clave de acceso a un modelo para esta preparación.
+**Cuando termines la comprobación, ya estás preparado.** Los ejercicios se construyen en clase. No necesitas una clave de acceso a un modelo para esta preparación.
 
 ## Durante la clase
 
-Espera a que Luis indique el comienzo de la práctica. Entonces abre [Paso 0: arranca tu primera app](SESION1_PASO0.md). Crearemos una rama para guardar tu trabajo y haremos los ejercicios en orden. Con esa rama, el material de la sesión 2 llegará sin pisar lo que hagas hoy.
+Abre [Paso 0: arranca tu primera app](SESION1_PASO0.md). Crearás una rama para guardar tu trabajo y harás los ejercicios en orden. Con esa rama, el material de la sesión 2 llegará sin pisar lo que hagas hoy.
 
 ## Ejercicios de la sesión
 
-Luis indicará cuándo abrir cada archivo. No tienes que resolverlos antes de clase.
+Cada archivo explica su propio reto. No hace falta resolverlos antes de clase; a partir del paso 5 necesitarás la clave del curso.
 
 | Paso | Qué trabajamos |
 | :--- | :--- |

@@ -11,7 +11,7 @@ git status
 
 Haz un commit antes de actualizar o cambiar de rama. Un commit guarda una versión en tu ordenador; no publica nada en GitHub.
 
-Si todavía estás en la rama del profesor, crea primero una rama propia. Por ejemplo, si `alumno/preparacion` no existe:
+Si todavía estás en `main` o en una rama `clase/`, crea primero una rama propia. Por ejemplo, si `alumno/preparacion` no existe:
 
 ```text
 git switch -c alumno/preparacion
@@ -26,7 +26,7 @@ git config user.name "Tu nombre"
 git config user.email "tu-correo-de-GitHub"
 ```
 
-Puedes usar la dirección privada que GitHub muestra en **Settings > Emails**. Después repite el commit y comprueba `git status`. Si no tienes claro qué guardar, conserva los archivos y pide ayuda al profesor antes de seguir.
+Puedes usar la dirección privada que GitHub muestra en **Settings > Emails**. Después repite el commit y comprueba `git status`. Si no tienes claro qué guardar, conserva los archivos y pide ayuda en el chat del curso antes de seguir.
 
 ## Actualizar la preparación de main
 
@@ -41,7 +41,7 @@ git pull --ff-only
 
 ## Entrar en una sesión
 
-Sigue los comandos de la guía de esa sesión: primero se descarga la rama docente y después se crea una rama de alumno a partir de ella. No hagas `git pull` a ciegas dentro de tu rama de ejercicios. Integrar material nuevo en una rama donde ya has trabajado se hará con el profesor.
+Sigue los comandos de la guía de esa sesión: primero se descarga la rama de la clase y después se crea una rama de alumno a partir de ella. No hagas `git pull` a ciegas dentro de tu rama de ejercicios. Integrar material nuevo en una rama donde ya has trabajado se explica en la guía de esa sesión.
 
 Para descargar la información de las ramas disponibles sin cambiar tus archivos:
 

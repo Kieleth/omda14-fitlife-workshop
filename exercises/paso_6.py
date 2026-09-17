@@ -58,7 +58,7 @@
 #
 # ── Mira exactamente lo que ve el modelo ───────────────────
 #
-# Cuando Luis lo indique. Como en el paso 5: copia estas seis
+# Como en el paso 5: copia estas seis
 # líneas al final del archivo, quita el "# " del principio y
 # deja 4 espacios delante de with.
 #
