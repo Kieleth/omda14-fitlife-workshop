@@ -274,6 +274,8 @@ Si al arrancar aparece «Missing credentials», el archivo `.env` no existe o no
 
 ## Cierre: lo que has visto
 
+**Simulación 4: `explicaciones/modelo.html`.** Va más allá del JSON: el texto se convierte en trozos numerados, el modelo devuelve un trozo cada vez lanzando un dado cargado, y lo que hacemos con esos trozos es cosa nuestra. Las probabilidades de la estación 3 son reales, capturadas con la pregunta del churn: mueve la temperatura y lanza el dado varias veces antes de responder a lo de abajo.
+
 Responde por escrito, con tus palabras, sin abrir nada:
 
 - ¿Qué sale de tu portátil cuando pulsas Enter en el chat? ¿En qué formato y con qué campos?

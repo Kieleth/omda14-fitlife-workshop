@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMDA14 · ¿Cómo responde un modelo?</title>
+<style>
+:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; }
+@media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
+main { max-width:1180px; margin:auto; padding:36px 24px; }
+a { color:var(--accent); }
+.eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
+h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
+h2 { font-size:20px; margin:0 0 12px; }
+p { margin:8px 0 18px; }
+.intro { max-width:800px; }
+.steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
+.steps li,.note { color:var(--muted); font-size:14px; }
+.steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
+.flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.station.active { border-color:var(--accent); background:var(--soft); }
+.station:not(.reached) .body, .station.reached .wait { display:none; }
+.station .note { margin:6px 0 10px; }
+label { display:block; font-size:14px; margin:14px 0 6px; }
+button,input { font:inherit; }
+input[type=range] { width:100%; margin:0 0 10px; }
+.chips { display:flex; flex-wrap:wrap; gap:4px; align-content:flex-start; }
+.chip { display:inline-block; padding:1px 8px; border:1px solid var(--line); border-radius:12px; background:var(--paper); font-family:monospace; font-size:13px; line-height:1.4; text-align:center; transition:opacity .3s,transform .3s; }
+.chip small { display:block; font-size:10px; color:var(--muted); }
+.chip.sent { opacity:.2; transform:translateX(28px); }
+.chip.id { color:var(--accent); animation:pop .3s; }
+.chip.empty { color:var(--muted); border-style:dashed; }
+.chip.roll { border:2px solid var(--accent); }
+.chip.now, .chip.now small { background:var(--accent); color:var(--bg); }
+@keyframes pop { from { transform:scale(.4); opacity:0; } }
+.io { display:flex; gap:12px; }
+.io .chips { flex:1; }
+.model { flex:none; width:128px; padding:8px; border:2px solid var(--accent); border-radius:8px; font-size:12px; }
+.model .chips { margin-top:6px; gap:3px; } .model .chip { padding:0 4px; font-size:11px; }
+.shelf { display:grid; grid-template-columns:auto 1fr; gap:8px 10px; align-items:center; font-size:13px; margin:10px 0; }
+.shelf div { position:relative; height:22px; border:1px solid var(--line); border-right:4px solid var(--ink); border-radius:3px 0 0 3px; background:var(--paper); }
+.shelf i { position:absolute; inset:0 auto 0 0; }
+.shelf .q { width:3px; background:var(--accent); }
+.shelf .c { left:5px; width:9px; background:var(--muted); }
+.shelf .t { width:84.4%; background:var(--accent); opacity:.55; }
+.bars { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:5px 8px; align-items:center; font-size:13px; }
+.bars .row { display:contents; }
+.bars .l { white-space:nowrap; }
+.chart { display:block; font-size:13px; } .chart .pr { display:flex; justify-content:space-between; gap:8px; margin-top:6px; } .chart .b { height:12px; }
+.bars .b { height:16px; border:1px solid var(--line); border-radius:3px; background:var(--paper); overflow:hidden; }
+.bars .b i { display:block; height:100%; min-width:2px; background:var(--accent); transition:width .25s; }
+.bars .b.dashed { border-style:dashed; } .bars .b.dashed i { display:none; }
+.bars .b.dotted i { background:repeating-linear-gradient(90deg,var(--muted) 0 4px,transparent 4px 8px); }
+.bars .hot .b i { background:var(--ink); } .bars .hot .l { font-weight:750; }
+.bars .v { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.ruler { position:relative; height:16px; font-size:10px; color:var(--muted); }
+.ruler span { position:absolute; top:0; transform:translateX(-50%); }
+.ruler span:first-child { transform:none; } .ruler span:last-child { transform:translateX(-100%); }
+.bubble { padding:12px 14px; border-radius:12px; background:var(--paper); border:1px solid var(--line); overflow-wrap:anywhere; margin:10px 0 6px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
+.card { padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); font-size:13px; }
+.card b, .card small { display:block; } .card small { color:var(--accent); font-weight:650; margin-top:4px; }
+figure { margin:10px 0; }
+figure svg { width:100%; max-width:340px; height:auto; display:block; }
+figcaption { font-size:12px; color:var(--muted); }
+.loop.pulse .back { stroke-dasharray:6 4; animation:dash .7s linear; }
+@keyframes dash { from { stroke-dashoffset:40; } to { stroke-dashoffset:0; } }
+.facts { padding-left:18px; margin:8px 0; }
+.detail { padding:24px 0 8px; min-height:140px; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
+button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
+button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+button.small { min-height:0; padding:4px 12px; font-size:14px; }
+button:disabled { opacity:.45; cursor:default; }
+footer { border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:1000px) { .flow { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:700px) { .flow { grid-template-columns:1fr; } main { padding:24px 16px; } .detail { min-height:0; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">OMDA14 · SESIÓN 1 · CIERRE</div>
+<h1>¿Cómo responde un modelo?</h1>
+<p class="intro">Hoy has visto el JSON que entra y el JSON que sale, y has visto al modelo inventarse una tasa de churn. Esta página mira dentro: qué pasa entre un JSON y el otro.</p>
+<p class="note">Datos reales, capturados el 16 de septiembre de 2026 con gpt-4.1-mini (versión gpt-4.1-mini-2025-04-14) y la clave de clase, con la tabla de 5 filas como contexto. Esta página no llama a ninguna API.</p>
+</header>
+<ol class="steps" aria-label="Recorrido por dentro del modelo">
+<li aria-current="step">1. El texto se hace trozos</li><li>2. La ventana</li><li>3. El dado gigante</li><li>4. Uno detrás de otro</li><li>5. Lo que hacemos con los trozos</li><li>6. Para situarse</li>
+</ol>
+<div class="flow">
+<section class="station active reached" aria-labelledby="t0">
+<h2 id="t0">El texto se hace trozos</h2>
+<div class="body">
+<p class="note">Tu pregunta de hoy, cortada por palabras y signos. ␣ es un espacio y forma parte del trozo. Debajo de cada trozo, su número.</p>
+<div class="io"><div class="chips" id="chips-q"></div><div class="model">modelo<div class="chips" id="ids"></div></div></div>
+<p><button id="send" class="small" type="button">Enviar al modelo</button></p>
+<p class="note">Este corte es aproximado. El tokenizador real corta más fino: <b>18 tokens</b>, 9 palabras, 42 caracteres (la misma pregunta en inglés: 17 tokens, 9 palabras, 41 caracteres). Los números de aquí son inventados; los reales los asigna el tokenizador desde un vocabulario de unos 200.000 trozos.</p>
+</div>
+</section>
+<section class="station" aria-labelledby="t1">
+<h2 id="t1">La ventana</h2>
+<div class="body">
+<p class="note">Todo lo que el modelo ve en una petición cabe en esta estantería: 1.047.576 tokens en gpt-4.1-mini. El tope grueso del final es el límite.</p>
+<div class="shelf"><span>Hoy</span><div><i class="q"></i><i class="c"></i></div><span>Tabla entera</span><div><i class="t"></i></div></div>
+<p class="note">Fila «Hoy»: tu pregunta, 18 tokens (verde), y el contexto de 5 filas (gris). Los dos van ampliados: a escala no se verían.</p>
+<p class="note">Fila «Tabla entera»: la tabla completa de socios de FitLife, 883.929 tokens. Cabría, pero con la clave de clase la petición falla: hay un límite de tokens por minuto.</p>
+<p class="note">Con 5 filas dentro, el churn real del plan básico no está en la estantería. Para el modelo no existe.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" aria-labelledby="t2">
+<h2 id="t2">El dado gigante</h2>
+<div class="body">
+<p class="note">Tras «La tasa de churn del plan básico es␣», el modelo reparte probabilidad entre unas 200.000 caras. Las que registró la API en la tirada real:</p>
+<div class="bars" id="faces"></div>
+<label for="temp">Temperatura: <output id="temp-out">1,00</output></label>
+<input id="temp" type="range" min="0" max="2" step="0.05" value="1">
+<button id="roll" class="primary" type="button">Lanzar el dado</button>
+<div class="bubble">La tasa de churn del plan básico es <span id="face">…</span></div>
+<p class="note" id="roll-note"></p>
+<p class="note">Las otras caras suman 44,7 % y la API no dice cómo se reparten. Para que se muevan con la temperatura, esta página supone que cada una pesa como el '37', 0,3 %: salen 149 caras. Es un supuesto, no un dato.</p>
+<p class="note">Tiradas reales de hoy: 37.5% ('37' al 0,3 %) y 17.6% ('17' al 5 %, con '12' otra vez favorito al 40 %). Con temperatura 0 y semilla fija: 12.5% dos veces. Con temperatura 1,5: 15,8, 11,24 y 18,7. El número real no está aquí.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" aria-labelledby="t3">
+<h2 id="t3">Uno detrás de otro</h2>
+<div class="body">
+<p class="note">La respuesta real de hoy, trozo a trozo, con la probabilidad que tenía cada uno. La petición añadía «Dame solo el porcentaje, sin explicar el procedimiento.» y llevaba la tabla de 5 filas como contexto.</p>
+<div class="chips" id="strip"></div>
+<p class="note" id="gen-note"></p>
+<figure class="loop" id="loop">
+<svg viewBox="0 0 320 100" role="img" aria-label="La entrada pasa por el modelo, sale un trozo y ese trozo vuelve a la entrada">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<rect x="6" y="22" width="100" height="38" rx="5" fill="none" stroke="currentColor"/>
+<text x="56" y="38" text-anchor="middle" font-size="12" fill="currentColor">entrada</text>
+<text id="in-count" x="56" y="53" text-anchor="middle" font-size="10" style="fill:var(--muted)">pregunta + 0 trozos</text>
+<line x1="106" y1="41" x2="132" y2="41" stroke="currentColor" marker-end="url(#arr)"/>
+<rect x="134" y="22" width="62" height="38" rx="5" fill="none" stroke="currentColor"/>
+<text x="165" y="45" text-anchor="middle" font-size="12" fill="currentColor">modelo</text>
+<line x1="196" y1="41" x2="222" y2="41" stroke="currentColor" marker-end="url(#arr)"/>
+<rect x="224" y="22" width="90" height="38" rx="5" fill="none" stroke-width="2" style="stroke:var(--accent)"/>
+<text id="out-tok" x="269" y="45" text-anchor="middle" font-size="12" font-family="monospace" fill="currentColor">?</text>
+<path class="back" d="M269 60 V82 H56 V62" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="162" y="94" text-anchor="middle" font-size="11" fill="currentColor">lo que sale vuelve a entrar</text>
+</svg>
+<figcaption>Cada trozo elegido se añade a la entrada y el modelo vuelve a mirar todo.</figcaption>
+</figure>
+<p><button id="reveal" class="small" type="button">Siguiente trozo</button></p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" aria-labelledby="t4">
+<h2 id="t4">Lo que hacemos con los trozos</h2>
+<div class="body">
+<p class="note">Del modelo sale texto: «La tasa de churn del plan básico es 37.5%.» Todo lo demás lo hace tu código.</p>
+<div class="cards">
+<div class="card"><b>Mostrarlo</b>Del campo content del JSON a la burbuja del chat.<small>Hoy</small></div>
+<div class="card"><b>Leerlo como número</b>Sacar 37.5 del texto y compararlo con tu propio cálculo sobre la tabla. No coincide: el real no está aquí.<small>Hoy, a mano</small></div>
+<div class="card"><b>Ejecutarlo como código</b>Si el trozo es código, tu programa puede ejecutarlo.<small>Sesión 2</small></div>
+<div class="card"><b>Volver a metérselo</b>Poner lo que dijo en la siguiente entrada. Así se hace la memoria.<small>Sesión 3</small></div>
+</div>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+<section class="station" aria-labelledby="t5">
+<h2 id="t5">Para situarse</h2>
+<div class="body">
+<p class="note">Parámetros: los pesos que cargan el dado. Cifras publicadas por sus autores. Escala logarítmica: cada marca es diez veces la anterior.</p>
+<div class="chart bars" id="params"></div>
+<ul class="note facts">
+<li>Vocabulario del tokenizador: unos 200.000 trozos.</li>
+<li>Ventana de gpt-4.1-mini: 1.047.576 tokens.</li>
+<li>Texto de entrenamiento de Llama 3.1: más de 15 billones de tokens (15 × 10¹²).</li>
+<li>Precio de gpt-4.1-mini: 0,40 $ por millón de tokens de entrada.</li>
+<li>La fila punteada es solo para el orden de magnitud: un cerebro humano tiene unos 86.000 millones de neuronas. Una neurona no es un parámetro.</li>
+</ul>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+</div>
+<section class="detail" aria-live="polite" aria-atomic="true">
+<h2 id="step-title"></h2>
+<p id="step-detail"></p>
+</section>
+<div class="controls">
+<button id="previous" type="button" disabled>Anterior</button>
+<button id="next" class="primary" type="button">Siguiente</button>
+<button id="restart" type="button">Reiniciar recorrido</button>
+<span id="position" class="note">Estación 1 de 6</span>
+</div>
+<footer>
+<p><strong>Entra texto hecho trozos. Sale un trozo cada vez, elegido con un dado cargado por todo lo que ha leído. Lo que hagamos con esos trozos es nuestro trabajo.</strong></p>
+<p class="note">Honestidad: el corte en trozos de la estación 1 es aproximado y sus números son inventados; el recuento de 18 tokens es el real. Las probabilidades de las estaciones 3 y 4 son las de una tirada real del 16 de septiembre de 2026 con gpt-4.1-mini-2025-04-14, redondeadas. El reparto de «las otras caras» es un supuesto de esta página. Los tamaños de la estación 6 son cifras publicadas por sus autores; el de gpt-4.1-mini no está publicado y así se marca. El número real de churn no está en esta página.</p>
+<p class="note">Fuentes: <a href="https://platform.openai.com/docs/api-reference/chat/create">referencia de chat/completions</a> · <a href="https://ai.meta.com/blog/meta-llama-3-1/">Llama 3.1 (Meta)</a> · <a href="https://openai.com/index/better-language-models/">GPT-2 (OpenAI)</a> · <a href="https://mistral.ai/news/announcing-mistral-7b">Mistral 7B</a>.</p>
+</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const Q = "¿Cuál es la tasa de churn del plan básico?";
+const FACES = [["12", .42], ["18", .07], ["15", .06], ["37", .003], ["las otras ~200.000", .003, 149]];
+const GEN = [
+  ["La", .61, [["12", .29], ["14", .02]], true], [" tasa", 1, [[" taza", 0], [" taux", 0]]], [" de", 1, [[" churn", 0], [" exact", 0]]],
+  [" churn", 1, [[" abandono", 0], [" Ch", 0]]], [" del", 1, [[" para", 0], [" de", 0]]], [" plan", 1, [[" plano", 0], [" ", 0]]],
+  [" básico", 1, [[" Bás", 0], [" basic", 0]]], [" es", 1, [[" (", 0], [" is", 0]]], [" ", .99, [[" aproximadamente", .01], [" del", 0]]],
+  ["37", .003, [["12", .42], ["18", .07], ["15", .06]], true], [".", 1, [["%.", 0], [" %.", 0]]], ["5", .89, [["8", .05], ["2", .01]]], ["%.", 1, [["%", 0], [" %.", 0]]]
+];
+const MODELS = [["GPT-2 (OpenAI, 2019)", 1.5e9], ["Mistral 7B (2023)", 7.3e9], ["Llama 3.1 8B (Meta, 2024)", 8e9], ["Llama 3.1 70B", 7e10], ["Llama 3.1 405B", 4.05e11]];
+const stages = [
+  ["1. El texto se hace trozos", "Un token es un trozo: una palabra corta, media palabra, un signo. El modelo no lee letras ni palabras: lee estos números, uno detrás de otro."],
+  ["2. La ventana", "Todo lo que el modelo tiene delante cabe en esta estantería. Lo que no está en ella no existe para él. Y la estantería tiene fin."],
+  ["3. El dado gigante", "No calcula el churn. Reparte probabilidad entre 200.000 trozos posibles y lanza. La temperatura decide si gana casi siempre el favorito o si cualquiera puede salir."],
+  ["4. Uno detrás de otro", "Una respuesta es este bucle repetido: mirar todo lo que hay, elegir un trozo, añadirlo y volver a mirar. Termina cuando elige el trozo de fin."],
+  ["5. Lo que hacemos con los trozos", "Lo que sale es texto. Convertirlo en algo útil, y comprobarlo, es nuestro trabajo, no el suyo."],
+  ["6. Para situarse", "Ha leído más texto del que leerás en mil vidas. Eso es lo que carga el dado. No es una base de datos y no es una calculadora."]
+];
+const es = n => String(n).replace(/\B(?=(\d{3})+$)/g, ".");
+const esc = s => s.replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"})[c]);
+const show = s => s.replace(/ /g, "␣");
+const chunks = text => text.match(/\s*[\p{L}\p{N}]+|\s*[^\s\p{L}\p{N}]/gu) || [];
+const tid = s => { let h = 7; for (const c of s) h = (h * 31 + c.codePointAt(0)) % 199000; return 1000 + h; };
+const pct = p => { const v = p * 100; return (v > 0 && v < 1 ? v.toFixed(1) : String(Math.round(v))).replace(".", ",") + " %"; };
+const reshape = (faces, T) => { const t = Math.max(T, .05), w = faces.map(([, p, n = 1]) => n * Math.pow(p, 1 / t)), s = w.reduce((a, b) => a + b, 0); return w.map(x => x / s); };
+const pick = (probs, r) => { let acc = 0; for (let i = 0; i < probs.length; i++) { acc += probs[i]; if (r < acc) return i; } return probs.length - 1; };
+const chip = (text, cls = "", sub = "") => `<span class="chip ${cls}">${esc(show(text))}${sub ? `<small>${sub}</small>` : ""}</span>`;
+const bar = (label, width, value, cls = "") => `<div class="l">${label}</div><div class="b ${cls}"><i style="width:${width}%"></i></div><div class="v">${value}</div>`;
+const prow = (label, width, value, cls = "") => `<div class="pr"><span>${label}</span><span class="v">${value}</span></div><div class="b ${cls}"><i style="width:${width}%"></i></div>`;
+const logw = n => (Math.log10(n) - 9) / 3 * 100;
+const QCH = chunks(Q);
+let step = 0, sent = 0, revealed = 0, T = 1, rolled = -1, rolledP = 0, hot = -1, timer;
+$("params").innerHTML = MODELS.map(([n, v]) => prow(n, logw(v), es(v / 1e6) + " millones")).join("")
+  + prow("gpt-4.1-mini (2025)", 0, "no publicado", "dashed") + prow("cerebro humano, neuronas", logw(8.6e10), "86.000 millones", "dotted")
+  + `<div class="ruler"><span>10⁹</span><span style="left:33.3%">10¹⁰</span><span style="left:66.7%">10¹¹</span><span style="left:100%">10¹²</span></div>`;
+function render() {
+  const probs = reshape(FACES, T), g = GEN[revealed - 1];
+  $("chips-q").innerHTML = QCH.map((c, i) => chip(c, i < sent ? "sent" : "", tid(c))).join("");
+  $("ids").innerHTML = QCH.slice(0, sent).map(c => `<span class="chip id">${tid(c)}</span>`).join("");
+  $("send").disabled = step !== 0 || sent > 0;
+  $("faces").innerHTML = FACES.map(([t], i) => `<div class="row${i === hot || (hot < 0 && i === rolled) ? " hot" : ""}">${bar(esc(t), probs[i] * 100, pct(probs[i]))}</div>`).join("");
+  $("temp-out").textContent = T.toFixed(2).replace(".", ",");
+  $("roll").disabled = step !== 2 || hot >= 0;
+  $("face").innerHTML = rolled < 0 ? "…" : rolled === 4 ? chip("?", "empty") : chip(FACES[rolled][0], "now");
+  $("roll-note").textContent = rolled < 0 ? "Con temperatura 1 el reparto es el real de hoy. Bájala y gana casi siempre el '12'; súbela y cualquier cara puede salir."
+    : rolled === 4 ? `salió una de las otras caras (${pct(rolledP)}): la API solo guardó las tres mejores alternativas, así que no sabemos cuál`
+    : `salió '${FACES[rolled][0]}' (${pct(rolledP)})${rolledP < .05 ? ": el dado también cae en caras raras" : ""}`;
+  $("strip").innerHTML = GEN.map(([t, p, , roll], i) => i < revealed ? chip(t, (roll ? "roll " : "") + (i === revealed - 1 ? "now" : ""), (roll ? "dado · " : "") + pct(p)) : chip("?", "empty")).join("");
+  $("gen-note").textContent = revealed ? `Trozo ${revealed}: '${show(g[0])}' con ${pct(g[1])}. Alternativas registradas: ${g[2].map(([a, p]) => `'${show(a)}' ${pct(p)}`).join(", ")}.`
+    + (g[3] ? " Aquí sí se jugó algo." : g[1] >= .95 ? " Casi seguro: no había dado que tirar." : "") + (revealed === GEN.length ? " Después eligió el trozo de fin y paró." : "")
+    : "Pulsa «Siguiente trozo». Los dos trozos con borde grueso son los únicos donde el dado se jugó algo.";
+  $("in-count").textContent = `pregunta + ${revealed} trozos`;
+  $("out-tok").textContent = revealed ? show(g[0]) : "?";
+  $("reveal").disabled = step !== 3 || revealed >= GEN.length;
+  document.querySelectorAll(".station").forEach((s, i) => { s.classList.toggle("active", i === step); s.classList.toggle("reached", i <= step); });
+  document.querySelectorAll(".steps li").forEach((li, i) => i === step ? li.setAttribute("aria-current", "step") : li.removeAttribute("aria-current"));
+  $("step-title").textContent = stages[step][0];
+  $("step-detail").textContent = stages[step][1];
+  $("position").textContent = `Estación ${step + 1} de ${stages.length}`;
+  $("previous").disabled = step === 0;
+  $("next").disabled = step === stages.length - 1;
+}
+function send() { sent = REDUCED ? QCH.length : sent + 1; render(); if (sent < QCH.length) timer = setTimeout(send, 150); }
+function roll() {
+  const probs = reshape(FACES, T), i = pick(probs, Math.random());
+  const settle = () => { hot = -1; rolled = i; rolledP = probs[i]; render(); };
+  rolled = -1;
+  if (REDUCED) return settle();
+  let n = 0;
+  const spin = () => { hot = Math.floor(Math.random() * FACES.length); render(); n += 1; timer = setTimeout(n < 9 ? spin : settle, 50 + n * 15); };
+  spin();
+}
+function reveal() { if (revealed >= GEN.length) return; revealed += 1; render(); const f = $("loop"); f.classList.remove("pulse"); void f.offsetWidth; f.classList.add("pulse"); }
+$("next").addEventListener("click", () => {
+  if (step === stages.length - 1) return;
+  clearTimeout(timer);
+  if (step === 0) sent = QCH.length;
+  if (step === 2) hot = -1;
+  if (step === 3) revealed = GEN.length;
+  step += 1;
+  render();
+});
+$("previous").addEventListener("click", () => { if (step > 0) { step -= 1; render(); } });
+$("restart").addEventListener("click", () => { clearTimeout(timer); step = 0; sent = 0; revealed = 0; T = 1; rolled = -1; hot = -1; $("temp").value = 1; render(); });
+$("send").addEventListener("click", send);
+$("roll").addEventListener("click", roll);
+$("reveal").addEventListener("click", reveal);
+$("temp").addEventListener("input", e => { T = +e.target.value; render(); });
+render();
+</script>
+</body>
+</html>
