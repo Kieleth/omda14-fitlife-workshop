@@ -26,7 +26,7 @@ st.caption(f"Ejecuciones del script en esta sesión del navegador: {st.session_s
 st.code("número = valor_del_control\nresultado = número * número", language="python")
 st.write("Al mover el control, el navegador envía el nuevo valor al servidor de Streamlit. "
          "Python vuelve a ejecutar el script y Streamlit actualiza la pantalla. "
-         "En este taller, ese servidor corre en tu portátil.")
+         "En este taller, ese servidor se ejecuta en tu portátil.")
 
 st.subheader("2. Explora un archivo local")
 import pandas as pd

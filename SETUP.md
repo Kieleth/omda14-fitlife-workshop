@@ -4,7 +4,7 @@ Al terminar tendrás el proyecto en tu portátil, las librerías instaladas en u
 
 ## 1. Herramientas
 
-Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13.15](https://www.python.org/downloads/release/python-31315/#files). En la tabla **Files**, elige **Windows installer (64-bit)** para un PC habitual o **macOS installer** para Mac. Si tu PC utiliza Windows ARM, consulta a Luis antes de instalar. El taller fija la versión de Python en `.python-version`.
+Instala [VS Code](https://code.visualstudio.com/download), [Git](https://git-scm.com/downloads) y [Python 3.13.15](https://www.python.org/downloads/release/python-31315/#files). En la tabla **Files**, elige **Windows installer (64-bit)** para un PC habitual o **macOS installer** para Mac. Si tu PC utiliza Windows ARM, pregunta en el chat del curso antes de instalar. El taller fija la versión de Python en `.python-version`.
 
 En Windows, el instalador de Python debe incluir el lanzador `py`. En macOS, el instalador oficial permite ejecutar `python3.13`. Si ya tienes otra versión o Anaconda, puedes conservarla: el entorno del taller estará en la carpeta `.venv`.
 
@@ -95,15 +95,15 @@ La terminal mostrará una dirección local, normalmente `http://localhost:8501`.
 
 En la página de OMDA14:
 
-1. Comprueba que los chequeos aparecen en verde.
+1. Comprueba que las comprobaciones aparecen en verde.
 2. Cambia el número a **7**. El cuadrado debe pasar a **49** y debe aumentar el contador de ejecuciones.
 3. Cambia el plan de FitLife. La tabla y el número de registros deben actualizarse.
 
-Has probado que el navegador, Streamlit, Python y los archivos locales trabajan juntos. **Esto todavía no comprueba una conexión con un LLM.** No necesitas `.env` ni clave para pasar esta prueba.
+Has probado que el navegador, Streamlit, Python y los archivos locales trabajan juntos. **Esto todavía no comprueba una conexión con un LLM (modelo de lenguaje).** No necesitas `.env` ni clave para pasar esta prueba.
 
 Para parar la app, vuelve a la terminal y pulsa `Ctrl+C`.
 
-**Ya estás preparado. Para aquí y espera a la clase para construir la aplicación con Luis.**
+**Ya estás preparado. La aplicación se construye en clase, siguiendo el README.**
 
 ## 5. Volver otro día
 
@@ -132,7 +132,7 @@ Conserva `.venv` en tu portátil. Git la ignora; no se sube al repositorio.
 | No se puede descargar un paquete | Revisa la conexión y el acceso a PyPI desde la red del centro. Repite la instalación completa; no desactives la verificación de certificados. |
 | `No module named streamlit` | Usa el Python de `.venv` tanto para instalar como para abrir la app. |
 | La versión de un paquete no coincide | Repite la instalación de `requirements.txt` en `.venv`. |
-| Faltan datos o columnas | Recupera los CSV del repositorio. No inventes filas ni cambies el chequeo para que pase. |
+| Faltan datos o columnas | Recupera los CSV del repositorio. No inventes filas ni cambies la comprobación para que pase. |
 | `Address already in use` | Puede haber otra app abierta. Busca su terminal y párala con `Ctrl+C`, o usa la URL que ya está abierta. |
 | La página deja de responder | Comprueba que la terminal que ejecuta Streamlit sigue abierta y no muestra un error. |
 

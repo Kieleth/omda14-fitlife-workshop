@@ -118,7 +118,7 @@ def main() -> int:
     ok = all(check.ok for check in checks)
     print("Entorno local preparado. Falta abrir y probar la app de Streamlit."
           if ok else "Instalación incompleta. Corrige los errores antes de clase.")
-    print("Este chequeo no prueba una conexión con un LLM ni lee tu API key.")
+    print("Esta comprobación no prueba una conexión con un LLM ni lee tu API key.")
     return 0 if ok else 1
 
 
