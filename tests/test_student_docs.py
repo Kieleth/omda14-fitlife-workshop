@@ -19,7 +19,7 @@ class StudentDocsTests(unittest.TestCase):
         paths = [ROOT / name for name in GUIDES + ("SESION1.md", "ENUNCIADO.md", "PREGUNTAS_TEST.md",
                                                     "test_app.py", "check_setup.py")]
         paths += list((ROOT / "exercises").glob("*.py")) + list((ROOT / "explicaciones").glob("*.html"))
-        for path in paths:
+        for path in (path for path in paths if path.exists()):  # main carries only the preparation files
             with self.subTest(path=path.name):
                 self.assertNotRegex(path.read_text(encoding="utf-8"),
                                     r"\bLuis\b|profesor|cuando .{0,20}lo indique",
