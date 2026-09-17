@@ -33,4 +33,4 @@
 import streamlt as st
 
 st.title("Hola Mundo")
-st.write("Si ves esto en el navegador, tu primer app web funciona.")
+st.write("Si ves esto en el navegador, tu primera app web funciona.")

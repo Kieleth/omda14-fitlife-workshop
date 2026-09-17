@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 5 — Conecta el cerebro
+# PASO 5: Conecta el cerebro
 # ============================================================
 #
 # ── ¿Qué es un LLM? ────────────────────────────────────────
@@ -30,7 +30,7 @@
 #
 # Una contraseña que os identifica. Cada petición cuesta dinero
 # (fracciones de céntimo), así que OpenAI necesita saber quién
-# pide qué. El profesor os da una clave para el taller — no la
+# pide qué. El profesor os da una clave para el taller, no la
 # compartáis fuera de clase.
 #
 # ── Cómo crear el archivo .env ──────────────────────────────
@@ -56,6 +56,11 @@
 #
 # ── Errores comunes ─────────────────────────────────────────
 #
+#   "Missing credentials" u "OpenAIError" al arrancar
+#     → No existe el archivo .env o no se llama exactamente
+#       así. Repasa los pasos de arriba; .env.template
+#       muestra el formato de la línea.
+#
 #   "AuthenticationError" o "Incorrect API key"
 #     → Revisa que la clave en .env esté bien copiada,
 #       sin espacios extra al principio o final.
@@ -74,6 +79,44 @@
 #
 # Completa la línea marcada con ___ para crear el cliente
 # de OpenAI. Es solo una palabra: OpenAI()
+#
+# ── Mira lo que viaja ───────────────────────────────────────
+#
+# Cuando Luis lo indique. Copia estas cinco líneas al final
+# del archivo y quita el "# " del principio de cada una.
+# Deben quedar con 4 espacios delante de with, igual que la
+# línea "with st.chat_message" de arriba: así siguen dentro
+# de "if prompt:", después del bocadillo del asistente.
+#
+#     with st.expander("Lo que enviamos"):
+#         st.json({"model": "gpt-4.1-mini", "messages": [{"role": "user", "content": prompt}]})
+#     with st.expander("Lo que recibimos"):
+#         st.json(response.model_dump())
+#     st.caption(f"Tokens: {response.usage.prompt_tokens} enviados, {response.usage.completion_tokens} recibidos")
+#
+# Guarda, pregunta algo y abre los dos desplegables. response se
+# creó dentro del bocadillo del asistente, pero una variable
+# sigue existiendo después de su bloque with: el with solo
+# decide dónde se pinta.
+#
+# "Lo que enviamos" es lo que pusimos en messages: una lista
+# con un diccionario (pares clave: valor). "role" dice quién habla ("user" eres tú;
+# en el paso 6 aparece "system"). "content" es el texto. Con
+# el nombre del modelo y la clave, eso es todo lo que sale
+# del portátil: un JSON con texto dentro. JSON es un formato de
+# texto para escribir datos con llaves, comillas y comas; lo que
+# ves en el desplegable es JSON.
+#
+# "Lo que recibimos" es el JSON completo que devuelve la API;
+# model_dump() lo convierte en un diccionario para poder
+# mostrarlo. st.write solo enseña choices[0].message.content.
+# ¿Qué más viene? usage cuenta tokens: un token es el trozo
+# de texto con el que trabaja el modelo, una palabra corta o
+# un trozo de palabra. prompt_tokens es lo que ha leído;
+# completion_tokens, lo que ha escrito.
+#
+# Luis puede usar explicaciones/api.html para seguir el viaje
+# de la petición desde tu app hasta el modelo y de vuelta.
 #
 # ── Si has terminado antes ──────────────────────────────────
 #
@@ -101,7 +144,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = OpenAI()
+client = ___  # Crea el cliente: OpenAI()
 
 st.title("FitLife Dashboard")
 

@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 2 — Carga datos
+# PASO 2: Carga datos
 # ============================================================
 #
 # ── ¿Qué es pandas? ────────────────────────────────────────
@@ -12,7 +12,7 @@
 #
 #   pd.read_csv("ruta/al/archivo.csv")
 #
-# Carga un archivo CSV y lo convierte en un DataFrame — una
+# Carga un archivo CSV y lo convierte en un DataFrame, una
 # tabla con filas y columnas que podéis explorar y manipular.
 #
 # ── ¿Qué es una ruta de archivo? ───────────────────────────

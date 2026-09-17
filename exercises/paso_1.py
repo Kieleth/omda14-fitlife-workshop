@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 1 — Muestra información en pantalla
+# PASO 1: Muestra información en pantalla
 # ============================================================
 #
 # ── ¿Cómo funciona Streamlit? ──────────────────────────────
@@ -28,16 +28,16 @@
 #
 # ── Si has terminado antes ──────────────────────────────────
 #
-#   A. Prueba st.markdown() — funciona igual que st.write()
+#   A. Prueba st.markdown(): funciona igual que st.write()
 #      pero es más explícito:
 #        st.markdown("## Esto es un subtítulo en Markdown")
 #        st.markdown("Lista:\n- Uno\n- Dos\n- Tres")
 #
 #   B. Prueba a mostrar un número importante con estilo:
-#        st.metric("Socios totales", "16.334", "+2.1%")
+#        st.metric("Registros", "16.334", "+2.1%")
 #      Esto crea una tarjeta con el número grande y un delta.
 #
-#   C. Prueba st.divider() — pone una línea horizontal para
+#   C. Prueba st.divider(): pone una línea horizontal para
 #      separar secciones visualmente.
 #
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
@@ -50,7 +50,7 @@ import streamlit as st
 st.title("FitLife Dashboard")
 
 # ↓ Borra esta línea entera y escribe: st.subheader("Análisis de socios")
-st.subheader("Análisis de socios")
+___
 
 # ↓ Borra esta línea entera y escribe: st.write("Bienvenido al panel de control de FitLife.")
-st.write("Bienvenido al panel de control de FitLife.")
+___
