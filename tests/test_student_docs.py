@@ -6,6 +6,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 GUIDES = ("README.md", "SETUP.md", "SESION1_CHECKLIST.md", "ACTUALIZAR.md")
+SESSION_GUIDES = tuple(sorted(p.name for p in ROOT.glob("SESION[0-9].md")))  # main has none
 
 
 class StudentDocsTests(unittest.TestCase):
@@ -16,8 +17,8 @@ class StudentDocsTests(unittest.TestCase):
                 self.assertNotRegex(text, r"conda\s+activate|mda13-fitlife-workshop|`mda13`")
 
     def test_student_text_is_self_paced_and_does_not_name_the_teacher(self):
-        paths = [ROOT / name for name in GUIDES + ("SESION1.md", "ENUNCIADO.md", "PREGUNTAS_TEST.md",
-                                                    "test_app.py", "check_setup.py")]
+        paths = [ROOT / name for name in GUIDES + SESSION_GUIDES + ("ENUNCIADO.md", "PREGUNTAS_TEST.md",
+                                                                     "test_app.py", "check_setup.py")]
         paths += list((ROOT / "exercises").glob("*.py")) + list((ROOT / "explicaciones").glob("*.html"))
         for path in (path for path in paths if path.exists()):  # main carries only the preparation files
             with self.subTest(path=path.name):
@@ -34,7 +35,7 @@ class StudentDocsTests(unittest.TestCase):
     def test_student_route_has_no_editorial_history_or_teacher_notes(self):
         paths = [ROOT / name for name in GUIDES]
         paths += list((ROOT / "exercises").glob("*.py"))
-        paths += list(ROOT.glob("SESION1.md"))
+        paths += [ROOT / name for name in SESSION_GUIDES]
         for path in paths:
             with self.subTest(path=path.name):
                 self.assertNotRegex(path.read_text(encoding="utf-8"),
@@ -44,5 +45,6 @@ class StudentDocsTests(unittest.TestCase):
                      "SESION1_REPASO.md", "SESION2_REPASO.md", "PLAN_DOCENTE.md", "VERIFICACION.md"):
             self.assertFalse(any(path == name or path.startswith(name + "/") for path in tracked), name)
         if (ROOT / "exercises").is_dir():  # main carries only the preparation files
-            self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")},
-                             {f"paso_{i}.py" for i in range(8)})
+            names = {p.name for p in (ROOT / "exercises").glob("*.py")}
+            self.assertGreaterEqual(len(names), 8)
+            self.assertEqual(names, {f"paso_{i}.py" for i in range(len(names))}, "los pasos van seguidos desde 0")
