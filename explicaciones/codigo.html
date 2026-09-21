@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMDA14 · ¿Y si le pides el código?</title>
+<style>
+:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; }
+@media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
+main { max-width:1180px; margin:auto; padding:36px 24px; }
+a { color:var(--accent); }
+.eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
+h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
+h2 { font-size:20px; margin:0 0 12px; }
+h3 { font-size:15px; margin:14px 0 6px; }
+p { margin:8px 0 18px; }
+.intro { max-width:800px; }
+.setup { max-width:800px; padding:14px 0 0; }
+.steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
+.steps li,.note { color:var(--muted); font-size:14px; }
+.steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
+.flow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.station.active { border-color:var(--accent); background:var(--soft); }
+.station:not(.reached) .body, .station.reached .wait { display:none; }
+.station .note { margin:6px 0 10px; }
+label { display:block; font-size:14px; margin:0 0 6px; }
+button,input { font:inherit; }
+input[type=checkbox] { width:auto; margin-right:8px; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; max-height:300px; overflow:auto; margin:8px 0; }
+code { font-size:13px; }
+.bubble { padding:12px 14px; border-radius:12px; background:var(--paper); border:1px solid var(--line); overflow-wrap:anywhere; margin:8px 0; }
+mark { background:transparent; color:inherit; }
+mark.on { background:var(--accent); color:var(--bg); border-radius:3px; }
+.gone { opacity:.35; text-decoration:line-through; }
+.bars { display:grid; grid-template-columns:minmax(0,auto) minmax(0,1fr) auto; gap:6px 8px; align-items:center; font-size:13px; margin:10px 0; }
+.bars .l { font-family:monospace; overflow-wrap:anywhere; }
+.bars .b { height:16px; border:1px solid var(--line); border-radius:3px; background:var(--paper); overflow:hidden; }
+.bars .b i { display:block; height:100%; min-width:3px; background:var(--accent); transition:width .5s; }
+.bars .v { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.msgs { list-style:none; margin:8px 0; padding:0; display:grid; gap:6px; }
+.msgs li { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); font-size:13px; }
+.msgs li.added { border-color:var(--accent); animation:pop .35s; }
+.role { display:inline-block; margin-bottom:4px; padding:1px 8px; border:1px solid var(--line); border-radius:12px; font-family:monospace; font-size:12px; }
+.msgs li.added .role { border-color:var(--accent); color:var(--accent); font-weight:700; }
+.msgs .txt { display:block; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--muted); }
+@keyframes pop { from { transform:scale(.96); opacity:0; } }
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+.card { padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); font-size:13px; }
+.card b { display:block; }
+.warn { padding:12px 14px; margin:12px 0; border:1px solid var(--accent); border-radius:6px; background:var(--paper); }
+.pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0 16px; }
+.detail { padding:24px 0 8px; min-height:140px; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
+button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
+button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+button.small { min-height:0; padding:4px 12px; font-size:14px; }
+button:disabled { opacity:.45; cursor:default; }
+footer { border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:1000px) { .flow { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:700px) { .flow { grid-template-columns:1fr; } main { padding:24px 16px; } .detail { min-height:0; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">OMDA14 · SESIÓN 2 · PASOS 8 A 11</div>
+<h1>¿Y si le pides el código?</h1>
+<p class="intro">En la sesión 1 le pedías la respuesta y se la inventaba. Hoy le pides el código que la calcula. El modelo escribe texto, una regex lo extrae, pandas lo ejecuta sobre las 16.334 filas de verdad. Sigue ese texto de una punta a la otra.</p>
+<p class="note">Capturas reales del 20 de septiembre de 2026 con gpt-4.1-mini y la clave del curso: el código generado, los tokens y los resultados salen de ahí. Esta página no llama a ninguna API ni ejecuta Python.</p>
+<div class="setup">
+<label><input id="values" type="checkbox">Con los valores de las columnas (el reto del paso 9): cambia el prompt, el código y el resultado</label>
+</div>
+</header>
+<ol class="steps" aria-label="Recorrido de una pregunta convertida en código">
+<li aria-current="step">1. La pregunta y el prompt</li><li>2. Lo que vuelve</li><li>3. La receta</li><li>4. La mesa de trabajo</li><li>5. Cuando falla</li><li>6. Quién hace qué</li>
+</ol>
+<div class="flow">
+
+<section class="station active reached" aria-labelledby="t0">
+<h2 id="t0">La pregunta y el prompt</h2>
+<div class="body">
+<pre><code>prompt = st.chat_input("Pregunta sobre los datos de FitLife...")</code></pre>
+<div class="bubble" id="user-bubble"></div>
+<p class="note">El <code>content</code> del <code>system</code>. Ya no lleva filas de la tabla: nombres de columnas, cuántas filas hay y unas reglas.</p>
+<pre><code id="sys-text"></code></pre>
+<p class="note" id="sys-count"></p>
+<p class="note">Lo que sale del portátil, el desplegable «Lo que enviamos» de tu app:</p>
+<pre><code id="json-request"></code></pre>
+<p class="note">En el paso 6 este mismo <code>system</code> llevaba cinco filas de la tabla y la petición pesaba 715 tokens de prompt. Aquí pesa <span id="pt-inline">274</span>.</p>
+</div>
+</section>
+
+<section class="station" aria-labelledby="t1">
+<h2 id="t1">Lo que vuelve</h2>
+<div class="body">
+<p class="note">El desplegable «Lo que recibimos». Mira el campo <code>content</code>, resaltado:</p>
+<pre><code id="json-response"></code></pre>
+<p class="note">Es una cadena de texto. Los <code>\n</code> son saltos de línea escritos dentro de ella. La misma cadena, con los saltos puestos:</p>
+<pre><code id="content-text"></code></pre>
+<p class="note" id="usage-note"></p>
+<p class="note"><code>st.code(generated, language="python")</code> lo pinta con colores de Python. Pintar no es ejecutar: aquí todavía no se ha calculado nada. Ni el modelo ni tu app han tocado una sola fila.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t2">
+<h2 id="t2">La receta</h2>
+<div class="body">
+<pre><code>match = re.search(r"```(?:python)?\n(.*?)```", generated, re.DOTALL)
+code = match.group(1)</code></pre>
+<p class="note">Busca la marca de apertura, la de cierre, y se queda con lo de dentro. Los tres acentos graves son backticks, la marca de Markdown para un bloque de código.</p>
+<pre><code id="regex-view"></code></pre>
+<p><button id="apply" class="small" type="button">Aplicar la receta</button></p>
+<p class="note" id="regex-note"></p>
+<p class="note"><code>code</code>, lo que queda:</p>
+<pre><code id="code-extracted"></code></pre>
+<p class="note">Sigue siendo texto. Un <code>str</code> de Python como cualquier otro.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t3">
+<h2 id="t3">La mesa de trabajo</h2>
+<div class="body">
+<pre><code>exec_globals = {
+    "df_members": df_members,
+    "df_context": df_context,
+    "pd": pd,
+}
+
+exec(code, exec_globals)
+st.write(exec_globals["resultado"])</code></pre>
+<p class="note">Encima de la mesa hay tres cosas: los socios (16.334 filas), el contexto mensual (36 filas) y pandas. Nada más. El código se ejecuta ahí dentro y deja <code>resultado</code> sobre la mesa.</p>
+<div class="bars" id="filter"></div>
+<p><button id="run" class="small" type="button">Ejecutar el código</button></p>
+<p class="note"><code>resultado</code>, leído del diccionario y pintado con <code>st.write</code>:</p>
+<div class="bubble" id="result"></div>
+<p class="note" id="result-note"></p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t4">
+<h2 id="t4">Cuando falla</h2>
+<div class="body">
+<p class="note">Otra pregunta, y el prompt del paso 11, que va sin los valores: «Dibuja un gráfico de barras del churn por centro».</p>
+<h3>Intento 1</h3>
+<pre><code>import matplotlib.pyplot as plt
+
+churn_counts = df_members[df_members['status'] == 'churned'].groupby('center').size()
+churn_counts.plot(kind='bar', title='Churn por Centro')
+plt.xlabel('Centro')
+plt.</code></pre>
+<p class="note">La captura guardó los primeros 200 caracteres, por eso la última línea se corta. Da igual: revienta en la primera. matplotlib no está instalado.</p>
+<pre><code>ModuleNotFoundError: No module named 'matplotlib'</code></pre>
+<p class="note"><code>try</code> lo intenta, <code>except</code> recoge el error en <code>e</code> y la app sigue viva. 274 tokens de prompt en este intento.</p>
+<h3><code>messages</code>, la lista que enviamos: <span id="msg-count"></span></h3>
+<ol class="msgs" id="msg-list"></ol>
+<p><button id="retry" class="small" type="button">Devolver el error al modelo</button></p>
+<div id="attempt2" hidden>
+<h3>Intento 2</h3>
+<pre><code>resultado = df_members[df_members['status'] == 'churned'].groupby('center').size()</code></pre>
+<p class="note">383 tokens de prompt, contra 274 del primero: la conversación pesa más. <code>resultado</code> es una Series de pandas y <code>st.write</code> la pinta como tabla.</p>
+<pre><code>center
+downtown     80
+eastpark     81
+northside    76
+southgate    91
+westfield    83
+dtype: int64</code></pre>
+<p class="note">Quita el dibujo y devuelve los recuentos. Verificado dos veces: 383 tokens en una ejecución, 402 en la otra.</p>
+</div>
+<p class="note">El modelo no recuerda el primer intento. Recibe la lista entera, que construimos nosotros con dos <code>append</code>.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t5">
+<h2 id="t5">Quién hace qué</h2>
+<div class="body">
+<div class="cards">
+<div class="card"><b>El modelo</b>Traduce tu pregunta a código. Escribe texto y para ahí. Nunca ve tus filas y nunca ejecuta nada.</div>
+<div class="card"><b>La regex</b>Se queda con lo que hay entre las dos marcas. Si el modelo no las pone, no hay código y la app avisa.</div>
+<div class="card"><b>pandas</b>Calcula sobre las 16.334 filas reales, dentro del diccionario. De aquí sale el número.</div>
+<div class="card"><b>Tú</b>Lees el código generado. Es lo único que dice qué se ha calculado en realidad.</div>
+</div>
+<div class="warn">
+<h3>Lo que no da error</h3>
+<p class="note">«¿Cuál es la satisfacción media de los socios?». No hay ninguna columna de satisfacción, así que la pregunta no tiene respuesta con estos datos. Nada falla. El código se ejecuta y devuelve un número.</p>
+<div class="pair">
+<div>
+<p class="note">Con los valores en el prompt, el modelo se inventó un índice y lo promedió:</p>
+<pre><code># No hay una columna explícita llamada "satisfacción" en los DataFrames proporcionados.
+# Asumiendo que "satisfacción" puede aproximarse con "group_classes_attended" y "uses_app"
+# Podríamos calcular un índice de satisfacción como la media de asistentes a clases grupales y uso de app normalizado.
+
+# Normalizar group_classes_attended (asumiendo maximo teórico 20 clases al mes)
+df_members['group_classes_norm'] = df_members['group_classes_attended'] / 20
+
+# uses_app es booleano, convertir a int para calcular la media
+df_members['uses_app_int'] = df_members['uses_app'].astype(int)
+
+# Índice de satisfacción simple: media de asistencia a clases y uso de app
+df_members['satisfaction_index'] = (df_members['group_classes_norm'] + df_members['uses_app_int']) / 2
+
+# Calcular media global
+resultado = df_members['satisfaction_index'].mean()</code></pre>
+<p class="note">Resultado: <code>0.34321048120484876</code>. Aritmética real sobre filas reales, de una fórmula que nadie pidió.</p>
+</div>
+<div>
+<p class="note">Sin los valores, en una ejecución se plantó:</p>
+<pre><code># No hay una columna llamada 'satisfacción' en los DataFrames proporcionados.
+# Por lo tanto, no es posible calcular la satisfacción media de los socios con los datos disponibles.
+resultado = None</code></pre>
+<p class="note">Resultado: <code>None</code>, y la app no pinta nada debajo de «Resultado». En otras dos ejecuciones de esa misma pregunta salieron 0,286 y 3,017, con fórmulas distintas cada vez.</p>
+</div>
+</div>
+<p class="note">Ni error, ni <code>except</code>, ni aviso. Por eso el código generado se enseña siempre.</p>
+</div>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+</div>
+<section class="detail" aria-live="polite" aria-atomic="true">
+<h2 id="step-title"></h2>
+<p id="step-detail"></p>
+</section>
+<div class="controls">
+<button id="previous" type="button" disabled>Anterior</button>
+<button id="next" class="primary" type="button">Siguiente</button>
+<button id="restart" type="button">Reiniciar recorrido</button>
+<span id="position" class="note">Estación 1 de 6</span>
+</div>
+<footer>
+<p><strong>El modelo escribe la receta y pandas cocina. El número sale de tus 16.334 filas, y el código generado es la única prueba de qué se ha calculado.</strong></p>
+<p class="note">Compruébalo en tu app con los desplegables «Lo que enviamos» y «Lo que recibimos» de los pasos 8 a 11, y con el desplegable del código generado del paso 10. Las flechas del teclado también mueven el recorrido.</p>
+<p class="note">Honestidad: el código, los tokens y los resultados son capturas del 20 de septiembre de 2026 con gpt-4.1-mini y pueden cambiar en tu ejecución, porque el modelo no escribe dos veces lo mismo. El <code>id</code> y el <code>created</code> del JSON de respuesta son de ejemplo; <code>usage</code> es real. Los 322 tokens se midieron con esas tres líneas de valores pegadas al final del prompt, no debajo de las columnas como las pide el paso 9, y el texto del prompt cambió después en dos signos: el recuento puede moverse en un token o dos. El código del primer intento de la estación 5 está cortado a 200 caracteres porque así se guardó.</p>
+<p class="note">Fuentes: <a href="https://platform.openai.com/docs/api-reference/chat/create">referencia de chat/completions</a> · <a href="https://docs.python.org/3/library/re.html#re.search">re.search</a> · <a href="https://docs.python.org/3/library/functions.html#exec">exec</a>.</p>
+</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"})[c]);
+const es = n => String(n).replace(/\B(?=(\d{3})+$)/g, ".");
+const MODEL = "gpt-4.1-mini";
+const Q = "¿Cuál es la tasa de churn del plan básico?";
+const ROWS = 16334, CTX = 36;
+const COLS_M = "['member_id', 'month', 'center', 'plan', 'price_paid', 'signup_date', 'acquisition_channel', 'tenure_months', 'visits_this_month', 'group_classes_attended', 'uses_app', 'has_personal_trainer', 'cost_to_serve', 'status', 'churn_reason']";
+const COLS_C = "['month', 'competitor_lowcost_price', 'campaign_active', 'service_incident', 'monthly_fixed_costs', 'avg_occupancy_rate', 'acquisition_cost_avg']";
+const VALUES = "   Valores de 'plan': basic (29€), premium (49€), family (69€)\n   Valores de 'status': active, churned\n   Valores de 'center': downtown, northside, eastpark,\n                         westfield, southgate";
+const SYS_HEAD = `Genera solo código Python/pandas que responda a la pregunta del usuario.
+
+Tienes acceso a dos DataFrames ya cargados:
+
+1. df_members: datos de socios (${ROWS} filas)
+   Columnas: ${COLS_M}`;
+const SYS_TAIL = `
+
+2. df_context: contexto mensual (${CTX} filas)
+   Columnas: ${COLS_C}
+
+Reglas:
+- Usa pandas para las operaciones.
+- El código debe terminar con: resultado = <lo que calcules>
+- NO uses print(). Solo asigna el resultado final a la variable "resultado".
+- NO incluyas import ni read_csv: los datos ya están cargados.
+- Devuelve SOLO el bloque de código, sin explicaciones antes ni después.
+- Envuelve el código en triple backtick python.`;
+const CASES = {
+  off: {
+    generated: '```python\n# Filtrar socios con plan básico\ndf_basico = df_members[df_members[\'plan\'] == \'básico\']\n\n# Calcular tasa de churn como el porcentaje de socios con estado "churned" dentro del plan básico\ntasa_churn = (df_basico[\'status\'] == \'churned\').mean()\n\nresultado = tasa_churn\n```',
+    prompt: 274, completion: 78, total: 352,
+    filtro: "df_members['plan'] == 'básico'", filas: 0, bajas: 0, resultado: "nan",
+    nota: "El filtro no deja ninguna fila: en la tabla el plan se llama basic, no básico. Promediar cero filas da nan, not a number. El modelo conoce los nombres de las columnas, que van en el prompt; los valores los adivina, y en castellano adivina básico."
+  },
+  on: {
+    generated: '```python\ntotal_basic = df_members[df_members[\'plan\'] == \'basic\'].shape[0]\nchurned_basic = df_members[(df_members[\'plan\'] == \'basic\') & (df_members[\'status\'] == \'churned\')].shape[0]\nresultado = churned_basic / total_basic if total_basic > 0 else 0\n```',
+    prompt: 322, completion: 75, total: 397,
+    filtro: "df_members['plan'] == 'basic'", filas: 4480, bajas: 307, resultado: "0.06852678571428572",
+    nota: "307 bajas entre 4.480 filas del plan basic: 0,0685, o un 6,85 %. Lo ha contado pandas sobre las filas de verdad, no el modelo. Lo único que ha cambiado son tres líneas de texto en el prompt."
+  }
+};
+const MSGS = [
+  ["system", "Genera solo código Python/pandas que responda a la pregunta del usuario.\n(sigue: las columnas de los dos DataFrames y las reglas)"],
+  ["user", "Dibuja un gráfico de barras del churn por centro"],
+  ["assistant", "```python\nimport matplotlib.pyplot as plt\n(sigue: el código que ha fallado, entero)"],
+  ["user", "El código falló con este error:\nModuleNotFoundError: No module named 'matplotlib'\n\nCorrige el código."]
+];
+const stages = [
+  ["1. La pregunta y el prompt", "El mismo chat y el mismo JSON de la sesión 1. Lo que cambia son las palabras del system: pide el código, no la respuesta, y ya no manda ninguna fila de la tabla."],
+  ["2. Lo que vuelve", "El código llega dentro de content, entre backticks, como texto. El modelo no ha ejecutado nada y tu app tampoco. El JSON es el de siempre; solo son otras palabras."],
+  ["3. La receta", "re.search se queda con lo que hay entre las dos marcas y lo devuelve como texto. De ahí sale code. Si el modelo no pone las marcas, no hay nada que extraer."],
+  ["4. La mesa de trabajo", "exec ejecuta ese texto dentro de un diccionario donde están df_members, df_context y pd. El código deja resultado encima y la app lo lee. Aquí es donde el número deja de ser inventado."],
+  ["5. Cuando falla", "El error vuelve al modelo dentro de messages: su código como assistant y el fallo como user. No recuerda nada, recibe la lista entera, y por eso cada intento pesa más que el anterior."],
+  ["6. Quién hace qué", "El modelo traduce, la regex extrae, pandas calcula y tú lees el código. Cuando la pregunta no se puede responder, el código se ejecuta igual y devuelve un número: leerlo es la única forma de saberlo."]
+];
+let step = 0, phase = 0, ran = false, retried = false;
+const on = () => $("values").checked;
+const kase = () => on() ? CASES.on : CASES.off;
+const system = () => SYS_HEAD + (on() ? "\n" + VALUES : "") + SYS_TAIL;
+const inner = g => g.slice("```python\n".length, -3);
+const bar = (l, w, v) => `<div class="l">${esc(l)}</div><div class="b">${w > 0 ? `<i style="width:${w}%"></i>` : ""}</div><div class="v">${v}</div>`;
+function render() {
+  const c = kase(), g = c.generated, sys = system();
+  $("user-bubble").textContent = Q;
+  $("sys-text").innerHTML = esc(SYS_HEAD) + (on() ? '\n<mark class="on">' + esc(VALUES) + "</mark>" : "") + esc(SYS_TAIL);
+  $("sys-count").textContent = `${es(sys.length)} caracteres de system, y ninguno es una fila de la tabla. La pregunta son ${Q.length}.`;
+  $("json-request").textContent = JSON.stringify({model: MODEL, messages: [{role: "system", content: sys}, {role: "user", content: Q}]}, null, 2);
+  $("pt-inline").textContent = c.prompt;
+  $("json-response").innerHTML = `{
+  "id": "chatcmpl-ejemplo",
+  "object": "chat.completion",
+  "created": 1758326400,
+  "model": "${MODEL}",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": <mark class="on">${esc(JSON.stringify(g))}</mark>
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": ${c.prompt},
+    "completion_tokens": ${c.completion},
+    "total_tokens": ${c.total}
+  }
+}`;
+  $("content-text").textContent = g;
+  $("usage-note").textContent = `usage: ${c.prompt} tokens de prompt enviados y ${c.completion} recibidos, ${c.total} en total.`;
+  $("regex-view").innerHTML = phase === 0 ? esc(g)
+    : phase === 1 ? '<mark class="on">```python</mark>\n' + esc(inner(g)) + '<mark class="on">```</mark>'
+    : '<span class="gone">```python</span>\n<mark class="on">' + esc(inner(g)) + '</mark><span class="gone">```</span>';
+  $("regex-note").textContent = phase === 0 ? "Pulsa el botón: primero las marcas, después lo que se queda."
+    : phase === 1 ? "Estas dos marcas son las que busca la receta. El (.*?) es todo lo que hay entre ellas."
+    : "Las marcas se tiran. match.group(1) es lo de dentro, con su salto de línea final.";
+  $("apply").disabled = step !== 2 || phase >= 2;
+  $("code-extracted").textContent = phase >= 2 ? inner(g) : "(todavía nada: el texto sigue entero)";
+  $("filter").innerHTML = bar("df_members", 100, `${es(ROWS)} filas`)
+    + bar(c.filtro, ran ? c.filas / ROWS * 100 : 0, ran ? `${es(c.filas)} filas` : "?")
+    + bar("y status == 'churned'", ran ? c.bajas / ROWS * 100 : 0, ran ? `${es(c.bajas)} filas` : "?");
+  $("run").disabled = step !== 3 || ran;
+  $("result").innerHTML = ran ? `<code>${esc(c.resultado)}</code>` : '<span class="note">st.write todavía no ha pintado nada.</span>';
+  $("result-note").textContent = ran ? c.nota : "";
+  const n = retried ? 4 : 2;
+  $("msg-list").innerHTML = MSGS.slice(0, n).map(([role, text], i) => `<li${i > 1 ? ' class="added"' : ""}><span class="role">${role}</span><span class="txt">${esc(text)}</span></li>`).join("");
+  $("msg-count").textContent = `${n} entradas`;
+  $("retry").disabled = step !== 4 || retried;
+  $("attempt2").hidden = !retried;
+  document.querySelectorAll(".station").forEach((s, i) => { s.classList.toggle("active", i === step); s.classList.toggle("reached", i <= step); });
+  document.querySelectorAll(".steps li").forEach((li, i) => i === step ? li.setAttribute("aria-current", "step") : li.removeAttribute("aria-current"));
+  $("step-title").textContent = stages[step][0];
+  $("step-detail").textContent = stages[step][1];
+  $("position").textContent = `Estación ${step + 1} de ${stages.length}`;
+  $("previous").disabled = step === 0;
+  $("next").disabled = step === stages.length - 1;
+}
+function go(d) {
+  const target = step + d;
+  if (target < 0 || target > stages.length - 1) return;
+  if (d > 0 && step === 2) phase = 2;
+  if (d > 0 && step === 3) ran = true;
+  if (d > 0 && step === 4) retried = true;
+  step = target;
+  render();
+}
+$("next").addEventListener("click", () => go(1));
+$("previous").addEventListener("click", () => go(-1));
+$("restart").addEventListener("click", () => { step = 0; phase = 0; ran = false; retried = false; render(); });
+$("apply").addEventListener("click", () => { if (phase < 2) { phase += 1; render(); } });
+$("run").addEventListener("click", () => { ran = true; render(); });
+$("retry").addEventListener("click", () => { retried = true; render(); });
+$("values").addEventListener("change", render);
+document.addEventListener("keydown", event => {
+  const tag = event.target && event.target.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  if (event.key === "ArrowRight") go(1);
+  if (event.key === "ArrowLeft") go(-1);
+});
+render();
+</script>
+</body>
+</html>

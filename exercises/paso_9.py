@@ -111,6 +111,14 @@
 #      Allí el LLM inventaba números. Aquí calcula de verdad.
 #      ¿Cuáles coinciden? ¿Cuáles eran inventadas?
 #
+# ── Vía avanzada ────────────────────────────────────────────
+#
+# Las tres líneas de valores las escribiste a mano.
+# Constrúyelas desde los datos: recorre las columnas de texto
+# de df_members, saca sus valores distintos con unique() y
+# pégalos al system_prompt. Míralo en "Lo que enviamos". Hay
+# una columna que no debes meter ahí nunca: ¿cuál, y por qué?
+#
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_9.py
 # macOS:   .venv/bin/python -m streamlit run exercises/paso_9.py

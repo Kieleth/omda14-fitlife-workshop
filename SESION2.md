@@ -1,6 +1,6 @@
 # Sesión 2: que el modelo escriba el código y que Python calcule
 
-Esta guía acompaña los ejercicios `exercises/paso_8.py` a `paso_11.py`. Puedes seguirla en clase o por tu cuenta. Los pasos 0 a 7 están en esta rama en su versión terminada: son la sesión 1 resuelta, para repasar y para comparar con la tuya. Cada ejercicio lleva sus instrucciones en la cabecera del archivo; aquí está el hilo de la sesión, lo que debes ver antes de pasar al siguiente paso y las explicaciones que no caben en un comentario. No contiene las soluciones.
+Esta guía acompaña los ejercicios `exercises/paso_8.py` a `paso_11.py`. Puedes seguirla en clase o por tu cuenta. Los pasos 0 a 7 están en esta rama en su versión terminada: son la sesión 1 resuelta, para repasar y para comparar con la tuya. Cada ejercicio lleva sus instrucciones en la cabecera del archivo; aquí está el hilo de la sesión, lo que debes ver antes de pasar al siguiente paso y las explicaciones que no caben en un comentario. No contiene las soluciones. Las páginas de `explicaciones/` son simulaciones que se abren con doble clic y no tocan tu app; hoy hay una nueva, `codigo.html`, y la guía indica cuándo abrirla.
 
 ## Qué vas a construir
 
@@ -96,6 +96,8 @@ Apunta qué devuelve cada vez. Después haz las tres preguntas de la cabecera.
 
 Abre «Lo que enviamos»: el `content` del `system` ya no lleva filas de la tabla. Solo los nombres de las columnas, cuántas filas hay y las reglas. Abre «Lo que recibimos»: el código está dentro de `content`, entre ` ```python ` y ` ``` `; esos tres acentos graves se llaman backticks y son la marca de Markdown para un bloque de código. Es texto. El modelo no ha ejecutado nada, y tu app tampoco. Compara los `prompt_tokens` con los del paso 6.
 
+**Simulación 5: `explicaciones/codigo.html`, con la casilla «Con los valores de las columnas» desmarcada.** Estaciones 1 a 3: el mismo JSON que acabas de abrir, el `content` con el código dentro como texto, y la receta que lo extrae. Son capturas reales de la pregunta del churn; la página no está conectada a tu app.
+
 **Puerta.** Las tres preguntas de la cabecera respondidas con un bloque de código, y sabes señalar en «Lo que recibimos» dónde está.
 
 **Antes de seguir.** Pregunta «¿Cuál es la tasa de churn del plan básico?» y lee el código con calma. ¿Con qué valor filtra la columna `plan`? Apúntalo tal cual.
@@ -111,6 +113,8 @@ Antes de rellenar nada, arranca y pregunta: el error que ves es Python diciendo 
 Y la receta puede estar mal. Con la pregunta del churn del básico, mira el valor con el que filtra `plan` y el resultado. Si filtró por «básico», no hay ninguna fila que cumpla y el resultado es `nan` (not a number: pandas no puede promediar cero filas), cero, o un error de división por cero en rojo. En ningún caso tu referencia. En la tabla el plan se llama `basic`. El modelo conoce los nombres de las columnas, que van en el prompt; los valores, no. Adivina, y en castellano adivina «básico».
 
 **El reto de verdad.** Pega en el `system_prompt` las tres líneas de valores que da la cabecera, sin el `#`, dentro de las comillas triples, debajo de la línea `Columnas: {list(df_members.columns)}`. Guarda, repite la pregunta y compara con tu referencia. Abre «Lo que enviamos» y localiza los valores dentro del `content`: eso es lo único que ha cambiado.
+
+**Simulación 5, estación 4.** La mesa de trabajo a cámara lenta: con la casilla desmarcada, `'básico'` no encuentra ninguna fila y sale `nan`; márcala y verás `'basic'`, las filas que filtra y el número que tú ya tienes.
 
 **Puerta.** La tasa de churn del básico coincide con tu referencia del repaso, y sabes decir qué líneas del prompt lo han arreglado.
 
@@ -134,9 +138,23 @@ La segunda pregunta es la importante. No hay ninguna columna de satisfacción, a
 
 **Qué hay detrás.** El reintento son dos líneas: añadir a `messages` el código que falló como `assistant` y el error como `user`, y volver a llamar. El modelo no recuerda el primer intento; recibe la conversación entera porque la construimos nosotros en esa lista, y por eso cada petición pesa más que la anterior. Con el gráfico suele acertar al segundo intento: quita el dibujo y devuelve los recuentos. Prueba «Usa la columna nps de df_members para calcular el NPS medio por centro»: el error se corrige, pero la respuesta no puede existir; fíjate en cómo se rinde. Si el código deja `resultado = None`, la app lo cuenta como «sin resultado» y no vuelve a intentarlo: mira el pie con el número de peticiones. Hay errores que ningún reintento arregla porque el problema está en la pregunta, no en el código.
 
+**Simulación 5, estación 5.** El caso del gráfico paso a paso: el código del primer intento, el error, la lista `messages` creciendo de dos a cuatro entradas y los tokens de cada intento.
+
 **Puerta.** Una pregunta resuelta al segundo intento, y en el desplegable una lista `messages` con cuatro entradas.
 
+## Vía avanzada
+
+Esto es opcional y va aparte del resto: no hace falta para el cierre ni para la sesión 3, y puedes coger solo un trozo. Los cuatro pasos de hoy llevan al final de su cabecera un bloque «Vía avanzada», y los cuatro cuentan lo mismo: el prompt se construye desde los datos y el resultado se comprueba. En el paso 8 mides lo que pesa el prompt y si el código se repite con `temperature=0`. En el paso 9 dejas de escribir a mano los valores de las columnas y los sacas del DataFrame. En el paso 10 miras el código antes del `exec` y te niegas a ejecutar lo que traiga `import` u `open(`, y en el paso 11 compruebas que el resultado es posible antes de darlo por bueno: si una tasa se sale de su rango, eso es un error más y se lo devuelves al modelo.
+
+**Puerta.** Uno de los cuatro funcionando, y apuntado en `mis_notas.md` qué preguntas dejó de responder bien tu cambio. Todo filtro tiene ese coste; lo que no vale es no saber cuál es.
+
+El ejercicio extra es [`exercises/bonus_evaluacion.py`](exercises/bonus_evaluacion.py). Lanza de una vez las doce preguntas de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) contra el prompt del paso 10, esta vez con los valores de las columnas dentro, y de cada una te enseña el código generado, el resultado, el error si lo hubo, los tokens y los segundos. La nota la pones tú, pregunta a pregunta: correcta, parcial, inventada o no puede. Tiene tres huecos y no mide nada hasta que los rellenes; el archivo abre igual, los huecos solo revientan cuando pulsas el botón. Con la primera nota apuntada, cambia el prompt (las reglas de negocio de [ENUNCIADO.md](ENUNCIADO.md), un ejemplo resuelto, `temperature=0`), vuelve a lanzarlo y compara. En `mis_notas.md`: las dos notas, qué cambiaste entre una y otra, y qué has decidido que es una respuesta «correcta» a la pregunta doce.
+
+**Puerta.** Las doce puntuadas dos veces, con dos prompts distintos, y las dos notas escritas.
+
 ## Cierre: lo que has visto
+
+**Simulación 5, estación 6.** Quién hace qué, y la pregunta de la satisfacción con su código al lado. Mírala antes de responder a lo de abajo.
 
 Responde por escrito, en `mis_notas.md`, con tus palabras:
 

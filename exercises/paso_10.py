@@ -93,6 +93,13 @@
 #      ejecutes: lee el código generado y piensa qué haría
 #      falta para que una app así fuera segura.
 #
+# ── Vía avanzada ────────────────────────────────────────────
+#
+# Antes del exec, mira el código: si contiene "import" o
+# "open(", no lo ejecutes y enseña un aviso. Son dos líneas.
+# Repite las preguntas de arriba y apunta cuáles se quedan
+# fuera. ¿Alguna que sí querías? Ese es el coste de la regla.
+#
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_10.py
 # macOS:   .venv/bin/python -m streamlit run exercises/paso_10.py

@@ -87,6 +87,14 @@
 #      ¿Qué hace? ¿Genera código que falla? ¿Inventa una
 #      columna que no existe?
 #
+# ── Vía avanzada ────────────────────────────────────────────
+#
+# Mira los prompt_tokens del pie: el del paso 6 pesaba 715.
+# ¿Cuántos pesa este? Luego añade temperature=0 a la llamada,
+# repite la misma pregunta tres veces y compara el código
+# línea por línea. ¿Sale igual? Quita temperature=0 y
+# repítelo. Apunta las dos respuestas en mis_notas.md.
+#
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_8.py
 # macOS:   .venv/bin/python -m streamlit run exercises/paso_8.py

@@ -29,5 +29,6 @@ Los pasos 0 a 7 son la versión terminada de la sesión 1. Sirven para repasar y
 | [9](exercises/paso_9.py) | Extraer el código y ejecutarlo sobre los datos reales. |
 | [10](exercises/paso_10.py) | Capturar los errores y enseñar el código que se ejecutó. |
 | [11, opcional](exercises/paso_11.py) | Devolver el error al modelo para que corrija su código. |
+| [Extra, opcional](exercises/bonus_evaluacion.py) | Medir el sistema con las doce preguntas de test. |
 
 Las 12 preguntas con las que evaluaremos el sistema en todas las sesiones están en [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md).

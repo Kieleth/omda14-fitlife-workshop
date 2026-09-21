@@ -85,6 +85,14 @@
 #      el resultado "tiene sentido"? (Por ejemplo: una tasa
 #      de churn del 500% claramente está mal.)
 #
+# ── Vía avanzada ────────────────────────────────────────────
+#
+# El bucle solo reintenta cuando Python revienta. Comprueba
+# también el resultado: si la pregunta pide una tasa, un
+# número fuera de 0 a 1 está mal. Trátalo como un error más y
+# devuélveselo al modelo. ¿Lo arregla, o te da otra versión
+# del mismo número?
+#
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_11.py
 # macOS:   .venv/bin/python -m streamlit run exercises/paso_11.py

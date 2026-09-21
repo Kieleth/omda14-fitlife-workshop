@@ -17,6 +17,36 @@ ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / "docente/referencia"
 STEPS = range(12)
 
+BONUS = "bonus_evaluacion.py"
+
+# El cuerpo de evaluar(), el hueco grande del bonus: su contrato está en el docstring.
+EVALUAR = r'''
+    inicio = time.time()
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": pregunta},
+        ],
+    )
+    segundos = time.time() - inicio
+    generado = response.choices[0].message.content
+    match = re.search(r"```(?:python)?\n(.*?)```", generado, re.DOTALL)
+    if match:
+        resultado, error = ejecutar_codigo(match.group(1))
+    else:
+        resultado, error = None, "No se pudo extraer código de la respuesta."
+    return {
+        "pregunta": pregunta,
+        "codigo": match.group(1) if match else generado,
+        "resultado": resultado,
+        "error": error,
+        "prompt_tokens": response.usage.prompt_tokens,
+        "completion_tokens": response.usage.completion_tokens,
+        "segundos": segundos,
+    }
+'''
+
 # Huecos ___ de los ejercicios de hoy y la solución documentada en sus comentarios.
 # Los pasos 0 a 7 se entregan resueltos: no tienen huecos.
 SOLUTIONS = {
@@ -26,6 +56,12 @@ SOLUTIONS = {
     "paso_10.py": [("with ___:", 'with st.expander("Ver código generado"):'),
                    ("\n                ___\n", '\n                st.error(f"Error al ejecutar el código: {e}")\n'),
                    ("with ___:", 'with st.expander("Detalles del error"):')],
+    BONUS: [("lineas.append(___)",
+             'lineas.append(f"   Valores de \'{columna}\': "'
+             ' + ", ".join(str(valor) for valor in df[columna].dropna().unique()))'),
+            ("\n    ___\n", EVALUAR),
+            ("recuento = ___",
+             "recuento = {etiqueta: veredictos.count(etiqueta) for etiqueta in ETIQUETAS}")],
 }
 
 # Correcciones de texto aprobadas sobre el material base; la copia MDA13 en referencia/ no cambia.
@@ -78,7 +114,10 @@ def lesson(source):
 
 class ExerciseSourceTests(unittest.TestCase):
     def test_exercises_match_the_baseline_once_solved(self):
-        self.assertEqual({p.name for p in (ROOT / "exercises").glob("*.py")}, {f"paso_{i}.py" for i in STEPS})
+        names = {p.name for p in (ROOT / "exercises").glob("*.py")}
+        steps = {f"paso_{i}.py" for i in STEPS}
+        self.assertEqual({name for name in names if name.startswith("paso_")}, steps)
+        self.assertLessEqual(names - steps, {BONUS})
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         positions = []
         for number in STEPS:
@@ -140,7 +179,7 @@ class OfflineAppTests(unittest.TestCase):
         os.chdir(self.cwd)
 
     def app(self, number, question=None, solve=False):
-        path = ROOT / "exercises" / f"paso_{number}.py"
+        path = ROOT / "exercises" / (number if isinstance(number, str) else f"paso_{number}.py")
         source = path.read_text(encoding="utf-8")
         if solve:
             source = solved(source, path.name)
@@ -211,6 +250,19 @@ class OfflineAppTests(unittest.TestCase):
         self.assertEqual([m["role"] for m in sent], ["system", "user", "assistant", "user"])
         self.assertIn("KeyError", sent[3]["content"])
         self.assertEqual(app.caption[-1].value, "Peticiones enviadas: 2. Cada una lleva la lista messages completa.")
+
+    def test_bonus_scores_the_twelve_questions_offline(self):
+        source = (ROOT / "exercises" / BONUS).read_text(encoding="utf-8")
+        self.assertEqual(blanks(source), len(SOLUTIONS[BONUS]),
+                         f"{BONUS} debe entregarse con {len(SOLUTIONS[BONUS])} huecos ___ en el código.")
+        self.assertClean(self.app(BONUS))  # sin rellenar, la app abre; los huecos están dentro del botón
+        app = self.app(BONUS, solve=True)
+        self.assertClean(app)
+        app = app.button[0].click().run(timeout=60)
+        self.assertClean(app)
+        self.assertEqual(len(app.dataframe[0].value), 12)
+        self.assertEqual(len([x for x in app.expander if x.label.startswith("Código de la pregunta")]), 12)
+        self.assertEqual(app.markdown[-1].value, "correcta: 0 | parcial: 0 | inventada: 0 | no puede: 0")
 
 
 if __name__ == "__main__":

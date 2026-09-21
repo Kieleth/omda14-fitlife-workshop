@@ -235,7 +235,7 @@ let step = 0, generated = 0, part = 0;
 function render() {
   const q = $("question").value, ctxOn = $("ctx").checked, body = wire(q, ctxOn);
   const reqChars = ctxOn ? body.length : q.length;
-  const reqTokens = ctxOn ? 2151 : (q === DEFAULT_Q ? 18 : Math.max(1, Math.round(q.length / 2.3)));
+  const reqTokens = ctxOn ? 715 : (q === DEFAULT_Q ? 18 : Math.max(1, Math.round(q.length / 2.3)));
   $("user-bubble").textContent = q;
   $("prompt-note").textContent = `prompt es un str de ${q.length} caracteres.`;
   $("ctx-source").hidden = !ctxOn;
@@ -247,7 +247,7 @@ function render() {
   $("chips-in").innerHTML = chips(chunks(q), "");
   $("scale-req").style.width = `${reqTokens / LIMIT * 100}%`;
   $("scale-csv").style.left = `${CSV_TOKENS / LIMIT * 100}%`;
-  $("scale-notes").textContent = `Relleno verde = esta petición: ${ctxOn ? "2.151 tokens, medidos (2.835 caracteres)" : (q === DEFAULT_Q ? "18 tokens, medidos (42 caracteres)" : "~" + es(reqTokens) + " tokens, aproximados (" + q.length + " caracteres)")}. Barra completa = límite de ${MODEL}: ${es(LIMIT)} tokens. Marca gris = la tabla completa de socios en el prompt: ${es(CSV_TOKENS)} tokens, contados por OpenAI (${es(CSV_CHARS)} caracteres).`;
+  $("scale-notes").textContent = `Relleno verde = esta petición: ${ctxOn ? "715 tokens, medidos (2.835 caracteres)" : (q === DEFAULT_Q ? "18 tokens, medidos (42 caracteres)" : "~" + es(reqTokens) + " tokens, aproximados (" + q.length + " caracteres)")}. Barra completa = límite de ${MODEL}: ${es(LIMIT)} tokens. Marca gris = la tabla completa de socios en el prompt: ${es(CSV_TOKENS)} tokens, contados por OpenAI (${es(CSV_CHARS)} caracteres).`;
   $("ctx-only").hidden = !ctxOn;
   $("chips-out").innerHTML = chips(OUT.slice(0, generated), "out") + (generated < OUT.length ? '<span class="chip">?</span>' : "");
   $("generate").disabled = step !== 3 || generated >= OUT.length;
