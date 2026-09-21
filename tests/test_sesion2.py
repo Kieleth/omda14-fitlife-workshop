@@ -70,8 +70,12 @@ PROMPT_FIXES = [("FitLife — Text-to-Code", "FitLife: Text-to-Code"), ("df_memb
 BASELINE_FIXES = {"paso_0.py": [("tu primer app web", "tu primera app web")],
                   "paso_7.py": [("Paso 7 — Prompt enriquecido", "Paso 7: Prompt enriquecido")],
                   **{f"paso_{n}.py": PROMPT_FIXES for n in range(8, 12)}}
-BASELINE_FIXES["paso_11.py"] = PROMPT_FIXES + [('"No se pudo obtener un resultado después de {MAX_RETRIES} intentos."',
-                                              '"Sin resultado tras {intento + 1} intento(s) de {MAX_RETRIES}."')]
+BASELINE_FIXES["paso_11.py"] = PROMPT_FIXES + [
+    ('"No se pudo obtener un resultado después de {MAX_RETRIES} intentos."',
+     '"Sin resultado tras {intento + 1} intento(s) de {MAX_RETRIES}."'),
+    # Un intento sin error borra el error del anterior: el mensaje final no debe atribuirlo al último.
+    ("                # ¡Éxito!\n                break\n", "                # ¡Éxito!\n                last_error = None\n                break\n"),
+]
 
 # Errores intencionados de la sesión 1; en esta rama los pasos 0 a 7 se entregan corregidos.
 INTENDED_ERRORS = {"paso_0.py": [("import streamlt as st", "import streamlit as st")],
@@ -249,7 +253,7 @@ class OfflineAppTests(unittest.TestCase):
         sent = json.loads(app.json[-1].value)["messages"]
         self.assertEqual([m["role"] for m in sent], ["system", "user", "assistant", "user"])
         self.assertIn("KeyError", sent[3]["content"])
-        self.assertEqual(app.caption[-1].value, "Peticiones enviadas: 2. Cada una lleva la lista messages completa.")
+        self.assertEqual(app.caption[-1].value, "Peticiones enviadas: 2. La última pesó 250 tokens de prompt. Cada una lleva la lista messages completa.")
 
     def test_bonus_scores_the_twelve_questions_offline(self):
         source = (ROOT / "exercises" / BONUS).read_text(encoding="utf-8")

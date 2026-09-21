@@ -96,7 +96,8 @@
 # ── Vía avanzada ────────────────────────────────────────────
 #
 # Antes del exec, mira el código: si contiene "import" o
-# "open(", no lo ejecutes y enseña un aviso. Son dos líneas.
+# "open(", no lo ejecutes y enseña un aviso. Son tres o cuatro
+# líneas; piensa qué pasa con los desplegables de abajo.
 # Repite las preguntas de arriba y apunta cuáles se quedan
 # fuera. ¿Alguna que sí querías? Ese es el coste de la regla.
 #

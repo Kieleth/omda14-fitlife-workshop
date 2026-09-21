@@ -76,7 +76,8 @@
 #
 # ── El reto de verdad ──────────────────────────────────────
 #
-# Modifica el system_prompt (empieza en la línea 147) para que
+# Modifica el system_prompt (la variable que empieza por
+# system_prompt = f""") para que
 # incluya los valores reales de las columnas más importantes.
 # Pega estas tres líneas sin el "#", dentro de las comillas
 # triples, debajo de la línea Columnas: {list(df_members.columns)}

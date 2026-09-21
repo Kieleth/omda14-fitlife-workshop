@@ -256,7 +256,6 @@ if resultados:
             f"Nota de la pregunta {numero}",
             [SIN_MARCAR] + ETIQUETAS,
             key=f"veredicto_{numero}",
-            label_visibility="collapsed",
         ))
 
     st.subheader("Tu nota")

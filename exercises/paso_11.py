@@ -207,7 +207,7 @@ if prompt:
             resultado, error = run_code(code, df_members, df_context)
 
             if error is None:
-                # ¡Éxito!
+                last_error = None
                 break
             else:
                 last_error = error
@@ -236,4 +236,4 @@ if prompt:
 
     with st.expander("Lo que enviamos en el último intento"):
         st.json({"model": "gpt-4.1-mini", "messages": messages})
-    st.caption(f"Peticiones enviadas: {intento + 1}. Cada una lleva la lista messages completa.")
+    st.caption(f"Peticiones enviadas: {intento + 1}. La última pesó {response.usage.prompt_tokens} tokens de prompt. Cada una lleva la lista messages completa.")
