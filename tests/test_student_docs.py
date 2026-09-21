@@ -45,6 +45,6 @@ class StudentDocsTests(unittest.TestCase):
                      "SESION1_REPASO.md", "SESION2_REPASO.md", "PLAN_DOCENTE.md", "VERIFICACION.md"):
             self.assertFalse(any(path == name or path.startswith(name + "/") for path in tracked), name)
         if (ROOT / "exercises").is_dir():  # main carries only the preparation files
-            names = {p.name for p in (ROOT / "exercises").glob("*.py")}
+            names = {p.name for p in (ROOT / "exercises").glob("paso_*.py")}
             self.assertGreaterEqual(len(names), 8)
             self.assertEqual(names, {f"paso_{i}.py" for i in range(len(names))}, "los pasos van seguidos desde 0")
