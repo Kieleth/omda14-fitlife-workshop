@@ -206,3 +206,9 @@ Reglas:
         else:
             st.warning("No se pudo extraer código de la respuesta del LLM.")
             st.code(generated)
+
+    with st.expander("Lo que enviamos"):
+        st.json({"model": "gpt-4.1-mini", "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}]})
+    with st.expander("Lo que recibimos"):
+        st.json(response.model_dump())
+    st.caption(f"Tokens: {response.usage.prompt_tokens} enviados, {response.usage.completion_tokens} recibidos. finish_reason: {response.choices[0].finish_reason}")

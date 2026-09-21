@@ -76,8 +76,11 @@
 #
 # ── El reto de verdad ──────────────────────────────────────
 #
-# Modifica el system_prompt (línea 140 en adelante) para que
-# incluya los valores reales de las columnas más importantes:
+# Modifica el system_prompt (empieza en la línea 147) para que
+# incluya los valores reales de las columnas más importantes.
+# Pega estas tres líneas sin el "#", dentro de las comillas
+# triples, debajo de la línea Columnas: {list(df_members.columns)}
+# del primer DataFrame:
 #
 #   Valores de 'plan': basic (29€), premium (49€), family (69€)
 #   Valores de 'status': active, churned

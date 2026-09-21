@@ -30,7 +30,8 @@
 #
 # Una contraseña que os identifica. Cada petición cuesta dinero
 # (fracciones de céntimo), así que OpenAI necesita saber quién
-# pide qué. El curso te da una clave para el taller; no la
+# pide qué. El curso te da una clave para el taller, la misma
+# en todas las sesiones, publicada en el chat del curso; no la
 # compartas fuera de clase.
 #
 # ── Cómo crear el archivo .env ──────────────────────────────

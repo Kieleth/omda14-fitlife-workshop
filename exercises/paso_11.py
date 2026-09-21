@@ -217,7 +217,7 @@ if prompt:
             st.write("**Resultado:**")
             st.write(resultado)
         else:
-            st.error(f"No se pudo obtener un resultado después de {MAX_RETRIES} intentos.")
+            st.error(f"Sin resultado tras {intento + 1} intento(s) de {MAX_RETRIES}.")
             if last_error:
                 st.write(f"Último error: `{last_error}`")
 

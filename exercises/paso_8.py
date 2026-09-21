@@ -120,7 +120,8 @@ if prompt:
     with st.chat_message("assistant"):
 
         # ── PROMPT DEL SISTEMA ──────────────────────────────
-        # La instrucción clave está en la primera línea.
+        # La primera línea dice qué queremos; las reglas de abajo
+        # también. Haz antes el experimento de la cabecera.
         # Borra ___ (solo el hueco, las comillas se quedan) y
         # escribe la instrucción para que el LLM genere código
         # Python en vez de responder con texto.

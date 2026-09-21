@@ -5,7 +5,7 @@ Construirás paso a paso una aplicación para explorar los datos de FitLife y ha
 ## Antes de clase
 
 1. Si no hiciste la sesión 1, sigue [la guía de instalación](SETUP.md) de tu sistema operativo y lee [el caso FitLife](ENUNCIADO.md).
-2. Comprueba que tienes el archivo `.env` con la clave del curso en la raíz del proyecto. Se creó en el paso 5 de la sesión 1; la cabecera de `exercises/paso_5.py` explica cómo crearlo.
+2. Comprueba que tienes el archivo `.env` con la clave del curso en la raíz del proyecto. Es la misma clave de la sesión 1 y se comparte en el chat del curso; la cabecera de `exercises/paso_5.py` explica cómo crear el archivo.
 
 ## Durante la clase
 

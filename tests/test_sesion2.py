@@ -34,6 +34,8 @@ PROMPT_FIXES = [("FitLife — Text-to-Code", "FitLife: Text-to-Code"), ("df_memb
 BASELINE_FIXES = {"paso_0.py": [("tu primer app web", "tu primera app web")],
                   "paso_7.py": [("Paso 7 — Prompt enriquecido", "Paso 7: Prompt enriquecido")],
                   **{f"paso_{n}.py": PROMPT_FIXES for n in range(8, 12)}}
+BASELINE_FIXES["paso_11.py"] = PROMPT_FIXES + [('"No se pudo obtener un resultado después de {MAX_RETRIES} intentos."',
+                                              '"Sin resultado tras {intento + 1} intento(s) de {MAX_RETRIES}."')]
 
 # Errores intencionados de la sesión 1; en esta rama los pasos 0 a 7 se entregan corregidos.
 INTENDED_ERRORS = {"paso_0.py": [("import streamlt as st", "import streamlit as st")],
@@ -192,7 +194,8 @@ class OfflineAppTests(unittest.TestCase):
         app = self.app(10, "¿Cuál es la satisfacción media de los socios?", solve=True)
         self.assertClean(app)
         self.assertTrue(app.error[0].value.startswith("Error al ejecutar el código: 'satisfaccion'"))
-        self.assertEqual([x.label for x in app.expander], ["Ver código generado", "Detalles del error"])
+        self.assertEqual([x.label for x in app.expander],
+                         ["Ver código generado", "Detalles del error", "Lo que enviamos", "Lo que recibimos"])
         app = self.app(10, "¿Cuántos registros tiene el dataset de socios?", solve=True)
         self.assertClean(app)
         self.assertEqual(len(app.error), 0)
