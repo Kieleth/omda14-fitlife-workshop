@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 7: Dale contexto de verdad  (Bonus)
+# PASO 7: Dale contexto de verdad  (resuelto, opcional)
 # ============================================================
 #
 # ── La hipótesis ────────────────────────────────────────────
@@ -189,16 +189,16 @@ Columnas:
 - churn_reason: motivo de baja (price, competitor, no_use, relocation, personal)
 
 Distribución por plan:
-{___}
+{planes}
 
 Distribución por centro:
-{___}
+{centros}
 
 Distribución por estado:
-{___}
+{status}
 
 Distribución por canal de captación:
-{___}
+{canales}
 
 Muestra de datos (5 primeras filas):
 {df_members.head().to_string()}
@@ -228,3 +228,10 @@ Si no puedes calcular algo con certeza, dilo claramente. No inventes números.""
             ]
         )
         st.write(response.choices[0].message.content)
+
+    with st.expander("Lo que enviamos"):
+        st.json({"model": "gpt-4.1-mini", "messages": [{"role": "system", "content": context}, {"role": "user", "content": prompt}]})
+        st.caption(f"El contexto tiene {len(context)} caracteres. Es una de las dos entradas de messages.")
+    with st.expander("Lo que recibimos"):
+        st.json(response.model_dump())
+    st.caption(f"Tokens: {response.usage.prompt_tokens} enviados, {response.usage.completion_tokens} recibidos. finish_reason: {response.choices[0].finish_reason}")

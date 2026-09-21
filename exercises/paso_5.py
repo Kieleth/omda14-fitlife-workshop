@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 5: Conecta el cerebro
+# PASO 5: Conecta el cerebro  (resuelto)
 # ============================================================
 #
 # ── ¿Qué es un LLM? ────────────────────────────────────────
@@ -144,7 +144,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = ___  # Crea el cliente: OpenAI()
+client = OpenAI()
 
 st.title("FitLife Dashboard")
 
@@ -162,3 +162,9 @@ if prompt:
             ]
         )
         st.write(response.choices[0].message.content)
+
+    with st.expander("Lo que enviamos"):
+        st.json({"model": "gpt-4.1-mini", "messages": [{"role": "user", "content": prompt}]})
+    with st.expander("Lo que recibimos"):
+        st.json(response.model_dump())
+    st.caption(f"Tokens: {response.usage.prompt_tokens} enviados, {response.usage.completion_tokens} recibidos")

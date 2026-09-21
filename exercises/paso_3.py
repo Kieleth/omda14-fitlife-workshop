@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 3: Explora los dos datasets
+# PASO 3: Explora los dos datasets  (resuelto)
 # ============================================================
 #
 # ── Los datos de FitLife ────────────────────────────────────
@@ -72,10 +72,16 @@ st.dataframe(df_members.head())
 
 # --- Dataset 2: contexto mensual ---
 # ↓ Mismo patrón que la línea 66: pd.read_csv("data/...")
-df_context = ___  # Carga data/fitlife_context.csv
+df_context = pd.read_csv("data/fitlife_context.csv")  # Carga data/fitlife_context.csv
 
 st.subheader("Contexto mensual")
 # ↓ Mismo patrón que la línea 69: len(df_context) y len(df_context.columns)
-st.write(f"**{___}** filas, **{___}** columnas")
+st.write(f"**{len(df_context)}** filas, **{len(df_context.columns)}** columnas")
 st.write("Columnas:", list(df_context.columns))
 st.dataframe(df_context.head())
+
+with st.expander("Tu verdad: los recuentos de la sesión 1"):
+    st.write(df_members["status"].value_counts())
+    st.write(df_members["plan"].value_counts())
+    st.write(df_members["center"].value_counts())
+    st.write(df_members[df_members["plan"] == "basic"]["status"].value_counts())

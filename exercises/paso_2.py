@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 2: Carga datos
+# PASO 2: Carga datos  (resuelto)
 # ============================================================
 #
 # ── ¿Qué es pandas? ────────────────────────────────────────
@@ -68,7 +68,7 @@ import pandas as pd
 
 st.title("FitLife Dashboard")
 
-df = pd.read_csv("fitlife_members.csv")
+df = pd.read_csv("data/fitlife_members.csv")
 
 st.write(f"El dataset tiene **{len(df)}** filas y **{len(df.columns)}** columnas.")
 st.dataframe(df)

@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 6: Pregúntale sobre los datos
+# PASO 6: Pregúntale sobre los datos  (resuelto)
 # ============================================================
 #
 # ── ¿Qué pasa cuando un LLM habla de datos que no ha visto?
@@ -157,3 +157,10 @@ Columnas: {list(df_context.columns)}"""
             ]
         )
         st.write(response.choices[0].message.content)
+
+    with st.expander("Lo que enviamos"):
+        st.json({"model": "gpt-4.1-mini", "messages": [{"role": "system", "content": context}, {"role": "user", "content": prompt}]})
+        st.caption(f"El contexto tiene {len(context)} caracteres. Es una de las dos entradas de messages.")
+    with st.expander("Lo que recibimos"):
+        st.json(response.model_dump())
+    st.caption(f"Tokens: {response.usage.prompt_tokens} enviados, {response.usage.completion_tokens} recibidos. finish_reason: {response.choices[0].finish_reason}")

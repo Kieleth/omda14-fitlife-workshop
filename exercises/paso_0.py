@@ -1,4 +1,4 @@
-# PASO 0: arranca la app
+# PASO 0: arranca la app  (resuelto)
 #
 # Streamlit es una librería de Python. Funciones como st.title
 # y st.write muestran elementos en el navegador.
@@ -30,7 +30,7 @@
 # Guía de la sesión y Git: SESION1.md.
 # Siguiente: exercises/paso_1.py.
 
-import streamlt as st
+import streamlit as st
 
 st.title("Hola Mundo")
 st.write("Si ves esto en el navegador, tu primera app web funciona.")

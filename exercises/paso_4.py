@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 4: Habla con la app
+# PASO 4: Habla con la app  (resuelto)
 # ============================================================
 #
 # ── ¿Qué es un chat en Streamlit? ──────────────────────────
@@ -87,4 +87,4 @@ if prompt:
     #      en la misma línea y con los mismos espacios delante.
     #    Importante: debe ir indentado (con espacios) dentro del with
     with st.chat_message("assistant"):
-        ___
+        st.write(f"Has dicho: {prompt}")

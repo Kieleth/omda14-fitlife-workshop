@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 1: Muestra información en pantalla
+# PASO 1: Muestra información en pantalla  (resuelto)
 # ============================================================
 #
 # ── ¿Cómo funciona Streamlit? ──────────────────────────────
@@ -50,7 +50,7 @@ import streamlit as st
 st.title("FitLife Dashboard")
 
 # ↓ Borra esta línea entera y escribe: st.subheader("Análisis de socios")
-___
+st.subheader("Análisis de socios")
 
 # ↓ Borra esta línea entera y escribe: st.write("Bienvenido al panel de control de FitLife.")
-___
+st.write("Bienvenido al panel de control de FitLife.")
