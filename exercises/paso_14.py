@@ -4,7 +4,8 @@
 #
 # ── ¿Qué hace con las preguntas difíciles? ─────────────────
 #
-# Prueba esta pregunta en paso_13:
+# Prueba esta pregunta aquí, antes de rellenar los huecos
+# (la app arranca con ellos vacíos):
 #   "¿Las bajas del plan básico aumentaron cuando el
 #    competidor bajó precios?"
 #
@@ -44,13 +45,16 @@
 #
 # Completa las dos variables marcadas con ___ :
 #
-#   1. EXAMPLES: añadir ejemplos de código (busca EXAMPLES = """___""")
-#   2. RULES: añadir reglas de cálculo del negocio (busca RULES = """___""")
+#   1. EXAMPLES: añadir ejemplos de código (la línea que
+#      empieza por EXAMPLES, debajo de "PASO 1", fuera de
+#      esta cabecera)
+#   2. RULES: añadir reglas de cálculo del negocio (la línea
+#      que empieza por RULES, debajo de "PASO 2")
 #
 # Los dos ___ están dentro de comillas: son texto, y la app
 # arranca sin rellenarlos. Aprovéchalo. Antes de tocar nada,
 # activa "Mostrar código", haz la pregunta del competidor
-# aquí y apunta dos cosas: qué compara el código y cuántos
+# y apunta dos cosas: qué compara el código y cuántos
 # tokens pesa la petición (el pie de "Lo que enviamos").
 # Después rellena, guarda, haz la misma pregunta y compara.
 # En "Lo que enviamos" verás tus ejemplos dentro del system.

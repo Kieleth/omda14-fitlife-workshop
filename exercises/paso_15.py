@@ -81,8 +81,9 @@
 # default=str) y open("registro.jsonl", "a", encoding="utf-8").
 # Haz las doce preguntas y léelo entero. ¿Cuántas respuestas
 # podrías defender, con el código en la mano, delante de
-# quien decide el precio? El archivo es tuyo: no lo añadas
-# a git.
+# quien decide el precio? Los comandos de la guía no lo
+# guardan en Git; si quieres conservarlo, añádelo con
+# git add registro.jsonl antes del commit.
 #
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_15.py

@@ -86,7 +86,7 @@ Esa lista es la idea de hoy. El modelo no recordó su primer intento: recibió l
 
 ## Paso 12: que el chat recuerde
 
-**Qué haces.** Tres huecos: crear la lista del historial en `st.session_state`, guardar ahí cada pregunta y guardar cada respuesta. Antes de rellenar nada, arranca la app: el error rojo sale al abrirla, sin preguntar nada, porque el primer hueco está en una línea que Python lee nada más empezar. Rellena los tres y haz el diálogo de la cabecera, las tres preguntas en orden. Antes de enviar la segunda, «¿Cuál es el que tiene más socios?», apunta qué esperas que responda.
+**Qué haces.** Tres huecos: crear la lista del historial en `st.session_state`, guardar ahí cada pregunta y guardar cada respuesta. Antes de rellenar nada, arranca la app: el error rojo sale al abrirla, sin preguntar nada, porque el primer hueco está en una línea que Python lee nada más empezar. Rellena los tres y haz el diálogo de la cabecera, las tres preguntas en orden. Antes de enviar la segunda, «¿Cuál es el que tiene más socios?», apunta qué esperas que responda, y hazlo antes de seguir leyendo: el párrafo siguiente cuenta lo que suele pasar.
 
 **Qué hay detrás.** Cada vez que escribes, Streamlit ejecuta el archivo entero desde la primera línea; lo viste en la sesión 1. `prompt`, `messages` o `resultado` nacen y mueren en cada ejecución. `st.session_state` es lo único que sobrevive, y el bucle `for msg in st.session_state.messages` vuelve a pintar la conversación en cada vuelta. Lo que se guarda es texto: por eso, a la pregunta siguiente, una tabla vuelve a aparecer como texto en el historial.
 
@@ -98,7 +98,7 @@ Ahora abre «Lo que enviamos en la última petición», debajo de la respuesta. 
 
 **Puerta.** Con el reto de verdad hecho, la tercera pregunta responde sobre planes, y su desplegable muestra seis entradas en `messages`.
 
-**Antes de seguir.** Mira el código de «¿Cuál es el que tiene más socios?». ¿Cuenta filas o socios distintos con `member_id`? En la sesión 2 viste que no es lo mismo: cada socio tiene una fila por mes. Apunta qué cuenta.
+**Antes de seguir.** Mira el código de «¿Cuál es el que tiene más socios?». ¿Cuenta filas o socios distintos? No es lo mismo: la tabla tiene una fila por socio y por mes, 16.334 filas de 940 socios, y la columna `member_id` identifica a cada socio. Pregunta «¿Qué plan tiene más socios distintos, contando member_id?» y compara las dos respuestas. Apunta cuál responde a lo que tú querías saber.
 
 ## Paso 13: una segunda petición que explica el número
 
@@ -118,6 +118,8 @@ La explicación suena a informe, y el número de dentro es real. El resto de la 
 
 **Qué hay detrás.** Los ejemplos son texto dentro del `system`: ábrelo en «Lo que enviamos» y los verás. El modelo no los ejecuta; los imita. Por eso cambian la forma del código que escribe, y viajan en cada petición: mira cuánto ha subido el pie.
 
+En el código de esta pregunta verás dos cosas nuevas. `merge` une las dos tablas por la columna `month`: a cada fila de un socio le pega el precio del competidor de ese mes. `.diff()` resta a cada fila la anterior: con meses ordenados, dice cuánto cambió algo de un mes al siguiente, y `< 0` se queda con los meses en que bajó.
+
 Después prueba las preguntas 7 a 12 de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md), con y sin los ejemplos. Quizá ninguna daba error antes. Lo que cambia es qué se calcula: una pregunta que antes devolvía un sí o un no puede devolver dos márgenes, y el lifetime value puede pasar de sumar lo pagado a sumar el margen. Ninguna de las dos versiones es un error de Python. Decidir cuál es la buena es trabajo tuyo, no del modelo.
 
 La pregunta 12 merece el reto C: «¿Debería FitLife bajar el precio del plan básico?». Abre el código y busca de dónde sale la recomendación. Si sale de un umbral, ¿quién ha elegido ese umbral?
@@ -130,7 +132,9 @@ La pregunta 12 merece el reto C: «¿Debería FitLife bajar el precio del plan b
 
 **Qué haces.** Sin huecos. Es todo junto: el prompt con ejemplos, los reintentos, la explicación y el historial en pantalla. Como en los pasos 13 y 14, cada petición lleva solo la última pregunta; si quieres la conversación entera, ya sabes qué tres líneas faltan. Haz las doce preguntas de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) y ponle a cada una una nota: correcta, parcial, inventada o no puede. Después, las preguntas de la misión de la cabecera.
 
-**Qué hay detrás.** La de bajar el básico de 29 € a 24 € es la más útil de leer despacio. Abre el código: ¿multiplica por los socios de hoy, los activos del último mes, o por todas las filas de los tres años? La explicación repetirá la cifra que le des con toda seguridad, sea cual sea. Ninguna segunda pasada arregla un cálculo que responde a otra pregunta.
+**Qué hay detrás.** Lee la función `interpret_result()` antes de preguntar. Su prompt le cuenta al modelo los precios de los tres planes y que el competidor cobra 19 €. Por eso las explicaciones citan cifras que no salen del resultado: salen de ese texto, que escribió una persona. Es contexto útil, y también es texto que el modelo repite sin comprobar.
+
+La de bajar el básico de 29 € a 24 € es la más útil de leer despacio. Abre el código: ¿multiplica por los socios de hoy, los activos del último mes, o por todas las filas de los tres años? La explicación repetirá la cifra que le des con toda seguridad, sea cual sea. Ninguna segunda pasada arregla un cálculo que responde a otra pregunta.
 
 El reto A cambia el modelo. `gpt-4.1-nano` funciona con la clave del curso; `gpt-4.1` no, y el error 403 que verás lo dice: el proyecto no tiene acceso a ese modelo.
 

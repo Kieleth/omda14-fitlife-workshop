@@ -40,16 +40,21 @@
 # Para el chat, lo usamos así:
 #
 #   # Al principio del archivo (solo la primera vez):
-#   if "mensajes" not in st.session_state:
-#       st.session_state.mensajes = []
+#   if "messages" not in st.session_state:
+#       st.session_state.messages = []
 #
 #   # Cuando el usuario escribe algo:
-#   st.session_state.mensajes.append({"role": "user", ...})
+#   st.session_state.messages.append({"role": "user", ...})
 #
 #   # Para mostrar el historial:
-#   for msg in st.session_state.mensajes:
+#   for msg in st.session_state.messages:
 #       with st.chat_message(msg["role"]):
 #           st.write(msg["content"])
+#
+# Ojo con los nombres. st.session_state.messages es el
+# historial que ves en pantalla. messages, a secas, es la
+# lista que se envía al modelo en cada petición, la de la
+# sesión 2. Son dos listas distintas.
 #
 # ── Tres cosas nuevas en el código ─────────────────────────
 #
@@ -62,8 +67,11 @@
 #   seguida de if prompt:, escrito en una sola.
 #
 #   El interruptor "Mostrar código" (st.toggle) enseña el
-#   código de cada respuesta. Actívalo: en la sesión 2 viste
-#   que es la única forma de saber qué se ha calculado.
+#   código de cada respuesta. Actívalo antes de preguntar: en
+#   la sesión 2 viste que es la única forma de saber qué se
+#   ha calculado. Al tocarlo, el archivo vuelve a ejecutarse:
+#   el historial se queda y los desplegables de la última
+#   pregunta desaparecen hasta la siguiente.
 #
 # ── Tu reto ─────────────────────────────────────────────────
 #

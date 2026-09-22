@@ -89,9 +89,10 @@
 # números con re.findall(r"\d+(?:[.,]\d+)?", interpretation)
 # y busca cada uno en str(resultado). Si alguno no aparece,
 # pon un st.warning debajo con los que faltan. Cuidado con los
-# redondeos: 6,85 viene de 6.852678... Prueba la pregunta del
-# canal varias veces. ¿Qué número se escapa, y lo pilla tu
-# comprobación?
+# redondeos: 18.91 viene de 18.909556 y no aparece tal cual,
+# y el modelo puede escribir 18,91 con coma. Prueba la
+# pregunta del canal varias veces. ¿Qué número se escapa, y
+# lo pilla tu comprobación?
 #
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_13.py

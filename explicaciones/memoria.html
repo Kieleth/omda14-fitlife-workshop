@@ -341,7 +341,7 @@ const HISTORY = [
   {sent: 2, tokens: 403, code: "resultado = df_members['plan'].nunique()", result: "3",
    note: "La primera petición es la de siempre. El historial solo tiene tu pregunta, así que viajan el system y ella."},
   {sent: 4, tokens: 421, code: "resultado = df_members['plan'].value_counts().idxmax()", result: "premium",
-   note: "El modelo lee la primera pregunta y su respuesta antes de la segunda. «El que» ya se refiere a los planes: cuenta filas por plan y devuelve premium."},
+   note: "El modelo lee la primera pregunta y su respuesta antes de la segunda. «El que» ya se refiere a los planes: cuenta filas por plan y devuelve premium. Ojo: cuenta filas, una por socio y mes. Contando socios distintos con member_id, el plan con más socios es basic: 386, frente a 327 de premium."},
   {sent: 6, tokens: 438, code: "churn_counts = df_members[df_members['status'] == 'churned'].groupby('plan').size()\nresultado = churn_counts.idxmax()", result: "basic",
    note: "Seis entradas, y cada petición pesa más que la anterior. Fíjate en el código: cuenta filas churned por plan, no calcula una tasa."}
 ];
