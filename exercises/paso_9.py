@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 9: Ejecuta el código generado
+# PASO 9: Ejecuta el código generado  (resuelto)
 # ============================================================
 #
 # ── ¿Qué hicimos en paso_8? ────────────────────────────────
@@ -159,6 +159,9 @@ Tienes acceso a dos DataFrames ya cargados:
 
 1. df_members: datos de socios ({len(df_members)} filas)
    Columnas: {list(df_members.columns)}
+   Valores de 'plan': basic (29€), premium (49€), family (69€)
+   Valores de 'status': active, churned
+   Valores de 'center': downtown, northside, eastpark, westfield, southgate
 
 2. df_context: contexto mensual ({len(df_context)} filas)
    Columnas: {list(df_context.columns)}
@@ -188,7 +191,7 @@ Reglas:
         # ↓ Borra ___ y escribe:
         #   re.search(r"```(?:python)?\n(.*?)```", generated, re.DOTALL)
 
-        match = ___
+        match = re.search(r"```(?:python)?\n(.*?)```", generated, re.DOTALL)
 
         if match:
             code = match.group(1)
@@ -211,7 +214,7 @@ Reglas:
                 "pd": pd,
             }
 
-            ___
+            exec(code, exec_globals)
 
             # Mostrar el resultado
             if "resultado" in exec_globals:

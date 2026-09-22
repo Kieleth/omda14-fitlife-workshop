@@ -1,5 +1,5 @@
 # ============================================================
-# BONUS: mide el sistema con las doce preguntas de test
+# BONUS: mide el sistema con las doce preguntas de test  (resuelto)
 # ============================================================
 #
 # ── ¿Para qué es este ejercicio? ────────────────────────────
@@ -128,7 +128,7 @@ def texto_de_valores(df, columnas):
     """
     lineas = []
     for columna in columnas:
-        lineas.append(___)
+        lineas.append(f"   Valores de '{columna}': " + ", ".join(str(valor) for valor in df[columna].dropna().unique()))
     return "\n".join(lineas)
 
 
@@ -201,7 +201,30 @@ def evaluar(pregunta, system_prompt):
     cuenta como error. Los segundos son los de la petición,
     no los del exec.
     """
-    ___
+    inicio = time.time()
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": pregunta},
+        ],
+    )
+    segundos = time.time() - inicio
+    generado = response.choices[0].message.content
+    match = re.search(r"```(?:python)?\n(.*?)```", generado, re.DOTALL)
+    if match:
+        resultado, error = ejecutar_codigo(match.group(1))
+    else:
+        resultado, error = None, "No se pudo extraer código de la respuesta."
+    return {
+        "pregunta": pregunta,
+        "codigo": match.group(1) if match else generado,
+        "resultado": resultado,
+        "error": error,
+        "prompt_tokens": response.usage.prompt_tokens,
+        "completion_tokens": response.usage.completion_tokens,
+        "segundos": segundos,
+    }
 
 
 def resumen(valor):
@@ -263,7 +286,7 @@ if resultados:
     # El recuento: cuántas preguntas has puesto en cada
     # etiqueta de ETIQUETAS. Las que sigan sin marcar no
     # cuentan en ninguna.
-    recuento = ___
+    recuento = {etiqueta: veredictos.count(etiqueta) for etiqueta in ETIQUETAS}
 
     st.write(" | ".join(f"{etiqueta}: {recuento[etiqueta]}" for etiqueta in ETIQUETAS))
     st.caption(f"Sin marcar: {len(PREGUNTAS) - sum(recuento.values())} de {len(PREGUNTAS)}.")

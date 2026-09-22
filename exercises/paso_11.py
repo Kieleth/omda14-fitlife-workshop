@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 11: Autocorrección  (Bonus)
+# PASO 11: Autocorrección  (resuelto, opcional)
 # ============================================================
 #
 # ── ¿Qué pasa cuando el código falla? ──────────────────────

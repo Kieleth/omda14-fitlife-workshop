@@ -1,5 +1,5 @@
 # ============================================================
-# PASO 8: Haz que escriba código
+# PASO 8: Haz que escriba código  (resuelto)
 # ============================================================
 #
 # ── ¿Qué aprendimos en la sesión 1? ────────────────────────
@@ -138,7 +138,7 @@ if prompt:
         #   Genera solo código Python/pandas que responda a la pregunta del usuario.
         #   o "Escribe únicamente código Python..."
 
-        system_prompt = f"""___
+        system_prompt = f"""Genera solo código Python/pandas que responda a la pregunta del usuario.
 
 Tienes acceso a dos DataFrames ya cargados:
 
