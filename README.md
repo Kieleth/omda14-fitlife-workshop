@@ -10,24 +10,26 @@ Vas a construir, paso a paso, una aplicación para explorar los datos de FitLife
 
 **Cuando termines la comprobación, ya estás preparado.** No necesitas una clave de acceso a un modelo para esta preparación; la clave del curso se usa a partir del paso 5 de la sesión 1.
 
-## Cuando empiece la sesión 2
+## Cuando empiece la sesión 3
 
-Los ejercicios de la sesión 2 y su guía están en la rama `clase/sesion-2`. Esa rama trae además los pasos 0 a 7 de la sesión 1 en su versión terminada, para repasar y comparar.
+Los ejercicios de la sesión 3 y su guía están en la rama `clase/sesion-3`. Esa rama trae además los pasos 0 a 11 de las sesiones 1 y 2 en su versión terminada, para repasar y comparar.
 
-Si hiciste la sesión 1 en tu rama `alumno/sesion-1`, sigue la sección «Preparar tu rama» de la [guía de la sesión 2](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-2/SESION2.md): primero guardas tu trabajo con un commit y después creas `alumno/sesion-2`.
+Si hiciste la sesión 2 en tu rama `alumno/sesion-2`, sigue la sección «Preparar tu rama» de la [guía de la sesión 3](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-3/SESION3.md): primero guardas tu trabajo con un commit y después creas `alumno/sesion-3`. Si te quedaste en la sesión 1, la misma sección sirve desde `alumno/sesion-1`.
 
 Si empiezas hoy, abre la carpeta del proyecto en VS Code, abre **Terminal > New Terminal** y ejecuta:
 
 ```text
 git fetch origin
-git switch -c alumno/sesion-2 origin/clase/sesion-2
+git switch -c alumno/sesion-3 origin/clase/sesion-3
 ```
 
-`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama, `alumno/sesion-2`, a partir de la rama de la clase; en ella quedan tus cambios, en tu ordenador. Al cambiar de rama aparecen en la carpeta `exercises/`, `explicaciones/`, `PREGUNTAS_TEST.md` y la guía `SESION2.md`, y el README cambia por el de la sesión.
+`fetch` descarga lo publicado para la clase. `switch -c` crea tu rama, `alumno/sesion-3`, a partir de la rama de la clase; en ella quedan tus cambios, en tu ordenador. Al cambiar de rama aparecen en la carpeta `exercises/`, `explicaciones/`, `PREGUNTAS_TEST.md` y las guías de las sesiones, y el README cambia por el de la sesión.
 
 Si `git status` muestra archivos modificados antes de cambiar de rama, [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo conservarlos.
 
-## La sesión 1 por tu cuenta
+## Las sesiones anteriores por tu cuenta
+
+La sesión 2 con sus huecos sigue en la rama `clase/sesion-2`, con su [guía](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-2/SESION2.md). Para hacerla desde cero, `git switch -c alumno/sesion-2 origin/clase/sesion-2` después de `git fetch origin`.
 
 Los ejercicios de la sesión 1 con sus huecos siguen en la rama `clase/sesion-1`, con su [guía](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-1/SESION1.md). Para hacerla desde cero:
 
