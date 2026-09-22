@@ -108,7 +108,7 @@ Ahora abre «Lo que enviamos en la última petición», debajo de la respuesta. 
 
 La explicación suena a informe, y el número de dentro es real. El resto de la frase sale del mismo sitio que las respuestas de la sesión 1: el modelo escribe lo probable. Si añade una cifra que no está en el resultado, esa cifra no la ha calculado nadie. Haz el reto A de la cabecera con las tres preguntas y busca cada número de la explicación dentro del `system` de la pasada 2. Los que no estén ahí no salen de tus datos.
 
-**Simulación 6, estaciones 4 y 5.** Las dos pasadas con el número viajando como texto, y dos explicaciones reales con sus números marcados: los que están en el resultado y los que no.
+**Simulación 6, estaciones 4 y 5.** Las dos pasadas con el número viajando como texto, y varias explicaciones reales con sus números marcados: los que están en el resultado y los que no.
 
 **Puerta.** La explicación de la tasa de churn del básico en pantalla, y en `mis_notas.md`, para una de las preguntas del reto A, qué números de la explicación están en el resultado y cuáles no.
 

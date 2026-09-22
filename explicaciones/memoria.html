@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMDA14 · La memoria es lo que envías</title>
+<style>
+:root { color-scheme:light dark; --bg:#f6f5f1; --ink:#20332f; --muted:#566660; --line:#ccd5cf; --paper:#fff; --accent:#176451; --soft:#e1f0e9; --alert:#fbd9c4; --alert-ink:#7a2410; }
+@media(prefers-color-scheme:dark) { :root { --bg:#17211f; --ink:#e5eeea; --muted:#aabdb4; --line:#41584e; --paper:#202e29; --accent:#9bdac1; --soft:#294638; --alert:#5a2a1a; --alert-ink:#ffd2bf; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,sans-serif; }
+main { max-width:1180px; margin:auto; padding:36px 24px; }
+a { color:var(--accent); }
+.eyebrow { color:var(--muted); letter-spacing:.12em; font-size:12px; font-weight:650; }
+h1 { font-size:clamp(28px,4vw,44px); line-height:1.15; margin:12px 0; }
+h2 { font-size:20px; margin:0 0 12px; }
+h3 { font-size:15px; margin:14px 0 6px; }
+p { margin:8px 0 18px; }
+.intro { max-width:800px; }
+.steps { display:flex; flex-wrap:wrap; gap:10px 20px; padding:18px 0; margin:18px 0; list-style:none; border-block:1px solid var(--line); }
+.steps li,.note { color:var(--muted); font-size:14px; }
+.steps [aria-current="step"] { color:var(--accent); font-weight:750; text-decoration:underline; text-underline-offset:6px; }
+.flow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
+.station { min-width:0; padding:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.station.active { border-color:var(--accent); background:var(--soft); }
+.station:not(.reached) .body, .station.reached .wait { display:none; }
+.station .note { margin:6px 0 10px; }
+label { display:block; font-size:14px; margin:0 0 6px; }
+button,input { font:inherit; }
+input[type=checkbox] { width:auto; margin-right:8px; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; max-height:300px; overflow:auto; margin:8px 0; }
+code { font-size:13px; }
+.bubble { padding:12px 14px; border-radius:12px; background:var(--paper); border:1px solid var(--line); overflow-wrap:anywhere; margin:8px 0; }
+.reply { margin:4px 0 12px 24px; }
+mark { background:transparent; color:inherit; }
+mark.on, mark.in { background:var(--accent); color:var(--bg); border-radius:3px; }
+mark.in, mark.out, mark.base { padding:0 3px; }
+mark.out { background:var(--alert); color:var(--alert-ink); border:1px dashed var(--alert-ink); border-radius:3px; font-weight:700; }
+mark.base { border-bottom:2px dotted var(--ink); }
+.bars { display:grid; grid-template-columns:minmax(0,auto) minmax(0,1fr) auto; gap:6px 8px; align-items:center; font-size:13px; margin:10px 0; }
+.bars .l { font-family:monospace; overflow-wrap:anywhere; }
+.bars .b { height:16px; border:1px solid var(--line); border-radius:3px; background:var(--paper); overflow:hidden; }
+.bars .b i { display:block; height:100%; min-width:3px; background:var(--accent); transition:width .5s; }
+.bars .v { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.msgs { list-style:none; margin:8px 0; padding:0; display:grid; gap:6px; }
+.msgs li { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); font-size:13px; }
+.msgs li.added { border-color:var(--accent); animation:pop .35s; }
+.role { display:inline-block; margin-bottom:4px; padding:1px 8px; border:1px solid var(--line); border-radius:12px; font-family:monospace; font-size:12px; }
+.msgs li.added .role { border-color:var(--accent); color:var(--accent); font-weight:700; }
+.msgs .txt { display:block; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--muted); }
+.msgs:empty::before { content:"(vacía)"; color:var(--muted); font-size:13px; }
+@keyframes pop { from { transform:scale(.96); opacity:0; } }
+.vars { display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px 12px; margin:8px 0; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:var(--paper); font-size:13px; }
+.vars dt { font-family:monospace; }
+.vars dd { margin:0; overflow-wrap:anywhere; color:var(--muted); }
+.vars dd.new { color:var(--ink); animation:pop .35s; }
+.legend, .verdicts { list-style:none; padding:0; margin:10px 0; font-size:13px; }
+.legend li, .verdicts li { margin:6px 0; }
+.legend { color:var(--muted); }
+.seg { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+.warn { padding:12px 14px; margin:12px 0; border:1px solid var(--accent); border-radius:6px; background:var(--paper); }
+.pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0 16px; }
+.pair > div { min-width:0; }
+.detail { padding:24px 0 8px; min-height:140px; }
+.controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:12px 0 24px; }
+button { min-height:44px; padding:9px 16px; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
+button.primary { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+button.small { min-height:0; padding:4px 12px; font-size:14px; }
+button.small[aria-pressed="true"] { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+button.turn { display:block; width:100%; text-align:left; margin:8px 0 0; border-radius:12px; overflow-wrap:anywhere; }
+button.turn[aria-pressed="true"] { border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); font-weight:650; }
+button:disabled { opacity:.45; cursor:default; }
+footer { border-top:1px solid var(--line); padding-top:18px; }
+@media(max-width:900px) { .flow { grid-template-columns:1fr; } }
+@media(max-width:700px) { main { padding:24px 16px; } .detail { min-height:0; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">OMDA14 · SESIÓN 3 · PASOS 12 A 14</div>
+<h1>La memoria es lo que envías</h1>
+<p class="intro">Tu app enseña la conversación entera y parece que el modelo la recuerda. No recuerda nada: en cada petición lee lo que va dentro de <code>messages</code>, y nada más. Sigue tres preguntas seguidas, un resultado que vuelve al modelo como texto y unos ejemplos que cambian qué se calcula.</p>
+<p class="note">Capturas reales del 22 de septiembre de 2026 con gpt-4.1-mini: las preguntas, el código generado, los resultados, los tokens y las explicaciones salen de ahí. Tus números pueden variar unos tokens, y el modelo no escribe dos veces lo mismo. Esta página no llama a ninguna API, no ejecuta Python y no está conectada a tu app.</p>
+</header>
+<ol class="steps" aria-label="Recorrido de la memoria de una conversación">
+<li aria-current="step">1. La pantalla recuerda, el modelo no</li><li>2. Cada pregunta vuelve a ejecutar el archivo</li><li>3. La conversación entra en messages</li><li>4. Dos pasadas</li><li>5. Números que no estaban</li><li>6. Ejemplos en el prompt</li>
+</ol>
+<div class="flow">
+
+<section class="station active reached" aria-labelledby="t0">
+<h2 id="t0">La pantalla recuerda, el modelo no</h2>
+<div class="body">
+<p class="note">El paso 12 con sus tres huecos rellenos, antes del reto de verdad. Las tres preguntas siguen en pantalla. Pulsa una para ver qué viajó con ella.</p>
+<div class="pair">
+<div>
+<h3>Tu app, en pantalla</h3>
+<button id="turn-0" class="turn" type="button" aria-pressed="true"></button>
+<div class="bubble reply"><code id="reply-0"></code></div>
+<button id="turn-1" class="turn" type="button" aria-pressed="false"></button>
+<div class="bubble reply"><code id="reply-1"></code></div>
+<button id="turn-2" class="turn" type="button" aria-pressed="false"></button>
+<div class="bubble reply"><code id="reply-2"></code></div>
+</div>
+<div>
+<h3>Lo que enviamos con la pregunta <span id="s1-n"></span></h3>
+<pre><code id="s1-json"></code></pre>
+<p class="note" id="s1-count"></p>
+<p class="note">El código que volvió:</p>
+<pre><code id="s1-code"></code></pre>
+<p class="note" id="s1-note"></p>
+</div>
+</div>
+<p class="note">El <code>content</code> del <code>system</code> va recortado: sigue con los dos DataFrames, sus columnas y valores, y las reglas. Es el mismo en las tres peticiones. Por eso pesan lo mismo, <span id="s1-tokens"></span> tokens de prompt, haya lo que haya en pantalla.</p>
+</div>
+</section>
+
+<section class="station" aria-labelledby="t1">
+<h2 id="t1">Cada pregunta vuelve a ejecutar el archivo</h2>
+<div class="body">
+<p class="note">Cada vez que haces algo en la app, Streamlit ejecuta tu archivo entero, de la primera línea a la última:</p>
+<pre><code>df_members, df_context = load_data()
+
+for msg in st.session_state.messages:
+    ...                          # pinta el historial
+
+if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
+    messages = [...]             # la petición
+    ...
+    resultado, error = run_code(code, df_members, df_context)</code></pre>
+<p><button id="ask" class="small" type="button">Escribes una pregunta</button> <button id="reload" class="small" type="button">Recargar la página (F5)</button></p>
+<p class="note"><strong id="run-label"></strong></p>
+<h3>Variables de esta ejecución</h3>
+<dl class="vars" id="locals"></dl>
+<h3><code>st.session_state.messages</code>: <span id="ss-count"></span></h3>
+<ol class="msgs" id="ss-list"></ol>
+<p class="note" id="run-note"></p>
+<p class="note">Las variables del archivo nacen y mueren en cada ejecución. <code>st.session_state</code> es un diccionario que Streamlit guarda entre ejecuciones, uno por pestaña. Aquí <code>messages</code> va como en la estación 1, sin el reto.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t2">
+<h2 id="t2">La conversación entra en messages</h2>
+<div class="body">
+<p class="note">El reto de verdad del paso 12 son estas tres líneas, debajo de <code>messages = [...]</code>. Rehacen la petición con el historial:</p>
+<pre><code>messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+for msg in st.session_state.messages:
+    messages.append({"role": msg["role"], "content": msg["content"]})</code></pre>
+<p class="note">Es el mismo recorrido que pinta el historial más arriba en tu archivo:</p>
+<pre><code>for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])</code></pre>
+<p class="note">Uno lo pinta en pantalla y el otro lo mete en la petición. Solo copia <code>role</code> y <code>content</code>: el <code>code</code> de cada respuesta se queda en <code>st.session_state</code> para la pantalla.</p>
+<div class="bubble" id="s3-q"></div>
+<h3><code>messages</code>, la lista que enviamos: <span id="s3-count"></span></h3>
+<ol class="msgs" id="s3-list"></ol>
+<p><button id="s3-send" class="small" type="button">Enviar la siguiente pregunta</button></p>
+<p class="note">Tokens de prompt de cada petición:</p>
+<div class="bars" id="s3-bars"></div>
+<p class="note">El código que volvió y su resultado:</p>
+<pre><code id="s3-code"></code></pre>
+<p class="note" id="s3-note"></p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t3">
+<h2 id="t3">Dos pasadas</h2>
+<div class="body">
+<p class="note">El paso 13. Otra pregunta y dos peticiones seguidas. Cada una tiene su desplegable «Lo que enviamos» en tu app.</p>
+<div class="bubble" id="s4-q"></div>
+<h3>Pasada 1: el código</h3>
+<pre><code id="s4-code"></code></pre>
+<p class="note">pandas lo ejecuta sobre las 16.334 filas y deja <code>resultado</code>:</p>
+<div class="bubble"><code id="s4-result"></code></div>
+<p class="note" id="s4-t1"></p>
+<p><button id="s4-send" class="small" type="button">Hacer la pasada 2</button></p>
+<div id="pass2" hidden>
+<h3>Pasada 2: la explicación</h3>
+<p class="note">Lo que enviamos en la pasada 2. El número va dentro del <code>content</code> del <code>system</code>, resaltado:</p>
+<pre><code id="s4-json"></code></pre>
+<p class="note" id="s4-t2"></p>
+<div class="bubble" id="s4-interp"></div>
+<p class="note">El modelo no ha calculado el 6,85. Lo ha leído como texto en su prompt, igual que lee tu pregunta.</p>
+</div>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t4">
+<h2 id="t4">Números que no estaban en el resultado</h2>
+<div class="body">
+<p class="note">Cuatro preguntas de los pasos 13 y 14, cada una con su resultado y su explicación. Cada número de la explicación se busca en el resultado, que es el único dato que recibió el modelo en la pasada 2. Empieza por la primera.</p>
+<div class="seg" role="group" aria-label="Pregunta">
+<button id="case-competidor" class="small" type="button" aria-pressed="true">Competidor</button>
+<button id="case-canal" class="small" type="button" aria-pressed="false">Canal de captación</button>
+<button id="case-app" class="small" type="button" aria-pressed="false">Socios con app</button>
+<button id="case-basic" class="small" type="button" aria-pressed="false">Plan básico</button>
+</div>
+<div class="bubble" id="s5-q"></div>
+<p class="note">El código de la pasada 1:</p>
+<pre><code id="s5-code"></code></pre>
+<p class="note"><code>resultado</code>, lo que calculó pandas:</p>
+<pre><code id="s5-result"></code></pre>
+<p class="note">La explicación que volvió de la pasada 2:</p>
+<div class="bubble" id="s5-interp"></div>
+<ul class="legend" aria-label="Leyenda">
+<li><mark class="in">6.85</mark> está en el resultado, tal cual o redondeado</li>
+<li><mark class="out">75</mark> no está en el resultado</li>
+<li><mark class="base">100</mark> no es un dato: la base de «de cada 100», o un número escrito en el propio prompt, como el 5 de «5 gimnasios»</li>
+</ul>
+<h3>Número a número</h3>
+<ul class="verdicts" id="s5-list"></ul>
+<p class="note" id="s5-note"></p>
+<p class="note">La comprobación es un regex que saca los números de los dos textos. Uno cuenta como presente si coincide con un número del resultado, tal cual o redondeado: <code>6.85</code> y <code>7</code> salen de <code>6.852678571428572</code>. Buscar solo el texto no basta, porque <code>52</code> está dentro de <code>1.520347508001829</code> y es otro número. Y es mecánica: dice si un número está, no si la frase lo usa bien.</p>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+<section class="station" aria-labelledby="t5">
+<h2 id="t5">Ejemplos en el prompt</h2>
+<div class="body">
+<p class="note">El paso 14. Dos preguntas de PREGUNTAS_TEST.md con el system de los pasos 12 y 13, y con el del paso 14, que añade tres ejemplos de código y cinco reglas de cálculo.</p>
+<label><input id="fewshot" type="checkbox">Con los ejemplos y las reglas (paso 14)</label>
+<p class="note">El <code>content</code> del <code>system</code>, entero. Lo que añade el paso 14 va resaltado:</p>
+<pre><code id="s6-system"></code></pre>
+<div class="pair">
+<div>
+<h3>Pregunta 8</h3>
+<div class="bubble" id="s6-q8"></div>
+<pre><code id="s6-code8"></code></pre>
+<p class="note"><code>resultado</code>:</p>
+<pre><code id="s6-res8"></code></pre>
+<p class="note" id="s6-note8"></p>
+</div>
+<div>
+<h3>Pregunta 11</h3>
+<div class="bubble" id="s6-q11"></div>
+<pre><code id="s6-code11"></code></pre>
+<p class="note"><code>resultado</code>:</p>
+<pre><code id="s6-res11"></code></pre>
+<p class="note" id="s6-note11"></p>
+</div>
+</div>
+<div class="warn">
+<h3>Lo que cambian los ejemplos</h3>
+<p class="note">Las cuatro respuestas terminan sin error, la pregunta 8 sin ejemplos al segundo intento. Con los ejemplos, la pregunta 8 enseña los dos márgenes en vez de un True, y el lifetime value pasa de sumar lo pagado a sumar el margen: 329,50 contra 219,47 en basic. Las dos definiciones se usan. Cuál quieres para FitLife lo decides tú, y solo lo ves en el código.</p>
+</div>
+</div>
+<p class="note wait">Todavía no ha llegado aquí.</p>
+</section>
+
+</div>
+<section class="detail" aria-live="polite" aria-atomic="true">
+<h2 id="step-title"></h2>
+<p id="step-detail"></p>
+</section>
+<div class="controls">
+<button id="previous" type="button" disabled>Anterior</button>
+<button id="next" class="primary" type="button">Siguiente</button>
+<button id="restart" type="button">Reiniciar recorrido</button>
+<span id="position" class="note">Estación 1 de 6</span>
+</div>
+<footer>
+<p><strong>El modelo no recuerda nada entre una petición y la siguiente. Sabe lo que le envías: la conversación si la metes en messages, el resultado si lo escribes en el prompt, los ejemplos si los añades. Y lo que escribe alrededor de un número sale del mismo sitio que cualquier otro texto suyo.</strong></p>
+<p class="note">Compruébalo en tu app con los desplegables «Lo que enviamos» de los pasos 12, 13 y 14, y con el pie que dice cuántas entradas y cuántos tokens llevó cada petición. Las flechas del teclado también mueven el recorrido.</p>
+<p class="note">Honestidad: el código, los resultados, los tokens y las explicaciones son capturas del 22 de septiembre de 2026 con gpt-4.1-mini y pueden cambiar en tu ejecución. Se tomaron con un system que llevaba otro signo de puntuación en unos pocos títulos, así que el recuento puede moverse en unos pocos tokens. En las estaciones 1 y 3 el <code>content</code> del <code>system</code> va recortado. La estación 2 es un esquema: no tiene números medidos. Del primer intento fallido de la pregunta 8 sin ejemplos solo se guardó que falló, no el error.</p>
+<p class="note">Fuentes: <a href="https://platform.openai.com/docs/api-reference/chat/create">referencia de chat/completions</a> · <a href="https://docs.streamlit.io/get-started/fundamentals/main-concepts">cómo ejecuta Streamlit tu archivo</a> · <a href="https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state">st.session_state</a>.</p>
+</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;"})[c]);
+const MODEL = "gpt-4.1-mini";
+const COLS_M = "['member_id', 'month', 'center', 'plan', 'price_paid', 'signup_date', 'acquisition_channel', 'tenure_months', 'visits_this_month', 'group_classes_attended', 'uses_app', 'has_personal_trainer', 'cost_to_serve', 'status', 'churn_reason']";
+const COLS_C = "['month', 'competitor_lowcost_price', 'campaign_active', 'service_incident', 'monthly_fixed_costs', 'avg_occupancy_rate', 'acquisition_cost_avg']";
+const HEAD = `Genera solo código Python/pandas que responda a la pregunta del usuario.
+
+Tienes acceso a dos DataFrames ya cargados:
+
+1. df_members: datos de socios (16334 filas)
+   Columnas: ${COLS_M}
+   Valores de 'plan': basic (29€), premium (49€), family (69€)
+   Valores de 'center': downtown, northside, eastpark, westfield, southgate
+   Valores de 'status': active, churned
+   Valores de 'churn_reason': price, competitor, no_use, relocation, personal (null si activo)
+   Valores de 'acquisition_channel': walk_in, referral, digital, january_campaign, corporate
+
+2. df_context: contexto mensual (36 filas)
+   Columnas: ${COLS_C}`;
+const GENERAL = `- Usa pandas para las operaciones.
+- El código debe terminar con: resultado = <lo que calcules>
+- NO uses print(). Solo asigna el resultado final a la variable "resultado".
+- NO incluyas import ni read_csv: los datos ya están cargados.
+- Devuelve SOLO el bloque de código, sin explicaciones antes ni después.
+- Envuelve el código en triple backtick python.`;
+const EXAMPLES = `Ejemplo 1. Tasa de churn por plan:
+  churn_plan = df_members.groupby('plan')['status'].apply(
+      lambda x: (x == 'churned').sum() / len(x) * 100
+  )
+  resultado = churn_plan
+
+Ejemplo 2. Cruzar tablas (socios + contexto):
+  merged = df_members.merge(df_context, on='month')
+  resultado = merged.groupby('month')[['visits_this_month', 'competitor_lowcost_price']].mean()
+
+Ejemplo 3. Margen por socio:
+  df_members['margin'] = df_members['price_paid'] - df_members['cost_to_serve']
+  resultado = df_members.groupby('plan')['margin'].mean()`;
+const RULES = `- Tasa de churn = churned / total * 100 (como porcentaje)
+- Margen = price_paid - cost_to_serve
+- Para cruzar tablas: df_members.merge(df_context, on='month')
+- Un socio "churned" es uno con status == 'churned' en ese mes
+- 'month' es string con formato YYYY-MM. Para extraer año: pd.to_datetime(df['month']).dt.year`;
+const P13 = HEAD + "\n\nReglas:\n" + GENERAL + '\n- Si la pregunta requiere cruzar las dos tablas, usa df_members.merge(df_context, on="month").\n- Para calcular tasa de churn: churned / total * 100.';
+const NEW14 = `EJEMPLOS DE CÓDIGO:\n\n${EXAMPLES}\n\nREGLAS DE CÁLCULO:\n\n${RULES}`;
+const P14 = HEAD + "\n\n" + NEW14 + "\n\nReglas generales:\n" + GENERAL;
+const SYS_SHORT = HEAD.slice(0, HEAD.indexOf("1. df_members")) + "…";
+const pass2 = (q, r) => `Eres un analista de datos experto en el negocio de FitLife,
+una red de 5 gimnasios de proximidad.
+
+El usuario preguntó: ${q}
+El resultado calculado sobre los datos reales es: ${r}
+
+Explica este resultado en el contexto del negocio.
+Sé conciso (2-3 frases). Usa los números reales.
+Si el resultado sugiere algo accionable, menciónalo.`;
+
+const DIALOGUE = ["¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?", "¿Y el que tiene más churn?"];
+const ALONE = [
+  {sent: 2, tokens: 403, code: "resultado = df_members['plan'].nunique()", result: "3",
+   note: "La pregunta se entiende sola: cuenta los valores distintos de plan."},
+  {sent: 2, tokens: 404, code: "resultado = df_members['center'].value_counts().idxmax()", result: "southgate",
+   note: "El modelo solo ha leído «¿Cuál es el que tiene más socios?». La palabra planes no viaja en esta petición, así que elige él: cuenta filas por center y devuelve un centro."},
+  {sent: 2, tokens: 403, code: "churn_counts = df_members[df_members['status'] == 'churned']['churn_reason'].value_counts()\nresultado = churn_counts.idxmax()", result: "no_use",
+   note: "«El que» tampoco se refiere a nada. El código busca el motivo de baja más repetido entre las filas churned: no_use."}
+];
+const HISTORY = [
+  {sent: 2, tokens: 403, code: "resultado = df_members['plan'].nunique()", result: "3",
+   note: "La primera petición es la de siempre. El historial solo tiene tu pregunta, así que viajan el system y ella."},
+  {sent: 4, tokens: 421, code: "resultado = df_members['plan'].value_counts().idxmax()", result: "premium",
+   note: "El modelo lee la primera pregunta y su respuesta antes de la segunda. «El que» ya se refiere a los planes: cuenta filas por plan y devuelve premium."},
+  {sent: 6, tokens: 438, code: "churn_counts = df_members[df_members['status'] == 'churned'].groupby('plan').size()\nresultado = churn_counts.idxmax()", result: "basic",
+   note: "Seis entradas, y cada petición pesa más que la anterior. Fíjate en el código: cuenta filas churned por plan, no calcula una tasa."}
+];
+const CASES = {
+  competidor: {q: "¿Las bajas del plan básico aumentaron cuando el competidor bajó precios?", result: "True",
+    code: "# Unir datos de bajas del plan básico con precios del competidor\nbajas_basico = df_members[(df_members['plan'] == 'basic') & (df_members['status'] == 'churned')]\nbajas_por_mes = bajas_basico.groupby('month').size().reset_index(name='bajas_basico')\nprecios_competidor = df_context[['month', 'competitor_lowcost_price']]\n\n# Combinar y calcular cambio en precios y bajas\ndf = bajas_por_mes.merge(precios_competidor, on='month', how='left')\ndf['competitor_price_change'] = df['competitor_lowcost_price'].diff()\ndf['bajas_change'] = df['bajas_basico'].diff()\n\n# Comprobar si las bajas aumentaron cuando bajó precio el competidor (ambos cambios negativos y positivos)\nresult = df[(df['competitor_price_change'] < 0) & (df['bajas_change'] > 0)]\n\n# Si result no está vacío, las bajas aumentaron cuando el competidor bajó precios\nresultado = not result.empty",
+    text: "Sí, las bajas del plan básico aumentaron un 18% durante el periodo en que el competidor redujo sus precios, pasando de 50 a 59 bajas mensuales en promedio. Esto indica que la competencia impactó negativamente en la retención de clientes básicos. Se recomienda evaluar ajustes en precios o mejorar beneficios para el plan básico para reducir la fuga.",
+    note: "El resultado es solo <code>True</code>. El código busca meses en que el precio del competidor bajó y las bajas del básico subieron de un mes al siguiente, y con que haya uno ya es True. No lleva ni un porcentaje ni una media: el 18 %, el 50 y el 59 no están en nada de lo que recibió el modelo. Capturado con la app del paso 14, antes de rellenar los ejemplos."},
+  basic: {q: "¿Cuál es la tasa de churn del plan básico?", result: "6.852678571428572", tokens1: 406, tokens2: 121, completion2: 72,
+    code: "total_basic = df_members[df_members['plan'] == 'basic'].shape[0]\nchurned_basic = df_members[(df_members['plan'] == 'basic') & (df_members['status'] == 'churned')].shape[0]\nresultado = churned_basic / total_basic * 100",
+    text: "La tasa de churn del plan básico en FitLife es aproximadamente 6.85%, lo que significa que de cada 100 clientes con este plan, casi 7 cancelan su suscripción en un período determinado. Este nivel de pérdida indica que es importante investigar las causas de abandono para mejorar la retención, posiblemente optimizando beneficios o servicios del plan básico.",
+    note: "Todo lo que cita sale del resultado. <code>6.85</code> y <code>7</code> son <code>6.852678571428572</code> redondeado, y «casi 7 de cada 100» es el mismo porcentaje dicho de otra forma."},
+  canal: {q: "¿Qué canal de captación trae socios más fieles?", result: "referral",
+    code: "fidelidad_por_canal = df_members.groupby('acquisition_channel')['tenure_months'].mean()\nresultado = fidelidad_por_canal.idxmax()",
+    text: "El canal de captación \"referral\" (recomendación) trae socios más fieles, con una tasa de retención del 75%, superior al promedio del 60% en otros canales. Esto indica que los miembros que llegan por referencias suelen mantener su membresía por más tiempo. Se recomienda potenciar los programas de referidos para aumentar la fidelidad y retención de socios.",
+    note: "El resultado es una palabra, <code>referral</code>: el canal con más tenure_months de media. No lleva ningún porcentaje. El 75 % y el 60 % no están en nada de lo que recibió el modelo, que no ha visto ni una fila."},
+  app: {q: "¿Los socios con app tienen menos churn?", result: "{True: 1.520347508001829}",
+    code: "churn_app = df_members[df_members['uses_app']].groupby('uses_app')['status'].apply(lambda x: (x == 'churned').mean() * 100)\nresultado = churn_app.to_dict()",
+    text: "El valor 1.52 indica que los socios con app tienen un 52% mayor retención que los que no la usan, es decir, tienen menos churn. Esto sugiere que promover el uso de la app puede ser una estrategia efectiva para reducir la pérdida de socios y mejorar la fidelización. Se recomienda incentivar la descarga y uso de la app entre todos los miembros.",
+    note: "<code>1.52</code> sí está: el código filtra solo a los socios con app, así que es su tasa de churn en porcentaje. No hay ningún grupo sin app con el que comparar. El 52 % de «mayor retención» no está en el resultado, y la comparación tampoco."}
+};
+const FEW = {
+  p13: {
+    8: {tokens: 524, result: "True",
+      code: "rentabilidad = df_members.groupby('status')[['price_paid', 'cost_to_serve']].mean()\nrentabilidad['profit'] = rentabilidad['price_paid'] - rentabilidad['cost_to_serve']\nresultado = rentabilidad.loc['churned', 'profit'] < rentabilidad.loc['active', 'profit']",
+      note: "524 tokens de prompt, del segundo intento: el primero falló, y este ya lleva el código fallido y el error, como en el paso 11. Por dentro calcula los dos márgenes, pero devuelve solo True, la comparación churned < active. Para saber qué significa ese True tienes que leer el código."},
+    11: {tokens: 405, result: "plan\nbasic       329.503109\nfamily     1499.397357\npremium    1000.514067\nName: total_revenue, dtype: float64",
+      code: "lifetime_value = df_members.groupby('member_id').agg(\n    total_revenue=('price_paid', 'sum'),\n    plan=('plan', 'first')\n).groupby('plan')['total_revenue'].mean()\nresultado = lifetime_value",
+      note: "405 tokens de prompt. Suma el price_paid de cada socio, lo que ha pagado, y hace la media por plan: basic 329,50, family 1.499,40, premium 1.000,51."}
+  },
+  p14: {
+    8: {tokens: 643, result: "status\nactive     29.428403\nchurned    26.419343\nName: margin, dtype: float64",
+      code: "df_members['margin'] = df_members['price_paid'] - df_members['cost_to_serve']\nrentabilidad = df_members.groupby('status')['margin'].mean()\nresultado = rentabilidad",
+      note: "643 tokens de prompt. Devuelve los dos márgenes medios: 29,43 los que se quedan y 26,42 los que se van. La primera línea es la del ejemplo 3, copiada tal cual."},
+    11: {tokens: 633, result: "plan\nbasic       219.468420\nfamily     1048.344537\npremium     479.381621\nName: margin, dtype: float64",
+      code: "df_members['margin'] = df_members['price_paid'] - df_members['cost_to_serve']\nltv = df_members.groupby('member_id').agg({\n    'margin': 'sum',\n    'plan': 'first'\n}).groupby('plan')['margin'].mean()\nresultado = ltv",
+      note: "633 tokens de prompt, 228 más que sin ejemplos. Suma el margen de cada socio, lo que paga menos lo que cuesta atenderle: basic 219,47, family 1.048,34, premium 479,38. La primera línea vuelve a ser la del ejemplo 3."}
+  }
+};
+const QUESTIONS = {8: "¿Los socios que se dan de baja son más o menos rentables que los que se quedan?", 11: "¿Cuál es el lifetime value medio por plan?"};
+const stages = [
+  ["1. La pantalla recuerda, el modelo no", "Las tres preguntas siguen en pantalla porque tu app las guarda. Cada petición lleva dos entradas: el system y la última pregunta. En la segunda, el modelo no sabe que hablabas de planes y elige él: centros."],
+  ["2. Cada pregunta vuelve a ejecutar el archivo", "Streamlit ejecuta tu archivo de arriba abajo en cada acción. prompt, messages y resultado nacen y mueren en cada ejecución. st.session_state.messages sobrevive entre ejecuciones hasta que recargas la pestaña."],
+  ["3. La conversación entra en messages", "Tres líneas rehacen messages con el historial, con el mismo bucle que lo pinta en pantalla. La petición pasa de 2 a 4 y a 6 entradas, y los tokens crecen con ella. Ahora «el que» se refiere a los planes."],
+  ["4. Dos pasadas", "La pasada 1 pide el código y pandas calcula. La pasada 2 envía el resultado como texto dentro del system y pide una explicación. El modelo no ha calculado el número: lo lee."],
+  ["5. Números que no estaban en el resultado", "El número de pandas es real. La frase de alrededor la escribe el modelo, igual que cualquier otro texto suyo, y a veces trae números que no estaban en ningún sitio."],
+  ["6. Ejemplos en el prompt", "Con ejemplos y reglas el prompt pesa más y el código cambia. Ninguna versión termina en error: cambia qué se calcula. Qué definición es la buena lo decides tú, leyendo el código."]
+];
+
+const NUM = /\d+(?:[.,]\d+)?/g;
+const nums = s => (String(s).match(NUM) || []).map(n => n.replace(",", "."));
+function check(text, result, prompt) {
+  const exact = nums(result), written = nums(prompt);
+  return [...text.matchAll(NUM)].map(m => {
+    const n = m[0].replace(",", "."), decimals = (n.split(".")[1] || "").length;
+    const near = decimals > 20 ? -1 : exact.findIndex(r => Number(r).toFixed(decimals) === n);
+    let kind = "out", why = "no está en el resultado", source = "";
+    if (exact.includes(n)) [kind, why] = ["in", "está en el resultado"];
+    else if (near >= 0) [kind, why, source] = ["in", "está en el resultado, redondeado de", exact[near]];
+    else if (n === "100" && /de cada\s+$/i.test(text.slice(0, m.index))) [kind, why] = ["base", "la base de «de cada 100», no un dato"];
+    else if (written.includes(n)) [kind, why] = ["base", "está escrito en el propio prompt de la pasada 2, no en el resultado"];
+    return {raw: m[0], index: m.index, kind, why, source};
+  });
+}
+function marked(text, found) {
+  let html = "", at = 0;
+  for (const f of found) {
+    html += esc(text.slice(at, f.index)) + `<mark class="${f.kind}">${esc(f.raw)}</mark>`;
+    at = f.index + f.raw.length;
+  }
+  return html + esc(text.slice(at));
+}
+const request = entries => JSON.stringify({model: MODEL, messages: entries.map(([role, content]) => ({role, content}))}, null, 2);
+function highlight(json, needle) {
+  const html = esc(json), n = esc(needle), at = html.lastIndexOf(n);
+  return at < 0 ? html : html.slice(0, at) + `<mark class="on">${n}</mark>` + html.slice(at + n.length);
+}
+const bar = (l, w, v) => `<div class="l">${esc(l)}</div><div class="b"><i style="width:${w}%"></i></div><div class="v">${v}</div>`;
+const entry = ([role, text], added) => `<li${added ? ' class="added"' : ""}><span class="role">${role}</span><span class="txt">${esc(text)}</span></li>`;
+
+const START2 = {session: 1, run: 1, asked: 0, fresh: false};
+let step = 0, turn = 0, run2 = {...START2}, sent3 = 1, passed = false, kase = "competidor";
+function renderRun() {
+  const k = run2.asked, cls = run2.fresh ? ' class="new"' : "";
+  $("run-label").textContent = `Sesión ${run2.session} · ejecución ${run2.run}`;
+  const vars = k === 0
+    ? [["prompt", "None: no has escrito nada"], ["messages", "no existe: el if no entra"], ["resultado", "no existe"]]
+    : [["prompt", `«${DIALOGUE[k - 1]}»`], ["messages", "2 entradas: system y user"], ["resultado", ALONE[k - 1].result]];
+  $("locals").innerHTML = vars.map(([name, value]) => `<dt>${name}</dt><dd${cls}>${esc(value)}</dd>`).join("");
+  const saved = [];
+  for (let i = 0; i < k; i += 1) saved.push(["user", DIALOGUE[i]], ["assistant", ALONE[i].result]);
+  $("ss-list").innerHTML = saved.map((e, i) => entry(e, run2.fresh && i >= saved.length - 2)).join("");
+  $("ss-count").textContent = `${saved.length} entradas`;
+  $("run-note").textContent = run2.run === 1 && run2.session === 1
+    ? "Primera ejecución: acabas de abrir la app. No has escrito nada, así que chat_input devuelve None y el if no entra. La lista existe, pero está vacía."
+    : run2.run === 1
+    ? "Has recargado la pestaña. Streamlit abre una sesión nueva y st.session_state empieza vacío otra vez. En pantalla no queda ninguna pregunta."
+    : `Ejecución ${run2.run}: el archivo ha corrido otra vez de arriba abajo. prompt, messages y resultado son nuevos; los de la ejecución ${run2.run - 1} ya no existen. st.session_state.messages ha crecido en dos entradas: tu pregunta y la respuesta.` + (k === DIALOGUE.length ? " Son las tres preguntas del diálogo. Recarga para empezar de cero." : "");
+  $("ask").disabled = k === DIALOGUE.length;
+  run2.fresh = false;
+}
+function render() {
+  DIALOGUE.forEach((q, i) => {
+    $(`turn-${i}`).textContent = q;
+    $(`turn-${i}`).setAttribute("aria-pressed", String(i === turn));
+    $(`reply-${i}`).textContent = ALONE[i].result;
+  });
+  const one = ALONE[turn];
+  $("s1-n").textContent = turn + 1;
+  $("s1-json").innerHTML = highlight(request([["system", SYS_SHORT], ["user", DIALOGUE[turn]]]), JSON.stringify(DIALOGUE[turn]));
+  $("s1-count").textContent = `${one.sent} entradas en messages · ${one.tokens} tokens de prompt`;
+  $("s1-code").textContent = one.code;
+  $("s1-note").textContent = one.note;
+  $("s1-tokens").textContent = ALONE.map(t => t.tokens).join(", ").replace(/, (\d+)$/, " y $1");
+
+  renderRun();
+
+  const h = HISTORY[sent3 - 1], sent = [["system", SYS_SHORT]];
+  for (let i = 0; i < sent3; i += 1) {
+    sent.push(["user", DIALOGUE[i]]);
+    if (i < sent3 - 1) sent.push(["assistant", HISTORY[i].result]);
+  }
+  $("s3-q").textContent = DIALOGUE[sent3 - 1];
+  $("s3-list").innerHTML = sent.map((e, i) => entry(e, sent3 > 1 && i >= sent.length - 2)).join("");
+  $("s3-count").textContent = `${sent.length} entradas · ${h.tokens} tokens de prompt`;
+  const top = Math.max(...HISTORY.map(t => t.tokens));
+  $("s3-bars").innerHTML = HISTORY.slice(0, sent3).map((t, i) => bar(`pregunta ${i + 1}`, t.tokens / top * 100, `${t.tokens} tokens`)).join("");
+  $("s3-code").textContent = `${h.code}\n\n# resultado: ${h.result}`;
+  $("s3-note").textContent = h.note;
+  $("s3-send").disabled = step !== 2 || sent3 === HISTORY.length;
+  $("s3-send").textContent = sent3 < HISTORY.length ? `Enviar la pregunta ${sent3 + 1}` : "Ya van las tres";
+
+  const b = CASES.basic;
+  $("s4-q").textContent = b.q;
+  $("s4-code").textContent = b.code;
+  $("s4-result").textContent = b.result;
+  $("s4-t1").textContent = `${b.tokens1} tokens de prompt en la pasada 1: el system largo, con columnas, valores y reglas.`;
+  $("s4-json").innerHTML = highlight(request([["system", pass2(b.q, b.result)], ["user", b.q]]), b.result);
+  $("s4-t2").textContent = `${b.tokens2} tokens de prompt en la pasada 2: sin columnas ni reglas, solo este texto y la pregunta. Vuelven ${b.completion2} tokens:`;
+  $("s4-interp").textContent = b.text;
+  $("s4-send").disabled = step !== 3 || passed;
+  $("pass2").hidden = !passed;
+
+  const c = CASES[kase], found = check(c.text, c.result, pass2(c.q, ""));
+  Object.keys(CASES).forEach(k => $(`case-${k}`).setAttribute("aria-pressed", String(k === kase)));
+  $("s5-q").textContent = c.q;
+  $("s5-code").textContent = c.code;
+  $("s5-result").textContent = c.result;
+  $("s5-interp").innerHTML = marked(c.text, found);
+  $("s5-list").innerHTML = found.map(f => `<li><mark class="${f.kind}">${esc(f.raw)}</mark> ${esc(f.why)}${f.source ? ` <code>${esc(f.source)}</code>` : ""}</li>`).join("");
+  $("s5-note").innerHTML = c.note;
+
+  const on = $("fewshot").checked, few = on ? FEW.p14 : FEW.p13;
+  $("s6-system").innerHTML = on
+    ? esc(HEAD) + '\n\n<mark class="on">' + esc(NEW14) + "</mark>\n\n" + esc("Reglas generales:\n" + GENERAL)
+    : esc(P13);
+  [8, 11].forEach(n => {
+    $(`s6-q${n}`).textContent = QUESTIONS[n];
+    $(`s6-code${n}`).textContent = few[n].code;
+    $(`s6-res${n}`).textContent = few[n].result;
+    $(`s6-note${n}`).textContent = few[n].note;
+  });
+
+  document.querySelectorAll(".station").forEach((s, i) => { s.classList.toggle("active", i === step); s.classList.toggle("reached", i <= step); });
+  document.querySelectorAll(".steps li").forEach((li, i) => i === step ? li.setAttribute("aria-current", "step") : li.removeAttribute("aria-current"));
+  $("step-title").textContent = stages[step][0];
+  $("step-detail").textContent = stages[step][1];
+  $("position").textContent = `Estación ${step + 1} de ${stages.length}`;
+  $("previous").disabled = step === 0;
+  $("next").disabled = step === stages.length - 1;
+}
+function go(d) {
+  const target = step + d;
+  if (target < 0 || target > stages.length - 1) return;
+  if (d > 0 && step === 2) sent3 = HISTORY.length;
+  if (d > 0 && step === 3) passed = true;
+  step = target;
+  render();
+}
+DIALOGUE.forEach((_, i) => $(`turn-${i}`).addEventListener("click", () => { turn = i; render(); }));
+Object.keys(CASES).forEach(k => $(`case-${k}`).addEventListener("click", () => { kase = k; render(); }));
+$("ask").addEventListener("click", () => {
+  if (run2.asked < DIALOGUE.length) { run2 = {...run2, run: run2.run + 1, asked: run2.asked + 1, fresh: true}; render(); }
+});
+$("reload").addEventListener("click", () => { run2 = {session: run2.session + 1, run: 1, asked: 0, fresh: true}; render(); });
+$("s3-send").addEventListener("click", () => { if (sent3 < HISTORY.length) { sent3 += 1; render(); } });
+$("s4-send").addEventListener("click", () => { passed = true; render(); });
+$("fewshot").addEventListener("change", render);
+$("next").addEventListener("click", () => go(1));
+$("previous").addEventListener("click", () => go(-1));
+$("restart").addEventListener("click", () => {
+  step = 0; turn = 0; run2 = {...START2}; sent3 = 1; passed = false; kase = "competidor"; $("fewshot").checked = false; render();
+});
+document.addEventListener("keydown", event => {
+  const tag = event.target && event.target.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  if (event.key === "ArrowRight") go(1);
+  if (event.key === "ArrowLeft") go(-1);
+});
+render();
+</script>
+</body>
+</html>
