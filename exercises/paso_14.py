@@ -322,11 +322,11 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             st.json({"model": MODEL, "messages": messages})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
-        if resultado is not None:
-            if show_code and last_code:
-                with st.expander("Código ejecutado"):
-                    st.code(last_code, language="python")
+        if show_code and last_code:
+            with st.expander("Código ejecutado"):
+                st.code(last_code, language="python")
 
+        if resultado is not None:
             with st.spinner("Interpretando..."):
                 interpretation = interpret_result(client, MODEL, prompt, resultado)
                 st.markdown(interpretation)

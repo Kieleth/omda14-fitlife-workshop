@@ -14,8 +14,9 @@
 #
 # Ojo: como los pasos 13 y 14, guarda la conversación en
 # pantalla pero cada petición lleva solo la última pregunta.
-# Si hiciste el reto de verdad del paso 12, ya sabes qué tres
-# líneas faltan.
+# Si hiciste el reto de verdad del paso 12, son las mismas
+# tres líneas, debajo de messages = [...], con un cambio:
+# aquí el historial se llama st.session_state.messages_v3.
 #
 # Este paso NO tiene blancos ___. Funciona tal cual.
 # Es la app que desplegaréis a la nube en la sesión 4.
@@ -296,11 +297,11 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             st.json({"model": MODEL, "messages": messages})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
-        if resultado is not None:
-            if show_code and last_code:
-                with st.expander("Código ejecutado"):
-                    st.code(last_code, language="python")
+        if show_code and last_code:
+            with st.expander("Código ejecutado"):
+                st.code(last_code, language="python")
 
+        if resultado is not None:
             with st.spinner("Interpretando..."):
                 interpretation = interpret_result(client, MODEL, prompt, resultado)
                 st.markdown(interpretation)

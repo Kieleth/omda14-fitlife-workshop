@@ -28,7 +28,7 @@ git commit -m "Mi sesión 2"
 git status
 ```
 
-`status` debe terminar en `nothing to commit, working tree clean`. Si no, mira qué archivo queda y añádelo antes de seguir. Ahora descarga la rama de la clase y crea la tuya:
+`status` debe terminar en `nothing to commit, working tree clean`. Si no, mira qué archivo queda, añádelo con `git add` y su nombre, y repite el `git commit`: un archivo añadido sin commit viaja contigo a la rama nueva y acaba en otro commit. Git sugiere `git push` después de cada commit; no hace falta, tu trabajo se queda en tu ordenador. Ahora descarga la rama de la clase y crea la tuya:
 
 ```text
 git fetch origin
@@ -80,7 +80,7 @@ Los pasos de hoy tienen un interruptor **Mostrar código** arriba a la derecha. 
 
 ## Repaso: dónde lo dejamos
 
-Un repaso corto con la versión terminada, aunque acabaras la sesión 2. Arranca `exercises/paso_11.py` y pregunta «Dibuja un gráfico de barras del churn por centro». Lo normal es que el primer intento falle y veas un mensaje azul. Abre «Lo que enviamos en el último intento»: la lista `messages` tiene cuatro entradas, el `system`, tu pregunta, el código que falló como `assistant` y el error como `user`. Si esta vez acertó a la primera, verás dos; pregúntalo otra vez.
+Un repaso corto con la versión terminada, aunque acabaras la sesión 2. Arranca `exercises/paso_11.py` y pregunta «Dibuja un gráfico de barras del churn por centro». Lo normal es que el primer intento falle y veas un mensaje azul. Abre «Lo que enviamos en el último intento»: la lista `messages` tiene cuatro entradas, el `system`, tu pregunta, el código que falló como `assistant` y el error como `user`. Si esta vez acertó a la primera, verás dos; pregúntalo otra vez. Mira también el resultado: que el segundo intento no dé error no quiere decir que el número esté bien.
 
 Esa lista es la idea de hoy. El modelo no recordó su primer intento: recibió la conversación entera porque tu app la escribió en `messages`. Hoy harás lo mismo con las preguntas del usuario.
 
@@ -92,7 +92,7 @@ Esa lista es la idea de hoy. El modelo no recordó su primer intento: recibió l
 
 Ahora abre «Lo que enviamos en la última petición», debajo de la respuesta. Dos entradas: el `system` y tu última pregunta. La pantalla recuerda; el modelo, no. Recibió «¿Cuál es el que tiene más socios?» sin nada más. Mira el código de la segunda y de la tercera. Lo normal es que al menos una responda con un centro o con un motivo de baja: el modelo nunca vio la palabra «planes». Si las dos hablan de planes, ha acertado adivinando, y la petición lo demuestra.
 
-**El reto de verdad.** Dentro del código, debajo de `messages = [...]`, hay un bloque «El reto de verdad» con tres líneas comentadas. Quita el `# ` del principio de las tres, sin tocar los espacios de delante, y guarda. Rehacen `messages` con todo el historial: es el mismo bucle que pinta la conversación en pantalla, puesto dentro de la petición. Recarga la página del navegador (F5 en Windows, `Cmd+R` en macOS) para empezar con la conversación vacía y repite las tres preguntas. Abre el desplegable en cada una: dos entradas, cuatro, seis. Mira el pie: los tokens de prompt suben a cada pregunta, porque cada petición lleva todas las anteriores.
+**El reto de verdad.** Dentro del código, debajo de `messages = [...]`, hay un bloque «El reto de verdad» con tres líneas comentadas. Quita el `# ` del principio de las tres, sin tocar los espacios de delante, y guarda. Rehacen `messages` con todo el historial: es el mismo bucle que pinta la conversación en pantalla, puesto dentro de la petición. Recarga la página del navegador (F5 en Windows, `Cmd+R` en macOS) para empezar con la conversación vacía y repite las tres preguntas. Abre el desplegable en cada una: dos entradas, cuatro, seis. Mira el pie: los tokens de prompt suben a cada pregunta, porque cada petición lleva todas las anteriores. Suben poco, unos veinte por turno, porque el historial guarda el resultado como texto y no el código; con respuestas largas subirían mucho más. Si Python dice `IndentationError` en una línea que no has tocado, revisa las tres que has activado: deben quedar alineadas con `messages = [` de encima.
 
 **Simulación 6: `explicaciones/memoria.html`.** Estaciones 1 a 3: la pantalla frente a la petición, lo que sobrevive a cada ejecución, y `messages` creciendo con la conversación. Son capturas reales del mismo diálogo; la página no está conectada a tu app.
 
@@ -102,11 +102,13 @@ Ahora abre «Lo que enviamos en la última petición», debajo de la respuesta. 
 
 ## Paso 13: una segunda petición que explica el número
 
-**Qué haces.** Dos huecos, los dos en la segunda pasada: el texto que le pedimos al modelo y la llamada que lo envía. El primero es largo. Sustituye `___` por el texto del comentario de encima, desde `f"""` hasta las tres comillas del final, quitando el `#` de cada línea. Las líneas de dentro pueden quedar pegadas al margen: dentro de las comillas triples la sangría no rompe nada. Antes de rellenar, arranca y pregunta: la pasada 1 funciona y verás su desplegable; el error rojo llega después, en el primer hueco. Rellena los dos y pregunta «¿Cuál es la tasa de churn del plan básico?».
+**Qué haces.** Dos huecos, los dos en la segunda pasada: el texto que le pedimos al modelo y la llamada que lo envía. El primero es largo. Sustituye `___` por el texto del comentario de encima, desde `f"""` hasta las tres comillas del final, quitando el `#` de cada línea. Las líneas de dentro pueden quedar pegadas al margen: dentro de las comillas triples la sangría no rompe nada. La `f` de delante sí importa: es la que mete tu pregunta y el resultado en el texto. Sin ella, el modelo recibe `{resultado}` tal cual, sin ningún error, y escribe una explicación de un número que no ha visto. Si lo ves en el desplegable de la pasada 2, ya sabes qué falta. Antes de rellenar, arranca y pregunta: la pasada 1 funciona y verás su desplegable; el error rojo llega después, en el primer hueco. Rellena los dos y pregunta «¿Cuál es la tasa de churn del plan básico?».
 
 **Qué hay detrás.** Son dos peticiones y cada una tiene su desplegable. La primera es la de la sesión 2: código, `exec`, un número de pandas. Fíjate en que ese número ya no aparece suelto en la pantalla. Abre «Lo que enviamos: pasada 2, la explicación» y lo encontrarás dentro del `system`, como texto, al lado de tu pregunta. El modelo no lo ha calculado: lo lee y escribe alrededor. Compara los tokens de las dos pasadas en los pies: la segunda pesa mucho menos, porque no lleva las columnas ni las reglas.
 
-La explicación suena a informe, y el número de dentro es real. El resto de la frase sale del mismo sitio que las respuestas de la sesión 1: el modelo escribe lo probable. Si añade una cifra que no está en el resultado, esa cifra no la ha calculado nadie. Haz el reto A de la cabecera con las tres preguntas y busca cada número de la explicación dentro del `system` de la pasada 2. Los que no estén ahí no salen de tus datos.
+La explicación suena a informe, y el número de dentro es real. El resto de la frase sale del mismo sitio que las respuestas de la sesión 1: el modelo escribe lo probable. Si añade una cifra que no está en el resultado, esa cifra no la ha calculado nadie. Haz el reto A de la cabecera con las tres preguntas y busca cada número de la explicación dentro del `system` de la pasada 2. Los que no estén ahí no salen de tus datos. Y que un número esté no basta: mira si la frase le da el sentido que tiene. Una diferencia de puntos contada como porcentaje, una media de bajas llamada tasa o una correlación leída al revés usan números del resultado y dicen algo falso.
+
+Con una tabla larga, como en el reto B, abre el desplegable de la pasada 2 y mira el final del resultado dentro del `system`: pandas recorta las tablas largas al convertirlas en texto y deja `...` y una línea como `[108 rows x 3 columns]`. El modelo solo ve las filas que caben, y explica la tabla entera.
 
 **Simulación 6, estaciones 4 y 5.** Las dos pasadas con el número viajando como texto, y varias explicaciones reales con sus números marcados: los que están en el resultado y los que no.
 
@@ -114,7 +116,7 @@ La explicación suena a informe, y el número de dentro es real. El resto de la 
 
 ## Paso 14: ejemplos en el prompt
 
-**Qué haces.** Dos huecos, los dos dentro de comillas: `EXAMPLES` y `RULES`. Como son texto, la app arranca sin rellenarlos, y eso te da el antes. Con **Mostrar código** activado, pregunta «¿Las bajas del plan básico aumentaron cuando el competidor bajó precios?» y apunta qué compara el código (¿cuenta bajas o calcula tasas? ¿qué ha decidido que significa «cuando el competidor bajó precios»?) y los tokens del pie. Después copia en los huecos los ejemplos y las reglas de las PISTAS, sin el `#` del principio de cada línea, guarda y repite la pregunta.
+**Qué haces.** Dos huecos, los dos dentro de comillas: `EXAMPLES` y `RULES`. Como son texto, la app arranca sin rellenarlos, y eso te da el antes. Con **Mostrar código** activado, pregunta «¿Las bajas del plan básico aumentaron cuando el competidor bajó precios?» y apunta qué compara el código (¿cuenta bajas o calcula tasas? ¿qué ha decidido que significa «cuando el competidor bajó precios»?) y los tokens del pie. Hazla dos veces: el modelo puede decidir cada vez una cosa distinta, y llegar a respuestas opuestas. Después copia en los huecos los ejemplos y las reglas de las PISTAS, sin el `#` del principio de cada línea, guarda y repite la pregunta. Ojo al comparar: sin rellenar, este prompt lleva menos reglas que el del paso 13, porque la del `merge` y la de la tasa de churn pasan a `RULES`.
 
 **Qué hay detrás.** Los ejemplos son texto dentro del `system`: ábrelo en «Lo que enviamos» y los verás. El modelo no los ejecuta; los imita. Por eso cambian la forma del código que escribe, y viajan en cada petición: mira cuánto ha subido el pie.
 
@@ -130,7 +132,7 @@ La pregunta 12 merece el reto C: «¿Debería FitLife bajar el precio del plan b
 
 ## Paso 15 (opcional): el analista completo
 
-**Qué haces.** Sin huecos. Es todo junto: el prompt con ejemplos, los reintentos, la explicación y el historial en pantalla. Como en los pasos 13 y 14, cada petición lleva solo la última pregunta; si quieres la conversación entera, ya sabes qué tres líneas faltan. Haz las doce preguntas de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) y ponle a cada una una nota: correcta, parcial, inventada o no puede. Después, las preguntas de la misión de la cabecera.
+**Qué haces.** Sin huecos. Es todo junto: el prompt con ejemplos, los reintentos, la explicación y el historial en pantalla. Como en los pasos 13 y 14, cada petición lleva solo la última pregunta. Si quieres la conversación entera, son las tres líneas del reto de verdad del paso 12, debajo de `messages = [...]`, cambiando `st.session_state.messages` por `st.session_state.messages_v3`, que es como se llama aquí el historial. Haz las doce preguntas de [PREGUNTAS_TEST.md](PREGUNTAS_TEST.md) y ponle a cada una una nota: correcta, parcial, inventada o no puede. Después, las preguntas de la misión de la cabecera.
 
 **Qué hay detrás.** Lee la función `interpret_result()` antes de preguntar. Su prompt le cuenta al modelo los precios de los tres planes y que el competidor cobra 19 €. Por eso las explicaciones citan cifras que no salen del resultado: salen de ese texto, que escribió una persona. Es contexto útil, y también es texto que el modelo repite sin comprobar.
 

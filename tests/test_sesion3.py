@@ -143,13 +143,21 @@ BASELINE_FIXES["paso_11.py"] = PROMPT_FIXES + [
 ]
 # Pasos de hoy: sin rayas largas, y 16.334 sin la coma de millares inglesa ("16,334").
 TODAY_FIXES = PROMPT_FIXES[1:] + RETRY_FIXES
+# "Mostrar código" enseña el código también cuando no hay resultado (resultado = None), como en el paso 12.
+CODE_SHOWN_WITHOUT_RESULT = [(
+    '        if resultado is not None:\n            if show_code and last_code:\n'
+    '                with st.expander("Código ejecutado"):\n                    st.code(last_code, language="python")\n\n'
+    '            with st.spinner("Interpretando..."):',
+    '        if show_code and last_code:\n            with st.expander("Código ejecutado"):\n'
+    '                st.code(last_code, language="python")\n\n'
+    '        if resultado is not None:\n            with st.spinner("Interpretando..."):', 1)]
 BASELINE_FIXES["paso_12.py"] = TODAY_FIXES + [("Paso 12 — El chat recuerda", "Paso 12: El chat recuerda", 1),
                                               ("{len(df_members):,}", "{len(df_members)}", 2)]
-BASELINE_FIXES["paso_13.py"] = TODAY_FIXES + [("Paso 13 — El analista explica", "Paso 13: El analista explica", 1),
+BASELINE_FIXES["paso_13.py"] = TODAY_FIXES + CODE_SHOWN_WITHOUT_RESULT + [("Paso 13 — El analista explica", "Paso 13: El analista explica", 1),
                                               ("{len(df_members):,}", "{len(df_members)}", 2)]
-BASELINE_FIXES["paso_14.py"] = TODAY_FIXES + [("Paso 14 — Prompt experto", "Paso 14: Prompt experto", 1),
+BASELINE_FIXES["paso_14.py"] = TODAY_FIXES + CODE_SHOWN_WITHOUT_RESULT + [("Paso 14 — Prompt experto", "Paso 14: Prompt experto", 1),
                                               ("{len(df_members):,}", "{len(df_members)}", 2)]
-BASELINE_FIXES["paso_15.py"] = TODAY_FIXES + [("{len(df_members):,}", "{len(df_members)}", 3)] + [
+BASELINE_FIXES["paso_15.py"] = TODAY_FIXES + CODE_SHOWN_WITHOUT_RESULT + [("{len(df_members):,}", "{len(df_members)}", 3)] + [
     (f"Ejemplo {n} — ", f"Ejemplo {n}. ", 1) for n in range(1, 5)]
 
 # Errores intencionados de la sesión 1; en esta rama los pasos 0 a 7 se entregan corregidos.
@@ -419,6 +427,27 @@ class OfflineAppTests(unittest.TestCase):
                 else:
                     self.assertIn("EJEMPLOS DE CÓDIGO:\n\n___\n\nREGLAS DE CÁLCULO:\n\n___", system)
                 self.assertIn(EXPLANATION, [m.value for m in app.markdown])
+
+    def test_paso_13_shows_the_code_when_there_is_no_result(self):
+        app = AppTest.from_string(solved((ROOT / "exercises/paso_13.py").read_text(encoding="utf-8"), "paso_13.py")).run()
+        app.toggle[0].set_value(True).run()
+        app.chat_input[0].set_value("¿Cuál es la edad media de los socios?").run(timeout=30)
+        self.assertClean(app)
+        self.assertEqual(app.error[0].value, "Sin resultado tras 1 intento(s) de 3.")
+        self.assertIn("resultado = None", app.code[-1].value)
+
+    def test_paso_15_sends_the_conversation_with_the_three_lines_on_messages_v3(self):
+        """La cabecera y la guía dicen: las tres líneas del paso 12, con messages_v3."""
+        lines = with_history(HISTORY_SNIPPET).replace("st.session_state.messages:", "st.session_state.messages_v3:")
+        request = '                {"role": "user", "content": prompt},\n            ]\n'
+        source = (ROOT / "exercises/paso_15.py").read_text(encoding="utf-8")
+        self.assertEqual(source.count(request), 1)
+        app = AppTest.from_string(source.replace(request, request + lines)).run()
+        for question in ("¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?"):
+            app.chat_input[0].set_value(question).run(timeout=30)
+        self.assertClean(app)
+        self.assertEqual([m["role"] for m in self.sent(app, "Lo que enviamos: pasada 1, el código")],
+                         ["system", "user", "assistant", "user"])
 
     def test_paso_15_retries_then_explains(self):
         app = self.app(15, "¿Cuál es la satisfacción media de los socios?")

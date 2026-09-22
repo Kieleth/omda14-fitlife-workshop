@@ -78,6 +78,8 @@
 #   B. Prueba una pregunta donde el resultado sea un DataFrame
 #      grande (como "Muestra el churn por centro y plan").
 #      ¿La interpretación resume bien una tabla compleja?
+#      Abre el desplegable de la pasada 2: ¿qué parte de la
+#      tabla le ha llegado al modelo?
 #
 #   C. Prueba a cambiar el tono del prompt de interpretación.
 #      En vez de "analista de datos", pon "consultor senior
@@ -90,7 +92,8 @@
 # y busca cada uno en str(resultado). Si alguno no aparece,
 # pon un st.warning debajo con los que faltan. Cuidado con los
 # redondeos: 18.91 viene de 18.909556 y no aparece tal cual,
-# y el modelo puede escribir 18,91 con coma. Prueba la
+# el modelo puede escribir 18,91 con coma, y puede pasar
+# 0.0187 a 1,87 %. Prueba la
 # pregunta del canal varias veces. ¿Qué número se escapa, y
 # lo pilla tu comprobación?
 #
@@ -250,12 +253,12 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             st.json({"model": MODEL, "messages": messages})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
+        if show_code and last_code:
+            with st.expander("Código ejecutado"):
+                st.code(last_code, language="python")
+
         # ── Pasada 2: interpretar el resultado ──────────────
         if resultado is not None:
-            if show_code and last_code:
-                with st.expander("Código ejecutado"):
-                    st.code(last_code, language="python")
-
             with st.spinner("Interpretando..."):
 
                 # ── PASO A: construir el prompt de interpretación

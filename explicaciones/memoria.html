@@ -222,7 +222,7 @@ for msg in st.session_state.messages:
 <section class="station" aria-labelledby="t5">
 <h2 id="t5">Ejemplos en el prompt</h2>
 <div class="body">
-<p class="note">El paso 14. Dos preguntas de PREGUNTAS_TEST.md con el system de los pasos 12 y 13, y con el del paso 14, que añade tres ejemplos de código y cinco reglas de cálculo.</p>
+<p class="note">El paso 14. Dos preguntas de PREGUNTAS_TEST.md con el system de los pasos 12 y 13, y con el del paso 14, que añade tres ejemplos de código y cinco reglas de cálculo. El paso 14 con los huecos vacíos no es igual que el 13: las reglas del merge y de la tasa de churn pasan a <code>RULES</code>, así que sin rellenar lleva menos reglas.</p>
 <label><input id="fewshot" type="checkbox">Con los ejemplos y las reglas (paso 14)</label>
 <p class="note">El <code>content</code> del <code>system</code>, entero. Lo que añade el paso 14 va resaltado:</p>
 <pre><code id="s6-system"></code></pre>
@@ -426,7 +426,7 @@ const START2 = {session: 1, run: 1, asked: 0, fresh: false};
 let step = 0, turn = 0, run2 = {...START2}, sent3 = 1, passed = false, kase = "competidor";
 function renderRun() {
   const k = run2.asked, cls = run2.fresh ? ' class="new"' : "";
-  $("run-label").textContent = `Sesión ${run2.session} · ejecución ${run2.run}`;
+  $("run-label").textContent = `Carga de página ${run2.session} · ejecución ${run2.run}`;
   const vars = k === 0
     ? [["prompt", "None: no has escrito nada"], ["messages", "no existe: el if no entra"], ["resultado", "no existe"]]
     : [["prompt", `«${DIALOGUE[k - 1]}»`], ["messages", "2 entradas: system y user"], ["resultado", ALONE[k - 1].result]];
