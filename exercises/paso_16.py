@@ -1,112 +1,31 @@
-# PASO 15: sesión 3 resuelta, con la conversación completa en la petición
+# PASO 16: guardar, enviar y recuperar son tres acciones distintas
 #
-# Se conserva el ejercicio de la sesión 3 con sus huecos resueltos.
-# Los comentarios siguientes describen el reto anterior para repasarlo;
-# en esta rama ya no hay huecos que rellenar en este paso.
-# En esta rama, las peticiones llevan las preguntas y respuestas anteriores.
-# La sesión 3 original sigue disponible en clase/sesion-3 para comparar.
+# Parte del analista del paso 15. Conserva el cálculo y la explicación.
+# Ahora cada respuesta guarda también su petición, código y resultado.
 #
-# Comprueba el historial con tres preguntas consecutivas y después cambia
-# Mostrar código: deben seguir visibles las tres preguntas del usuario.
-# El historial de session_state vive en esta conexión del navegador.
-# Recargar la pestaña o reiniciar el servidor inicia otra sesión.
-# La sesión 4 añade una copia descargable para recuperar la conversación.
+# 1. Haz tres preguntas encadenadas. Cambia Mostrar código: deben seguir
+#    las tres preguntas del usuario y los detalles de las tres respuestas.
+# 2. Descarga la conversación. Recarga el navegador: estará vacío.
+#    Recupera el JSON: vuelven los mensajes y sus detalles, sin llamar al modelo.
+# 3. Abre chat_history.py. Lee api_messages: system primero, después role y
+#    content de cada mensaje en orden. Sustituye la construcción repetida.
+#    Conéctala a la petición inicial sustituyendo el bucle y también a la
+#    petición de interpret_result, con su propio interp_prompt e history.
+#    No copies code ni details a la API. Compara el JSON antes y después.
+# 4. Prueba un archivo sin content: debe rechazarse sin borrar tu chat actual.
 #
-# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_15.py
-# macOS:   .venv/bin/python -m streamlit run exercises/paso_15.py
-
-# ============================================================
-# PASO 15: El analista completo  (Bonus)
-# ============================================================
+# Avanzado: limita la petición a los últimos dos turnos completos, pero
+# conserva toda la conversación visible. Busca una pregunta que ya no
+# pueda resolverse. No confundas limitar contexto con borrar mensajes.
 #
-# ── ¿Qué hay aquí? ─────────────────────────────────────────
-#
-# Este es el resultado final de las 3 sesiones. Integra todo:
-#
-#   ✓ Text-to-code (sesión 2)
-#   ✓ Manejo de errores y reintentos (sesión 2)
-#   ✓ Prompt enriquecido con valores (sesión 2) y ejemplos (sesión 3)
-#   ✓ Memoria de conversación (sesión 3)
-#   ✓ Interpretación de resultados (sesión 3)
-#
-# En esta versión resuelta, ambas peticiones llevan el historial.
-#
-# Este paso NO tiene blancos ___. Funciona tal cual.
-# Es la app que desplegaréis a la nube en la sesión 4.
-#
-# ── Tu misión ───────────────────────────────────────────────
-#
-# Usa esta herramienta para investigar el caso FitLife.
-# Recuerda la pregunta central:
-#
-#   "¿Debería FitLife bajar el precio del plan básico?"
-#
-# Haz las 12 preguntas de PREGUNTAS_TEST.md. Para cada una,
-# evalúa si la respuesta es correcta, parcial o incorrecta.
-#
-# Después, intenta responder la pregunta con datos:
-#   - ¿Cuánto margen pierde FitLife por cada baja del básico?
-#   - ¿Las bajas son por precio o por otras razones?
-#   - ¿Qué pasa si baja de 29€ a 24€? ¿Cuánto dejaría
-#     de ingresar con los socios actuales? (Lee el código:
-#     ¿cuenta los socios de hoy o todas las filas de los
-#     tres años?)
-#   - ¿Los socios que se van por precio son rentables?
-#
-# ── Para pensar ─────────────────────────────────────────────
-#
-# Has construido en 3 sesiones un sistema que:
-#   1. Entiende preguntas en español
-#   2. Las traduce a código Python
-#   3. Ejecuta el código contra datos reales
-#   4. Explica el resultado en contexto de negocio
-#
-# Es el mismo patrón que usan herramientas como ChatGPT
-# Code Interpreter, GitHub Copilot, o asistentes de BI.
-#
-# En la sesión 4 veremos:
-#   - Cómo desplegar esta app en la nube (Streamlit Cloud)
-#   - Modelos que "piensan" antes de actuar (razonamiento)
-#   - Cómo un LLM puede usar herramientas (tool use)
-#   - Varios modelos trabajando juntos (orquestación)
-#
-# ── Retos avanzados ─────────────────────────────────────────
-#
-#   A. Cambia MODEL a "gpt-4.1-nano", un modelo más pequeño
-#      y más barato que "gpt-4.1-mini". MODEL se usa en las
-#      dos pasadas. ¿Empeora el código? ¿Y las explicaciones?
-#      ¿Tarda menos? ¿Merece la pena? Si pruebas "gpt-4.1",
-#      verás un error 403: la clave del curso no incluye ese
-#      modelo. Quien paga la clave decide qué modelos se usan.
-#
-#   B. Añade más ejemplos al SYSTEM_PROMPT para tipos de
-#      preguntas que fallan. ¿Cuántos ejemplos necesitas
-#      para que las 12 preguntas funcionen?
-#
-#   C. Piensa: ¿qué preguntas NO puede responder este
-#      sistema? ¿Qué necesitaría para responderlas?
-#      (Pista: datos externos, predicciones, simulaciones...)
-#
-# ── Vía avanzada ────────────────────────────────────────────
-#
-# Deja rastro. Después de cada respuesta, añade una línea a
-# un archivo registro.jsonl con la pregunta, el código, el
-# resultado y la explicación: json.dumps(..., ensure_ascii=False,
-# default=str) y open("registro.jsonl", "a", encoding="utf-8").
-# Haz las doce preguntas y léelo entero. ¿Cuántas respuestas
-# podrías defender, con el código en la mano, delante de
-# quien decide el precio? Los comandos de la guía no lo
-# guardan en Git; si quieres conservarlo, añádelo con
-# git add registro.jsonl antes del commit.
-#
-# Ejecuta desde la carpeta del proyecto, según tu sistema:
-# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_15.py
-# macOS:   .venv/bin/python -m streamlit run exercises/paso_15.py
-# ============================================================
+# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_16.py
+# macOS: .venv/bin/python -m streamlit run exercises/paso_16.py
 
 import streamlit as st
 import pandas as pd
 import re
+from copy import deepcopy
+from chat_history import history_controls, draw_history
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -167,13 +86,11 @@ Explica este resultado en el contexto del negocio de FitLife.
 Sé conciso (2-3 frases). Usa los números reales del resultado.
 Si el resultado sugiere algo accionable para la decisión de precios, menciónalo."""
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": interp_prompt}
-        ] + [{"role": msg["role"], "content": msg["content"]} for msg in history]
-    )
-    return response.choices[0].message.content
+    messages = [
+        {"role": "system", "content": interp_prompt}
+    ] + [{"role": msg["role"], "content": msg["content"]} for msg in history]
+    response = client.chat.completions.create(model=model, messages=messages)
+    return response.choices[0].message.content, messages
 
 
 # ── Prompt del sistema (experto, con ejemplos) ─────────────
@@ -234,7 +151,7 @@ Reglas generales:
 
 # ── Interfaz ────────────────────────────────────────────────
 
-st.title("FitLife Analytics v3")
+st.title("Paso 16: una conversación que puedes recuperar")
 st.caption(f"Analista conversacional · {len(df_members)} registros · {MODEL}")
 
 col1, col2 = st.columns([3, 1])
@@ -247,15 +164,8 @@ st.divider()
 
 # ── Historial ───────────────────────────────────────────────
 
-if "messages_v3" not in st.session_state:
-    st.session_state.messages_v3 = []
-
-for msg in st.session_state.messages_v3:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-        if msg.get("code") and show_code:
-            with st.expander("Código ejecutado"):
-                st.code(msg["code"], language="python")
+history_controls("messages_v3")
+draw_history(st.session_state.messages_v3, show_code)
 
 # ── Chat ────────────────────────────────────────────────────
 
@@ -271,11 +181,14 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             for msg in st.session_state.messages_v3:
                 messages.append({"role": msg["role"], "content": msg["content"]})
 
+            sent_for_calculation = deepcopy(messages)
             resultado = None
             last_error = None
             last_code = None
+            sent_for_interpretation = None  # No hay petición si el cálculo falla.
 
             for intento in range(MAX_RETRIES):
+                last_request = deepcopy(messages)
                 response = client.chat.completions.create(
                     model=MODEL,
                     messages=messages,
@@ -305,7 +218,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
                         st.info(f"Intento {intento + 1} falló: {error}. Reintentando...")
 
         with st.expander("Lo que enviamos: pasada 1, el código"):
-            st.json({"model": MODEL, "messages": messages})
+            st.json({"model": MODEL, "messages": last_request})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
         if show_code and last_code:
@@ -314,7 +227,8 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
 
         if resultado is not None:
             with st.spinner("Interpretando..."):
-                interpretation = interpret_result(client, MODEL, prompt, resultado, st.session_state.messages_v3)
+                interpretation, sent_for_interpretation = interpret_result(
+                    client, MODEL, prompt, resultado, st.session_state.messages_v3)
                 st.markdown(interpretation)
                 answer_text = interpretation
         else:
@@ -328,4 +242,12 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             "role": "assistant",
             "content": answer_text,
             "code": last_code,
+            "details": {
+                "peticion_inicial": sent_for_calculation,
+                "ultimo_intento": last_request,
+                "peticion_interpretacion": sent_for_interpretation,
+                "resultado_calculado": str(resultado),
+                "intentos": intento + 1,
+            },
         })
+    st.rerun()

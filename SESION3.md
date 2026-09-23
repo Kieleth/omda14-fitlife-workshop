@@ -1,5 +1,7 @@
 # Sesión 3: que el chat recuerde y que alguien explique el número
 
+> En la rama de sesión 4 estos pasos están resueltos y las peticiones ya incluyen el historial. Esta guía conserva las actividades de sesión 3 para repasar. Para continuar, abre [SESION4.md](SESION4.md); para repetir los huecos del ejercicio, usa tu rama `alumno/sesion-3` después de guardar el trabajo actual.
+
 Esta guía acompaña los ejercicios `exercises/paso_12.py` a `paso_15.py`. Puedes seguirla en clase o por tu cuenta. Los pasos 0 a 11 están en esta rama en su versión terminada: son las sesiones 1 y 2 resueltas, para repasar y para comparar con las tuyas. Cada ejercicio lleva sus instrucciones en la cabecera del archivo; aquí está el hilo de la sesión, lo que debes ver antes de pasar al siguiente paso y las explicaciones que no caben en un comentario. No contiene las soluciones. Las páginas de `explicaciones/` son simulaciones que se abren con doble clic y no tocan tu app; hoy hay una nueva, `memoria.html`, y la guía indica cuándo abrirla.
 
 ## Qué vas a construir

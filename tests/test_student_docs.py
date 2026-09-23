@@ -17,7 +17,7 @@ class StudentDocsTests(unittest.TestCase):
                 self.assertNotRegex(text, r"conda\s+activate|mda13-fitlife-workshop|`mda13`")
 
     def test_student_text_is_self_paced_and_does_not_name_the_teacher(self):
-        paths = [ROOT / name for name in GUIDES + SESSION_GUIDES + ("ENUNCIADO.md", "PREGUNTAS_TEST.md",
+        paths = [ROOT / name for name in GUIDES + SESSION_GUIDES + ("ENUNCIADO.md", "PREGUNTAS_TEST.md", "DE_EXPERIMENTO_A_PRODUCCION.md",
                                                                      "test_app.py", "check_setup.py")]
         paths += list((ROOT / "exercises").glob("*.py")) + list((ROOT / "explicaciones").glob("*.html"))
         for path in (path for path in paths if path.exists()):  # main carries only the preparation files

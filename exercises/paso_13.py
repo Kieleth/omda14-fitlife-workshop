@@ -1,3 +1,20 @@
+# PASO 13: sesión 3 resuelta, con la conversación completa en la petición
+#
+# Se conserva el ejercicio de la sesión 3 con sus huecos resueltos.
+# Los comentarios siguientes describen el reto anterior para repasarlo;
+# en esta rama ya no hay huecos que rellenar en este paso.
+# En esta rama, las peticiones llevan las preguntas y respuestas anteriores.
+# La sesión 3 original sigue disponible en clase/sesion-3 para comparar.
+#
+# Comprueba el historial con tres preguntas consecutivas y después cambia
+# Mostrar código: deben seguir visibles las tres preguntas del usuario.
+# El historial de session_state vive en esta conexión del navegador.
+# Recargar la pestaña o reiniciar el servidor inicia otra sesión.
+# La sesión 4 añade una copia descargable para recuperar la conversación.
+#
+# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_13.py
+# macOS:   .venv/bin/python -m streamlit run exercises/paso_13.py
+
 # ============================================================
 # PASO 13: El analista explica
 # ============================================================
@@ -60,9 +77,7 @@
 # enviamos". Abre el de la pasada 2 y busca tu número dentro
 # del system: el modelo no lo ha calculado, lo lee como texto.
 #
-# Ojo: como el paso 12 antes del reto de verdad, este archivo
-# guarda la conversación en pantalla pero cada petición lleva
-# solo la última pregunta.
+# En esta versión resuelta, ambas peticiones llevan el historial.
 #
 # ── Si has terminado antes ──────────────────────────────────
 #
@@ -211,10 +226,9 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
         with st.spinner("Generando y ejecutando código..."):
 
             # ── Pasada 1: generar y ejecutar código ─────────
-            messages = [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
-            ]
+            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            for msg in st.session_state.messages:
+                messages.append({"role": msg["role"], "content": msg["content"]})
 
             resultado = None
             last_error = None
@@ -276,7 +290,15 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
                 #   Sé conciso (2-3 frases). Usa los números reales.
                 #   Si el resultado sugiere algo accionable, menciónalo."""
 
-                interpretation_prompt = ___
+                interpretation_prompt = f"""Eres un analista de datos experto en el negocio de FitLife,
+una red de 5 gimnasios de proximidad.
+
+El usuario preguntó: {prompt}
+El resultado calculado sobre los datos reales es: {resultado}
+
+Explica este resultado en el contexto del negocio.
+Sé conciso (2-3 frases). Usa los números reales.
+Si el resultado sugiere algo accionable, menciónalo."""
 
                 # ── PASO B: llamar al LLM para interpretar ──
                 # Misma estructura que la pasada 1, pero esta vez
@@ -291,14 +313,20 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
                 #       ]
                 #   )
 
-                interpretation_response = ___
+                interpretation_response = client.chat.completions.create(
+                    model=MODEL,
+                    messages=[
+                        {"role": "system", "content": interpretation_prompt}
+                    ] + [{"role": msg["role"], "content": msg["content"]}
+                         for msg in st.session_state.messages]
+                )
 
                 interpretation = interpretation_response.choices[0].message.content
                 st.markdown(interpretation)
                 answer_text = interpretation
 
                 with st.expander("Lo que enviamos: pasada 2, la explicación"):
-                    st.json({"model": MODEL, "messages": [{"role": "system", "content": interpretation_prompt}, {"role": "user", "content": prompt}]})
+                    st.json({"model": MODEL, "messages": [{"role": "system", "content": interpretation_prompt}] + [{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]})
                 st.caption(f"Pasada 2: {interpretation_response.usage.prompt_tokens} tokens de prompt, {interpretation_response.usage.completion_tokens} de respuesta.")
         else:
             error_msg = f"Sin resultado tras {intento + 1} intento(s) de {MAX_RETRIES}."

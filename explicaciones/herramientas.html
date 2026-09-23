@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FitLife · Quién hace qué</title>
+<style>
+:root{font:18px/1.6 system-ui,sans-serif;color:#e8eef7;background:#101924}body{max-width:1050px;margin:auto;padding:32px}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.1}h2{margin-top:0}.tag{color:#81dbc8;font-weight:700}button{font:inherit;border:1px solid #6596a8;border-radius:8px;padding:10px 18px;background:#193243;color:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:default}button:focus-visible{outline:3px solid #f1bd65;outline-offset:4px}.controls{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.stage{background:#1b2a3a;border:1px solid #486073;border-radius:16px;padding:26px;min-height:300px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0c1520;padding:16px;border-radius:8px;font-size:.85rem}.note{color:#bacada}.steps{display:flex;gap:10px;list-style:none;padding:0;flex-wrap:wrap}.steps li{padding:7px 12px;border-bottom:3px solid #3b5062}.steps .active{border-color:#81dbc8;color:#81dbc8}.question{border-left:3px solid #f1bd65;padding-left:16px}details{margin:20px 0}summary{cursor:pointer}a{color:#81dbc8}
+</style>
+</head>
+<body>
+<p class="tag">OMDA14 · SESIÓN 4</p>
+<h1>El modelo pide.<br>Python calcula.</h1>
+<p>Una pregunta sigue varios caminos antes de convertirse en una respuesta. Avanza para distinguir petición, ejecución y redacción.</p>
+<p class="note">Simulación local. Los datos y mensajes de este ejemplo están escritos a mano: no llama a una API ni muestra el razonamiento interno de un modelo.</p>
+<ol class="steps" id="steps" aria-label="Recorrido"></ol>
+<div class="controls"><button id="prev">Anterior</button><button id="next">Siguiente</button><button id="reset">Reiniciar</button></div>
+<section class="stage" aria-live="polite"><p class="tag" id="actor"></p><h2 id="title"></h2><p id="explanation"></p><pre id="payload"></pre><p class="question" id="question"></p><details id="reveal"><summary>Contrastar mi respuesta</summary><p id="answer"></p></details></section>
+<h2>Tres cosas que llamamos memoria</h2>
+<p><strong>Pantalla:</strong> Streamlit vuelve a dibujar lo que guardaste en <code>session_state</code>. <strong>Contexto:</strong> el modelo recibe solo los mensajes incluidos en la petición. <strong>Copia:</strong> un JSON descargado puede recuperarse después de perder la sesión.</p>
+<p>Un rerun vuelve a ejecutar el script en la sesión abierta. Recargar el navegador crea otra conexión y puede perder ese estado. Un commit guarda código, no la conversación en memoria.</p>
+<details><summary>Y si el modelo se ejecuta en mi ordenador</summary><p>Cambia dónde se calcula la respuesta del modelo. Sigues necesitando construir su entrada, interpretar su salida y decidir qué funciones puede ejecutar tu programa. Local no significa memoria automática ni resultados correctos. Este taller muestra las peticiones reales en los pasos de Python; esta página solo representa el recorrido.</p></details>
+<p class="note">En tu app, abre «Detalle de este turno» y busca los mismos elementos. El identificador enlaza la solicitud de herramienta con el resultado: no es un identificador de socio.</p>
+<script>
+const stages=[
+{actor:'NAVEGADOR → PYTHON',title:'1. Tú envías una pregunta',text:'El navegador comunica la entrada a Streamlit. Python añade el mensaje a la conversación de esta sesión.',data:{role:'user',content:'¿Qué ingreso tendría el básico a 24 euros?'},question:'¿Ya conoce el modelo esta pregunta?',answer:'No. Todavía falta que Python haga una petición a la API.'},
+{actor:'PYTHON → API DEL MODELO',title:'2. Tu programa construye la petición',text:'Envía instrucciones, mensajes anteriores y las herramientas permitidas. Describir una función no la ejecuta.',data:{messages:[{role:'system',content:'No confundas un escenario con una predicción.'},{role:'user',content:'¿Qué ingreso tendría el básico a 24 euros?'}],tools:['resumen_plan','escenario_precio']},question:'¿Viaja el archivo CSV entero?',answer:'En este ejemplo no. Viajan las descripciones de herramientas y el texto de la conversación. Después viajará un resultado agregado.'},
+{actor:'MODELO → PYTHON',title:'3. El modelo solicita una herramienta',text:'La respuesta contiene un nombre y argumentos. Tu programa comprueba que puede ejecutar esa función con esos valores.',data:{id:'call_ejemplo',type:'function',function:{name:'escenario_precio',arguments:{plan:'basic',month:'ultimo',new_price:24}}},question:'¿Quién decide qué funciones están permitidas?',answer:'El código de tu aplicación. Una petición del modelo no concede permiso para ejecutar cualquier cosa.'},
+{actor:'PYTHON · DATOS DEL EJEMPLO',title:'4. Python hace el cálculo',text:'Supón dos socios activos que pagaron 29 y 25 euros. Mantener los dos a 24 euros produce 48 euros frente a los 54 observados.',data:{socios_activos:2,ingreso_observado_euros:54,ingreso_simulado_euros:48,cambio_ingreso_euros:-6},question:'¿Podemos concluir que se darán de baja menos socios?',answer:'No. Hemos mantenido la población fija. No hemos calculado el efecto del precio sobre las bajas.'},
+{actor:'PYTHON → API DEL MODELO',title:'5. Devuelves el resultado calculado',text:'Otra petición incluye la solicitud del modelo y la respuesta de la herramienta. El identificador une ambas.',data:{role:'tool',tool_call_id:'call_ejemplo',content:'{"ingreso_observado_euros":54,"ingreso_simulado_euros":48,"cambio_ingreso_euros":-6}'},question:'¿Cuántas llamadas a la API llevamos?',answer:'Dos: una para obtener la solicitud de herramienta y otra para obtener la respuesta a partir de su resultado.'},
+{actor:'MODELO → PYTHON → NAVEGADOR',title:'6. El modelo redacta y tu app guarda',text:'Python guarda la respuesta con su detalle y Streamlit la muestra. El siguiente rerun debe dibujar de nuevo todas las entradas guardadas.',data:{role:'assistant',content:'Con los mismos dos socios activos, ingresarías 48 euros: 6 menos. Esto no predice las bajas.'},question:'¿Qué tendrías que darle a un revisor para comprobar esta frase?',answer:'La pregunta, este borrador y el resultado de la herramienta. Y aun así debes contrastar su revisión con el cálculo.'}
+];
+let index=0;const el=id=>document.getElementById(id);function render(){const s=stages[index];el('steps').replaceChildren(...stages.map((_,i)=>{const item=document.createElement('li');item.textContent=String(i+1);item.className=i===index?'active':'';if(i===index)item.setAttribute('aria-current','step');return item;}));el('actor').textContent=s.actor;el('title').textContent=s.title;el('explanation').textContent=s.text;el('payload').textContent=JSON.stringify(s.data,null,2);el('question').textContent=s.question;el('answer').textContent=s.answer;el('reveal').open=false;el('prev').disabled=index===0;el('next').disabled=index===stages.length-1;}el('prev').onclick=()=>{index--;render();};el('next').onclick=()=>{index++;render();};el('reset').onclick=()=>{index=0;render();};render();
+</script>
+</body>
+</html>

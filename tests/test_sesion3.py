@@ -113,7 +113,7 @@ SOLUTIONS = {
                    ('\nRULES = """___"""', f'\nRULES = """{RULES}"""')],
 }
 SOLVED_BEFORE_TODAY = {"paso_8.py", "paso_9.py", "paso_10.py", BONUS}
-TODAY = {f"paso_{n}.py" for n in range(12, 16)}
+TODAY = set()  # La sesión 4 entrega resueltos los pasos anteriores.
 
 # El reto de verdad del paso 9, que el alumno pega en el prompt: esta rama lo entrega pegado.
 PASTED = {"paso_9.py": [("   Columnas: {list(df_members.columns)}\n\n2.",
@@ -210,6 +210,34 @@ class WithoutPresentation(ast.NodeTransformer):
         return None if is_st_call(node.value, "caption") else node
 
 
+def fixed_history(source, number):
+    state = "messages_v3" if number == 15 else "messages"
+    old = '''            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ]'''
+    new = f'''            messages = [{{"role": "system", "content": SYSTEM_PROMPT}}]
+            for msg in st.session_state.{state}:
+                messages.append({{"role": msg["role"], "content": msg["content"]}})'''
+    if source.count(old) != 1:
+        raise AssertionError("La petición base ha cambiado: revisa la corrección del historial.")
+    source = source.replace(old, new)
+    if number == 13:
+        source = source.replace('''                        {"role": "system", "content": interpretation_prompt},
+                        {"role": "user", "content": prompt}
+                    ]''', '''                        {"role": "system", "content": interpretation_prompt}
+                    ] + [{"role": msg["role"], "content": msg["content"]}
+                         for msg in st.session_state.messages]''')
+    if number in (14, 15):
+        source = source.replace("def interpret_result(client, model, prompt, resultado):", "def interpret_result(client, model, prompt, resultado, history):")
+        source = source.replace('''            {"role": "system", "content": interp_prompt},
+            {"role": "user", "content": prompt}
+        ]''', '''            {"role": "system", "content": interp_prompt}
+        ] + [{"role": msg["role"], "content": msg["content"]} for msg in history]''')
+        source = source.replace("interpret_result(client, MODEL, prompt, resultado)", f"interpret_result(client, MODEL, prompt, resultado, st.session_state.{state})")
+    return source
+
+
 def lesson(source):
     return ast.dump(WithoutPresentation().visit(ast.parse(source)))
 
@@ -218,8 +246,8 @@ class ExerciseSourceTests(unittest.TestCase):
     def test_exercises_match_the_baseline_once_solved(self):
         names = {p.name for p in (ROOT / "exercises").glob("*.py")}
         steps = {f"paso_{i}.py" for i in STEPS}
-        self.assertEqual({name for name in names if name.startswith("paso_")}, steps)
-        self.assertLessEqual(names - steps, {BONUS})
+        self.assertEqual({name for name in names if name.startswith("paso_")}, steps | {f"paso_{n}.py" for n in range(16, 20)})
+        self.assertLessEqual(names - steps, {BONUS} | {f"paso_{n}.py" for n in range(16, 20)})
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         positions = []
         for number in STEPS:
@@ -240,6 +268,8 @@ class ExerciseSourceTests(unittest.TestCase):
                     for blank, _ in SOLUTIONS.get(name, []):
                         self.assertIn(blank, current, "El hueco no tiene la forma documentada.")
                 current, baseline = solved(current, name), solved(baseline, name)
+                if number >= 12:
+                    baseline = fixed_history(baseline, number)
                 self.assertEqual((blanks(current), blanks(baseline)), (0, 0))
                 self.assertEqual(lesson(current), lesson(baseline),
                                  f"{name} cambió más allá de sus instrucciones. Revisa su alcance con el docente.")
@@ -254,12 +284,11 @@ class ExerciseSourceTests(unittest.TestCase):
                 self.assertIn("resuelto", source.splitlines()[1])
         self.assertIn("Valores de 'plan': basic (29€)", (ROOT / "exercises/paso_9.py").read_text(encoding="utf-8"))
 
-    def test_the_history_snippet_is_in_paso_12_as_documented(self):
-        source = (ROOT / "exercises/paso_12.py").read_text(encoding="utf-8")
-        self.assertEqual(source.count(HISTORY_SNIPPET), 1)
-        activated = with_history(source)
-        self.assertIn('\n            for msg in st.session_state.messages:\n                messages.append(', activated)
-        ast.parse(activated)
+    def test_solved_history_is_active_in_all_four_steps(self):
+        for number in range(12, 16):
+            source = (ROOT / f"exercises/paso_{number}.py").read_text(encoding="utf-8")
+            self.assertIn('messages.append({"role": msg["role"], "content": msg["content"]})', source)
+            self.assertNotIn(HISTORY_SNIPPET, source)
 
     def test_no_em_dashes_in_student_files(self):
         for path in list((ROOT / "exercises").glob("*.py")) + [ROOT / "SESION3.md", ROOT / "README.md"]:
@@ -374,21 +403,22 @@ class OfflineAppTests(unittest.TestCase):
         self.assertEqual(len([x for x in app.expander if x.label.startswith("Código de la pregunta")]), 12)
         self.assertEqual(app.markdown[-1].value, "correcta: 0 | parcial: 0 | inventada: 0 | no puede: 0")
 
-    def test_paso_12_fails_on_load_until_the_first_blank_is_filled(self):
+    def test_paso_12_ships_solved(self):
         app = self.app(12)
-        self.assertIn("name '___' is not defined", app.exception[0].message)
+        self.assertClean(app)
+        self.assertEqual(len(app.chat_message), 0)
 
-    def test_paso_12_remembers_on_screen_but_sends_only_the_last_question(self):
+    def test_paso_12_remembers_on_screen_and_sends_the_conversation(self):
         app = self.app(12, "¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?", solve=True)
         self.assertClean(app)
         self.assertEqual([m.name for m in app.chat_message], ["user", "assistant", "user", "assistant"])
         self.assertEqual([m["role"] for m in app.session_state["messages"]], ["user", "assistant", "user", "assistant"])
         sent = self.sent(app, "Lo que enviamos en la última petición")
-        self.assertEqual([m["role"] for m in sent], ["system", "user"])
-        self.assertEqual(sent[1]["content"], "¿Cuál es el que tiene más socios?")
-        self.assertIn("2 entradas en messages y pesó 250 tokens", app.caption[-1].value)
+        self.assertEqual([m["role"] for m in sent], ["system", "user", "assistant", "user"])
+        self.assertEqual(sent[-1]["content"], "¿Cuál es el que tiene más socios?")
+        self.assertIn("4 entradas en messages y pesó 250 tokens", app.caption[-1].value)
 
-    def test_paso_12_with_the_snippet_sends_the_whole_conversation(self):
+    def test_paso_12_sends_roles_and_content_without_ui_fields(self):
         app = self.app(12, "¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?", solve=True, history=True)
         self.assertClean(app)
         sent = self.sent(app, "Lo que enviamos en la última petición")
@@ -402,10 +432,10 @@ class OfflineAppTests(unittest.TestCase):
         self.assertClean(app)
         self.assertEqual(app.error[0].value, "Sin resultado tras 1 intento(s) de 3.")
 
-    def test_paso_13_fails_in_the_second_pass_until_solved_then_shows_both_requests(self):
+    def test_paso_13_ships_solved_and_shows_both_requests(self):
         app = self.app(13, "¿Cuántos registros tiene el dataset de socios?")
-        self.assertIn("name '___' is not defined", app.exception[0].message)
-        self.assertEqual([x.label for x in app.expander], ["Lo que enviamos: pasada 1, el código"])
+        self.assertClean(app)
+        self.assertEqual(len(app.expander), 2)
         app = self.app(13, "¿Cuántos registros tiene el dataset de socios?", solve=True)
         self.assertClean(app)
         self.assertEqual([x.label for x in app.expander],
@@ -425,7 +455,8 @@ class OfflineAppTests(unittest.TestCase):
                     self.assertIn("Ejemplo 1. Tasa de churn por plan:", system)
                     self.assertIn("- Margen = price_paid - cost_to_serve", system)
                 else:
-                    self.assertIn("EJEMPLOS DE CÓDIGO:\n\n___\n\nREGLAS DE CÁLCULO:\n\n___", system)
+                    self.assertIn("Ejemplo 1. Tasa de churn por plan:", system)
+                    self.assertNotIn("___", system)
                 self.assertIn(EXPLANATION, [m.value for m in app.markdown])
 
     def test_paso_13_shows_the_code_when_there_is_no_result(self):
@@ -436,15 +467,8 @@ class OfflineAppTests(unittest.TestCase):
         self.assertEqual(app.error[0].value, "Sin resultado tras 1 intento(s) de 3.")
         self.assertIn("resultado = None", app.code[-1].value)
 
-    def test_paso_15_sends_the_conversation_with_the_three_lines_on_messages_v3(self):
-        """La cabecera y la guía dicen: las tres líneas del paso 12, con messages_v3."""
-        lines = with_history(HISTORY_SNIPPET).replace("st.session_state.messages:", "st.session_state.messages_v3:")
-        request = '                {"role": "user", "content": prompt},\n            ]\n'
-        source = (ROOT / "exercises/paso_15.py").read_text(encoding="utf-8")
-        self.assertEqual(source.count(request), 1)
-        app = AppTest.from_string(source.replace(request, request + lines)).run()
-        for question in ("¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?"):
-            app.chat_input[0].set_value(question).run(timeout=30)
+    def test_paso_15_sends_the_conversation(self):
+        app = self.app(15, "¿Cuántos planes tiene FitLife?", "¿Cuál es el que tiene más socios?")
         self.assertClean(app)
         self.assertEqual([m["role"] for m in self.sent(app, "Lo que enviamos: pasada 1, el código")],
                          ["system", "user", "assistant", "user"])

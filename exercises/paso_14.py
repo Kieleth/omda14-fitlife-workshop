@@ -1,3 +1,20 @@
+# PASO 14: sesión 3 resuelta, con la conversación completa en la petición
+#
+# Se conserva el ejercicio de la sesión 3 con sus huecos resueltos.
+# Los comentarios siguientes describen el reto anterior para repasarlo;
+# en esta rama ya no hay huecos que rellenar en este paso.
+# En esta rama, las peticiones llevan las preguntas y respuestas anteriores.
+# La sesión 3 original sigue disponible en clase/sesion-3 para comparar.
+#
+# Comprueba el historial con tres preguntas consecutivas y después cambia
+# Mostrar código: deben seguir visibles las tres preguntas del usuario.
+# El historial de session_state vive en esta conexión del navegador.
+# Recargar la pestaña o reiniciar el servidor inicia otra sesión.
+# La sesión 4 añade una copia descargable para recuperar la conversación.
+#
+# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_14.py
+# macOS:   .venv/bin/python -m streamlit run exercises/paso_14.py
+
 # ============================================================
 # PASO 14: El prompt experto
 # ============================================================
@@ -67,9 +84,7 @@
 # Quizá ninguna daba error antes. Mira el código de cada una
 # con y sin ejemplos: lo que cambia es qué calcula.
 #
-# Ojo: como el paso 13, este archivo guarda la conversación
-# en pantalla pero cada petición lleva solo la última
-# pregunta.
+# En esta versión resuelta, ambas peticiones llevan el historial.
 #
 # ── Si has terminado antes ──────────────────────────────────
 #
@@ -145,7 +160,7 @@ def run_code(code, df_members, df_context):
         return None, f"{type(e).__name__}: {e}"
 
 
-def interpret_result(client, model, prompt, resultado):
+def interpret_result(client, model, prompt, resultado, history):
     """Pide al LLM que interprete el resultado en contexto."""
     interp_prompt = f"""Eres un analista de datos experto en el negocio de FitLife,
 una red de 5 gimnasios de proximidad.
@@ -160,9 +175,8 @@ Si el resultado sugiere algo accionable, menciónalo."""
     response = client.chat.completions.create(
         model=model,
         messages=[
-            {"role": "system", "content": interp_prompt},
-            {"role": "user", "content": prompt}
-        ]
+            {"role": "system", "content": interp_prompt}
+        ] + [{"role": msg["role"], "content": msg["content"]} for msg in history]
     )
     return response.choices[0].message.content
 
@@ -176,7 +190,19 @@ Si el resultado sugiere algo accionable, menciónalo."""
 #
 # ↓ Borra ___ y escribe tus ejemplos (ver PISTAS más abajo)
 
-EXAMPLES = """___"""
+EXAMPLES = """Ejemplo 1. Tasa de churn por plan:
+  churn_plan = df_members.groupby('plan')['status'].apply(
+      lambda x: (x == 'churned').sum() / len(x) * 100
+  )
+  resultado = churn_plan
+
+Ejemplo 2. Cruzar tablas (socios + contexto):
+  merged = df_members.merge(df_context, on='month')
+  resultado = merged.groupby('month')[['visits_this_month', 'competitor_lowcost_price']].mean()
+
+Ejemplo 3. Margen por socio:
+  df_members['margin'] = df_members['price_paid'] - df_members['cost_to_serve']
+  resultado = df_members.groupby('plan')['margin'].mean()"""
 
 # ── PASO 2: Escribe las reglas de cálculo ───────────────────
 # Copia aquí las reglas específicas del negocio.
@@ -184,7 +210,11 @@ EXAMPLES = """___"""
 #
 # ↓ Borra ___ y escribe tus reglas (ver PISTAS más abajo)
 
-RULES = """___"""
+RULES = """- Tasa de churn = churned / total * 100 (como porcentaje)
+- Margen = price_paid - cost_to_serve
+- Para cruzar tablas: df_members.merge(df_context, on='month')
+- Un socio "churned" es uno con status == 'churned' en ese mes
+- 'month' es string con formato YYYY-MM. Para extraer año: pd.to_datetime(df['month']).dt.year"""
 
 SYSTEM_PROMPT = f"""Genera solo código Python/pandas que responda a la pregunta del usuario.
 
@@ -280,10 +310,9 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
     with st.chat_message("assistant"):
         with st.spinner("Generando y ejecutando código..."):
 
-            messages = [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
-            ]
+            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            for msg in st.session_state.messages:
+                messages.append({"role": msg["role"], "content": msg["content"]})
 
             resultado = None
             last_error = None
@@ -328,7 +357,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
 
         if resultado is not None:
             with st.spinner("Interpretando..."):
-                interpretation = interpret_result(client, MODEL, prompt, resultado)
+                interpretation = interpret_result(client, MODEL, prompt, resultado, st.session_state.messages)
                 st.markdown(interpretation)
                 answer_text = interpretation
         else:

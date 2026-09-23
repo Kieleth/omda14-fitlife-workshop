@@ -1,3 +1,20 @@
+# PASO 12: sesión 3 resuelta, con la conversación completa en la petición
+#
+# Se conserva el ejercicio de la sesión 3 con sus huecos resueltos.
+# Los comentarios siguientes describen el reto anterior para repasarlo;
+# en esta rama ya no hay huecos que rellenar en este paso.
+# En esta rama, las peticiones llevan las preguntas y respuestas anteriores.
+# La sesión 3 original sigue disponible en clase/sesion-3 para comparar.
+#
+# Comprueba el historial con tres preguntas consecutivas y después cambia
+# Mostrar código: deben seguir visibles las tres preguntas del usuario.
+# El historial de session_state vive en esta conexión del navegador.
+# Recargar la pestaña o reiniciar el servidor inicia otra sesión.
+# La sesión 4 añade una copia descargable para recuperar la conversación.
+#
+# Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_12.py
+# macOS:   .venv/bin/python -m streamlit run exercises/paso_12.py
+
 # ============================================================
 # PASO 12: El chat recuerda
 # ============================================================
@@ -98,13 +115,7 @@
 #
 # ── El reto de verdad ──────────────────────────────────────
 #
-# La conversación está en st.session_state.messages, pero
-# la petición no la lleva. Dentro del código, justo debajo
-# de messages = [...], hay un bloque "El reto de verdad" con
-# tres líneas comentadas. Quita el "# " del principio de las
-# tres, sin tocar los espacios de delante, y guarda. Repite
-# el diálogo desde el principio (recarga la página con F5
-# para empezar vacío) y vuelve a abrir el desplegable.
+# El reto de enviar la conversación ya está resuelto en esta rama.
 #
 # ── Si has terminado antes ──────────────────────────────────
 #
@@ -230,7 +241,7 @@ st.divider()
 #   st.session_state.messages = []
 
 if "messages" not in st.session_state:
-    ___
+    st.session_state.messages = []
 
 # ── Mostrar el historial de mensajes ───────────────────────
 # Cada vez que Streamlit ejecuta el archivo, necesitamos
@@ -254,7 +265,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
     # ↓ Borra ___ y escribe:
     #   st.session_state.messages.append({"role": "user", "content": prompt})
 
-    ___
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
     with st.chat_message("user"):
         st.write(prompt)
@@ -262,19 +273,9 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
     with st.chat_message("assistant"):
         with st.spinner("Generando y ejecutando código..."):
 
-            messages = [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
-            ]
-
-            # ── El reto de verdad: enviar la conversación ───
-            # Estas tres líneas rehacen messages con todo el
-            # historial: el mismo bucle que lo pinta arriba en
-            # pantalla, ahora dentro de la petición. Quita el
-            # "# " del principio de las tres:
-            # messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-            # for msg in st.session_state.messages:
-            #     messages.append({"role": msg["role"], "content": msg["content"]})
+            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            for msg in st.session_state.messages:
+                messages.append({"role": msg["role"], "content": msg["content"]})
 
             resultado = None
             last_error = None
@@ -331,7 +332,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
         # ↓ Borra ___ y escribe:
         #   st.session_state.messages.append({"role": "assistant", "content": answer_text, "code": last_code})
 
-        ___
+        st.session_state.messages.append({"role": "assistant", "content": answer_text, "code": last_code})
 
     with st.expander("Lo que enviamos en la última petición"):
         st.json({"model": MODEL, "messages": messages})
