@@ -12,7 +12,7 @@ Vas a construir, paso a paso, una aplicación para explorar los datos de FitLife
 
 ## Sesión 4
 
-Los ejercicios y la [guía de sesión 4](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-4/SESION4.md) están en `clase/sesion-4`. Esa rama trae los pasos 0 a 15 resueltos, con el historial corregido, y añade recuperación de conversaciones, herramientas, comparación de modelos, revisión con evidencia y una demo compartida.
+Los ejercicios y la [guía de sesión 4](https://github.com/Kieleth/omda14-fitlife-workshop/blob/clase/sesion-4/SESION4.md) están en `clase/sesion-4`. Esa rama trae los pasos 0 a 15 resueltos, con el historial corregido, y añade recuperación de conversaciones, herramientas, comparación de modelos, revisión con evidencia, consultas sobre documentos, gráficos solicitados en lenguaje natural y una demo compartida.
 
 Si ya tienes una rama de alumno, sigue «Preparar tu rama» en esa guía: primero guarda tus cambios con un commit y después crea `alumno/sesion-4`. Tu solución anterior permanece en su rama. [ACTUALIZAR.md](ACTUALIZAR.md) explica cómo conservar archivos y cambios antes de cambiar de rama.
 
