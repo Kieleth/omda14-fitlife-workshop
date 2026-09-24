@@ -3,6 +3,7 @@
 import copy
 from io import BytesIO
 import json
+import ntpath
 import os
 import sys
 from pathlib import Path
@@ -20,6 +21,25 @@ from fitlife_charts import build_chart, execute_chart, METRICS
 from test_sesion3 import completion
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def offline_environment(source):
+    # Libraries still need OS paths, especially USERPROFILE on Windows.
+    paths = {'HOME', 'USERPROFILE', 'HOMEDRIVE', 'HOMEPATH', 'SYSTEMROOT', 'PATH', 'TEMP', 'TMP'}
+    return {**{key: value for key, value in source.items() if key.upper() in paths},
+            'OPENAI_API_KEY': 'sk-test'}
+
+
+class EnvironmentTests(unittest.TestCase):
+    def test_isolation_preserves_windows_home_without_copying_credentials(self):
+        source = {'USERPROFILE': r'C:\Users\test-student', 'TEMP': r'C:\Temp',
+                  'OPENAI_API_KEY': 'never-copy', 'WORKSHOP_PASSWORD': 'never-copy',
+                  'UNRELATED_SECRET': 'never-copy'}
+        isolated = offline_environment(source)
+        self.assertEqual(isolated, {'USERPROFILE': source['USERPROFILE'], 'TEMP': source['TEMP'],
+                                    'OPENAI_API_KEY': 'sk-test'})
+        with patch.dict(os.environ, isolated, clear=True):
+            self.assertEqual(ntpath.expanduser('~'), source['USERPROFILE'])
 
 
 class DocumentTests(unittest.TestCase):
@@ -105,7 +125,7 @@ class OfflineDocumentChartApps(unittest.TestCase):
         self.denied = False
         self.chart_args = dict(metric='churn_rate', group_by='month', plan='all', start_month='2024-01',
                                end_month='2024-12', kind='line', split_by_plan=True)
-        self.enterContext(patch.dict(os.environ, {'OPENAI_API_KEY': 'sk-test'}, clear=True))
+        self.enterContext(patch.dict(os.environ, offline_environment(os.environ), clear=True))
         self.enterContext(patch('socket.socket.connect', side_effect=AssertionError('Unexpected network')))
         self.enterContext(patch('dotenv.load_dotenv', return_value=False))
         real = openai.OpenAI
