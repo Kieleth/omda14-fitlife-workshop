@@ -214,6 +214,7 @@ Reglas:
                 "pd": pd,
             }
 
+            # Este diccionario no aísla Python: exec usa los permisos del proceso.
             exec(code, exec_globals)
 
             # Mostrar el resultado

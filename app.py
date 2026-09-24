@@ -6,7 +6,9 @@ import os
 from dotenv import load_dotenv
 import streamlit as st
 
-from exercises.paso_17 import main
+from exercises.paso_17 import main as analyst
+from exercises.paso_20 import main as documents
+from exercises.paso_21 import main as charts
 from fitlife_tools import TOOLS
 
 load_dotenv()
@@ -28,4 +30,10 @@ if not st.session_state.get('authenticated', False):
 if not os.environ.get('OPENAI_API_KEY'):
     st.error('Falta OPENAI_API_KEY en la configuración del servidor. No se puede consultar el modelo.')
     st.stop()
-main(TOOLS)
+view = st.radio('Qué quieres investigar', ['Cálculos', 'Documentos', 'Gráficos'], horizontal=True)
+if view == 'Cálculos':
+    analyst(TOOLS)
+elif view == 'Documentos':
+    documents()
+else:
+    charts()

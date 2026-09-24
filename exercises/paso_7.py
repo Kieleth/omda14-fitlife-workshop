@@ -43,13 +43,11 @@
 # churn del plan básico necesita plan y status a la vez, y
 # solo le hemos dado cada distribución por separado.
 #
-# Aquí no tiene delante ninguna fila del plan basic ni ningún
-# cruce, y aun así escribe un número: sale del mismo mecanismo
-# que las palabras de alrededor, prediciendo texto. ¿Y si le
-# diéramos el cruce? Mejoraría esa pregunta, pero por mucho
-# contexto que le des, el LLM sigue sin tener una calculadora:
-# no itera sobre 16.334 filas y cuenta. Escribe el número que
-# mejor suena a partir de lo que tiene delante.
+# Las distribuciones separadas no dicen cuántas bajas son del
+# básico. Falta ese cruce. Si lo añadimos, tendrá evidencia para
+# esa pregunta; otras seguirán necesitando otros datos o cálculos.
+# Compara el resultado con pandas. La prosa por sí sola no
+# demuestra que haya hecho un cálculo correcto.
 #
 # Fíjate en las últimas líneas del prompt: dice "solo tienes
 # una muestra de 5 filas" después de darle cuatro
@@ -112,13 +110,12 @@
 #      gpt-4.1-mini acepta 1.047.576 tokens por petición.
 #      ¿Cabe la tabla entera? Son 3,5 millones de caracteres.
 #      Cada cuenta tiene además un límite de tokens por minuto.
-#      Con la clave del curso la petición falla en unos
-#      segundos y Streamlit muestra el error en rojo:
+#      Un error registrado en una prueba fue:
 #      "Request too large ... Limit 400000, Requested 883929".
-#      Lee el error: OpenAI ha contado los tokens por ti.
-#      Con una cuenta de más nivel funcionaría y costaría unos
-#      0,35 $ cada pregunta. Pruébalo si quieres ver el error:
-#      con la clave del curso no cuesta nada.
+#      Es un ejemplo histórico: los permisos y límites pueden
+#      cambiar. No asumas que enviar la tabla entera fallará o
+#      será gratis. La comparación entre 5 y 50 filas basta
+#      para observar cómo crece la petición.
 #
 # Ejecuta desde la carpeta del proyecto, según tu sistema:
 # Windows: .venv\Scripts\python.exe -m streamlit run exercises/paso_7.py

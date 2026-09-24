@@ -1,6 +1,6 @@
 # Sesión 4: del analista que responde al sistema que puedes comprobar
 
-Continúas con FitLife y sus doce preguntas. Los pasos 0 a 15 están resueltos en esta rama. Los pasos 12 a 15 conservan además la conversación en las peticiones de cálculo e interpretación. Hoy comprobarás esa continuidad, guardarás una investigación, darás al modelo herramientas concretas, compararás modelos y revisarás una respuesta contra su evidencia. Al final prepararás una demo accesible desde otro navegador.
+Continúas con FitLife y sus doce preguntas. Los pasos 0 a 15 están resueltos en esta rama. Los pasos 12 a 15 conservan además la conversación en las peticiones de cálculo e interpretación. Hoy comprobarás esa continuidad, guardarás una investigación, darás al modelo herramientas concretas, compararás modelos, revisarás una respuesta contra su evidencia, incorporarás documentos y pedirás gráficos sobre los datos. Al final prepararás una demo accesible desde otro navegador.
 
 ## Preparar tu rama sin perder la sesión 3
 
@@ -105,10 +105,77 @@ La pantalla conserva exactamente qué borrador se revisó. Si cambias el texto d
 
 **Comprobación para continuar:** una afirmación sin respaldo detectada o un fallo del revisor documentado, y una comprobación independiente con Python. El último juicio sigue siendo tuyo.
 
+## Paso 20: el CSV no contiene la respuesta
+
+Arranca `exercises/paso_20.py` con el mismo comando de Streamlit. Pregunta «¿Con cuántos días de antelación hay que solicitar la baja?». Es una condición comercial, no una cuenta sobre filas. Los tres documentos de `data/conocimiento/` son ficticios y están marcados como tales.
+
+Abre también `explicaciones/documentos.html` con doble clic desde el explorador de archivos: permite cambiar la selección y ver el contexto que prepararíamos, sin llamar a la API.
+
+### Cargar no significa entrenar
+
+El archivo contiene texto. Python lo lee y lo divide en fragmentos, conservando el nombre, la sección y un identificador que cambia si cambia el contenido. Después tu programa decide qué fragmentos enviar junto a la pregunta. El modelo recibe ese texto en esa petición. No se han cambiado los parámetros aprendidos del modelo ni se han insertado los documentos en sus conocimientos permanentes.
+
+**Predice antes de enviar:** ¿qué podrá contestar con cada modo?
+
+1. **Sin documentos.** Inspecciona la lista vacía y envía la pregunta. Una respuesta que reconoce que falta la política es válida. Si inventa una regla, anótala como fallo.
+2. **Todos los fragmentos.** Lee lo cargado, envía la misma pregunta y abre la fuente citada. Busca la frase concreta y sus condiciones. Comprueba en la petición que viaja el texto, no solo el nombre del archivo.
+3. **Buscar fragmentos.** Tu código cuenta palabras compartidas y selecciona los primeros resultados. Mira `matched_words` y `score`: son coincidencias de palabras, no probabilidades. Cambia el máximo de fragmentos y observa qué información entra o queda fuera.
+
+Encontrar información y añadirla a la petición antes de generar la respuesta se llama **RAG**, del inglés *retrieval-augmented generation*. Esta búsqueda sencilla permite ver cada paso. Un sistema mayor podría buscar por similitud semántica mediante embeddings, representaciones numéricas del texto, pero también tendría que comprobar que recuperó la evidencia necesaria. [Explicación oficial de recuperación y contexto](https://developers.openai.com/api/docs/guides/optimizing-llm-accuracy).
+
+La app valida el formato de la respuesta y que los identificadores citados existan entre los fragmentos enviados. Eso no demuestra que la fuente respalde la conclusión: lee el párrafo. Un resultado con `status=supported` es una declaración del modelo, no una certificación de Python.
+
+### Construye una mejora de búsqueda
+
+En `fitlife_documents.py`, localiza `words` y `retrieve`. Prueba el término «anulación» y después «baja» en la consulta. La primera palabra no aparece en los documentos; compara los fragmentos recuperados sin llamar a la API.
+
+Añade un pequeño diccionario de sinónimos que convierta `anulacion` en `baja` antes de comparar palabras. Conserva ambos términos si necesitas buscar los dos. Repite las dos consultas y explica por qué ha cambiado el resultado. Después comprueba una pregunta ajena, como «¿hay clases de natación?»: añadir sinónimos no crea la información que falta.
+
+### Incorpora tu propio documento
+
+Crea un archivo `.md` o `.txt` en UTF-8 con una condición inventada y un título. Por ejemplo: «Las taquillas violetas usan el código tulipán». Súbelo con el selector de archivos, revisa sus fragmentos y confirma que está seleccionado entre los documentos disponibles. El límite por archivo es 200 KB. Se usan textos legibles para observar el mecanismo; esta versión no extrae texto de PDF ni de escaneos.
+
+Pregunta por esa condición con **Todos los fragmentos**. Excluye después ese documento y repite. Cada envío es una consulta independiente: la respuesta anterior no se añade como historial oculto. La respuesta guardada identifica la pregunta y el modo con que se obtuvo, y avisa si después cambias la selección.
+
+**Prueba de límite.** Pregunta si la promoción de enero cambia el plazo de baja. Comprueba si hacen falta la política de bajas y la promoción. Si la búsqueda solo recupera una, ajusta la consulta o el número de fragmentos. Una respuesta fluida no corrige una búsqueda incompleta.
+
+**Ampliación.** Sube otra versión, con otro nombre, que establezca un plazo diferente. ¿Señala el conflicto? ¿Qué fecha o condición necesitaría para decidir cuál aplica? No presupongas que el primer resultado es la política vigente.
+
+**Comprobación para continuar:** un documento propio visible dentro de la petición, una respuesta con su fuente comprobada, una consulta sin respaldo reconocida como tal y una mejora de búsqueda que puedas explicar. Guarda el JSON de una consulta fuera del repositorio.
+
+## Paso 21: gráficos que responden a preguntas
+
+Arranca `exercises/paso_21.py`. Predice primero si el churn del básico es constante durante el periodo. Pide «Dibuja el churn mensual por plan durante 2024». Sigue cuatro objetos: la pregunta, los argumentos de `crear_grafico`, la tabla que calcula Python y el gráfico que dibuja Streamlit.
+
+El modelo elige una métrica, un intervalo, una agrupación y un tipo de gráfico. Python comprueba esos argumentos y calcula los valores con pandas. No acepta una lista de cifras inventada por el modelo. La tabla descargable contiene exactamente los puntos representados, junto con el número de registros de cada grupo.
+
+Prueba después:
+
+- «Ahora en barras». Comprueba que los dos gráficos siguen visibles tras otra ejecución.
+- «Compara los socios activos por centro en diciembre de 2024». Busca qué filas cuentan y qué significa `active_members`.
+- «Dibuja los ingresos del básico mes a mes durante 2024». Comprueba que suma `price_paid` de registros activos, incluidos los descuentos.
+- «Dibuja los ingresos de 2030». Un periodo sin datos debe dar un error explicado, no una serie de ceros.
+
+El intervalo omitido se interpreta como el último mes y se muestra. Una evolución sin periodo usa los meses disponibles. Revisa siempre esos filtros. Las líneas representan meses; las barras comparan categorías. El CSV termina en 2024: «último mes» no significa hoy.
+
+### Una pregunta de negocio antes del dibujo
+
+«¿Qué plan tiene más socios?» admite varias cuentas. Pide tres gráficos de barras por plan: registros socio-mes en todo el periodo (`member_records`), socios distintos en todo el periodo (`distinct_members`) y activos del último mes (`active_members`). Escribe cuál quieres antes de pedir el gráfico. La posición de un plan puede cambiar al cambiar la población.
+
+El churn agrupado sobre varios meses divide bajas entre registros socio-mes, no entre personas distintas. Una media global puede ocultar cambios mensuales. En una serie con meses ausentes, esta app rechaza el gráfico para que no interpretes una línea continua como evidencia de los puntos que faltan.
+
+### Construye una métrica
+
+Añade `churned_records`, el número de registros con `status == 'churned'`, a `METRICS` y a la selección de cálculos de `build_chart` en `fitlife_charts.py`. Añadir solo el nombre debe producir un error: falta implementar la operación.
+
+Compruébala con cuatro registros: tres activos y una baja. El número de bajas debe ser 1 y la tasa, 25 %. Repite con tres activos y dos bajas: 2 y 40 %. Después pide ambos gráficos sobre FitLife y explica por qué número y porcentaje responden preguntas distintas.
+
+**Comprobación para continuar:** gráfico solicitado en lenguaje natural, una cifra contrastada en su tabla, una métrica añadida por ti y una limitación explícita. Descarga la conversación, recupérala y verifica que vuelven los gráficos sin consultar de nuevo al modelo. La copia conserva el resultado calculado entonces; no recalcula un CSV que haya cambiado después.
+
 ## Cerrar el caso y abrir la app desde otro navegador
 
 Vuelve a la pregunta 12: «¿Debería FitLife bajar el precio del plan básico?». Prepara una respuesta que separe tres cosas: qué dicen los datos, qué cambia bajo un supuesto explícito y qué no sabemos todavía. Guarda el cálculo y los argumentos que permitirían defenderla.
 
-Después sigue [De experimento a una demo compartida](DE_EXPERIMENTO_A_PRODUCCION.md). La entrada de despliegue es `app.py`, con las dos herramientas, una clave en el servidor y un código de acceso al taller. Comprueba desde otra ventana que cada sesión tiene su propia conversación.
+Después sigue [De experimento a una demo compartida](DE_EXPERIMENTO_A_PRODUCCION.md). La entrada de despliegue es `app.py`, con un selector de Cálculos, Documentos y Gráficos, una clave en el servidor y un código de acceso al taller. Comprueba desde otra ventana que cada sesión tiene su propia conversación. Las consultas de documentos siguen siendo independientes, como en el paso 20.
 
 Para guardar tus cambios, usa otra terminal: `git status`, revisa `git diff`, añade solo los archivos que hayas modificado y haz un commit. Conserva aparte los JSON descargados. El resultado de la sesión es código, una investigación recuperable y evidencia para decidir qué funciona y qué falta.

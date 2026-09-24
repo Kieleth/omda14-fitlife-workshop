@@ -107,8 +107,8 @@ herramientas no pueden calcular. Un escenario a población fija no predice el ef
 de bajar precios. Distingue dato, supuesto y recomendación. Asociación no es causalidad.'''
 
 
-def ask_with_tools(client, df, history, model, tools):
-    messages = api_messages(SYSTEM, history)
+def ask_with_tools(client, df, history, model, tools, *, executor=execute_tool, system=SYSTEM):
+    messages = api_messages(system, history)
     trace = []
     started = perf_counter()
     for round_number in range(4):
@@ -137,7 +137,7 @@ def ask_with_tools(client, df, history, model, tools):
             arguments = json.loads(call.function.arguments)
         except (ValueError, TypeError) as exc:
             raise ValueError('Los argumentos de la herramienta no son JSON válido.') from exc
-        result = execute_tool(df, call.function.name, arguments)
+        result = executor(df, call.function.name, arguments)
         messages.append({'role': 'assistant', 'content': message.content,
                          'tool_calls': [call.model_dump()]})
         messages.append({'role': 'tool', 'tool_call_id': call.id,

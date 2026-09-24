@@ -242,12 +242,24 @@ def lesson(source):
     return ast.dump(WithoutPresentation().visit(ast.parse(source)))
 
 
+def fixed_observation(source, number):
+    """Approved corrections: snapshot before retry mutation; distinguish observed revenue from LTV."""
+    if number >= 11:
+        source = source.replace('import re\n', 'import re\nfrom copy import deepcopy\n', 1)
+        source = re.sub(r'(?m)^( +)for intento in range\(MAX_RETRIES\):\n',
+                        lambda match: match[0] + match[1] + '    last_request = deepcopy(messages)\n', source)
+    if number == 15:
+        source = source.replace('- Para LTV: agrupa por member_id, suma price_paid de todos los meses',
+                                '- Para ingreso observado por socio en 2022-2024: agrupa por member_id y suma price_paid. No lo presentes como LTV completo: faltan periodos fuera de la muestra y una definición de valor y vida del cliente.')
+    return source
+
+
 class ExerciseSourceTests(unittest.TestCase):
     def test_exercises_match_the_baseline_once_solved(self):
         names = {p.name for p in (ROOT / "exercises").glob("*.py")}
         steps = {f"paso_{i}.py" for i in STEPS}
-        self.assertEqual({name for name in names if name.startswith("paso_")}, steps | {f"paso_{n}.py" for n in range(16, 20)})
-        self.assertLessEqual(names - steps, {BONUS} | {f"paso_{n}.py" for n in range(16, 20)})
+        self.assertEqual({name for name in names if name.startswith("paso_")}, steps | {f"paso_{n}.py" for n in range(16, 22)})
+        self.assertLessEqual(names - steps, {BONUS} | {f"paso_{n}.py" for n in range(16, 22)})
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         positions = []
         for number in STEPS:
@@ -270,6 +282,7 @@ class ExerciseSourceTests(unittest.TestCase):
                 current, baseline = solved(current, name), solved(baseline, name)
                 if number >= 12:
                     baseline = fixed_history(baseline, number)
+                baseline = fixed_observation(baseline, number)
                 self.assertEqual((blanks(current), blanks(baseline)), (0, 0))
                 self.assertEqual(lesson(current), lesson(baseline),
                                  f"{name} cambió más allá de sus instrucciones. Revisa su alcance con el docente.")

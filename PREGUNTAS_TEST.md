@@ -24,6 +24,12 @@ Las mismas preguntas se repiten en cada sesión para ver la mejora.
 
 ## Cómo usarlas
 
+Antes de puntuar, fija el periodo, la población y la unidad. «Último mes» significa el último mes del dataset, no el mes del calendario actual. Una fila es un registro de socio y mes; no siempre equivale a un socio distinto.
+
+Para la pregunta 11, distingue el ingreso observado por socio dentro de 2022-2024 del valor completo durante su vida como cliente (LTV). Sumar `price_paid` en la muestra no calcula por sí solo ese valor completo. Una respuesta válida debe declarar qué aproxima, cómo trata a quienes siguen activos y qué definición de valor usa. Reconocer que faltan datos puede ser la respuesta correcta.
+
+En las preguntas 6, 9, 10 y 12, una diferencia entre grupos o periodos no demuestra una causa. La respuesta debe separar el cálculo observado, sus límites y cualquier supuesto usado para recomendar.
+
 1. Haz cada pregunta al chat del sistema
 2. Apunta la respuesta
 3. Evalúa: ¿es correcta? ¿es inventada? ¿es parcial?

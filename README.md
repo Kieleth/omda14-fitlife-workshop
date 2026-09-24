@@ -9,11 +9,11 @@ Construirás paso a paso una aplicación para explorar los datos de FitLife y ha
 
 ## Durante la clase
 
-Abre la [guía de la sesión 4](SESION4.md). Empieza por «Preparar tu rama»: guarda tu trabajo de la sesión 3 y crea `alumno/sesion-4` a partir de esta rama. Después comprobarás el historial y construirás herramientas, una comparación de modelos y una revisión con evidencia.
+Abre la [guía de la sesión 4](SESION4.md). Empieza por «Preparar tu rama»: guarda tu trabajo de la sesión 3 y crea `alumno/sesion-4` a partir de esta rama. Después comprobarás el historial y trabajarás con herramientas, comparación de modelos, revisión con evidencia, documentos y gráficos solicitados en lenguaje natural.
 
 ## Ejercicios
 
-Los pasos 0 a 15 están resueltos para repasar y comparar con tu solución. Los pasos 12 a 15 envían también el historial a la API. Los pasos 16 a 19 son los de hoy: cada archivo tiene un punto de partida que funciona y un cambio que construir. A partir del paso 5 hace falta la clave del curso.
+Los pasos 0 a 15 están resueltos para repasar y comparar con tu solución. Los pasos 12 a 15 envían también el historial a la API. Los pasos 16 a 21 son los de hoy: cada archivo tiene un punto de partida que funciona y un cambio que construir. A partir del paso 5 hace falta la clave del curso.
 
 | Paso | Qué trabajamos |
 | :--- | :--- |
@@ -38,6 +38,8 @@ Los pasos 0 a 15 están resueltos para repasar y comparar con tu solución. Los 
 | [17](exercises/paso_17.py) | Ofrecer funciones de Python al modelo y comprobar sus resultados. |
 | [18](exercises/paso_18.py) | Comparar modelos con una pregunta y un criterio de acierto. |
 | [19](exercises/paso_19.py) | Revisar un análisis contra la evidencia calculada. |
+| [20](exercises/paso_20.py) | Cargar documentos, buscar fragmentos y responder con fuentes. |
+| [21](exercises/paso_21.py) | Pedir gráficos, comprobar su tabla y añadir una métrica. |
 
 Termina con [la demo compartida y el salto a producción](DE_EXPERIMENTO_A_PRODUCCION.md). El [recorrido visual de las herramientas](explicaciones/herramientas.html) permite seguir una petición simulada sin usar la API.
 

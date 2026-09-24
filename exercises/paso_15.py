@@ -107,6 +107,7 @@
 import streamlit as st
 import pandas as pd
 import re
+from copy import deepcopy
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -222,7 +223,7 @@ REGLAS DE CÁLCULO:
 - Para cruzar tablas: df_members.merge(df_context, on='month')
 - 'month' es string YYYY-MM. Para año: pd.to_datetime(df['month']).dt.year
 - Un socio churned es uno con status == 'churned' en ese mes
-- Para LTV: agrupa por member_id, suma price_paid de todos los meses
+- Para ingreso observado por socio en 2022-2024: agrupa por member_id y suma price_paid. No lo presentes como LTV completo: faltan periodos fuera de la muestra y una definición de valor y vida del cliente.
 
 Reglas generales:
 - Usa pandas para las operaciones.
@@ -276,6 +277,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             last_code = None
 
             for intento in range(MAX_RETRIES):
+                last_request = deepcopy(messages)
                 response = client.chat.completions.create(
                     model=MODEL,
                     messages=messages,
@@ -305,7 +307,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
                         st.info(f"Intento {intento + 1} falló: {error}. Reintentando...")
 
         with st.expander("Lo que enviamos: pasada 1, el código"):
-            st.json({"model": MODEL, "messages": messages})
+            st.json({"model": MODEL, "messages": last_request})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
         if show_code and last_code:

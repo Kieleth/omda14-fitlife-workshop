@@ -1,5 +1,7 @@
 # FitLife | Enunciado
 
+Caso ficticio para el taller. Los datos y condiciones sirven para practicar análisis; no representan una empresa real.
+
 ---
 
 ## Contexto

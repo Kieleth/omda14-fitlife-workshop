@@ -101,6 +101,7 @@
 import streamlit as st
 import pandas as pd
 import re
+from copy import deepcopy
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -186,6 +187,7 @@ if prompt:
 
         # ── Bucle de reintentos ─────────────────────────────
         for intento in range(MAX_RETRIES):
+            last_request = deepcopy(messages)
 
             # 1. Pedir código al LLM
             response = client.chat.completions.create(
@@ -235,5 +237,5 @@ if prompt:
                 st.code(last_code, language="python")
 
     with st.expander("Lo que enviamos en el último intento"):
-        st.json({"model": "gpt-4.1-mini", "messages": messages})
+        st.json({"model": "gpt-4.1-mini", "messages": last_request})
     st.caption(f"Peticiones enviadas: {intento + 1}. La última pesó {response.usage.prompt_tokens} tokens de prompt. Cada una lleva la lista messages completa.")

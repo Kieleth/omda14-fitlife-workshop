@@ -126,9 +126,9 @@ Y la receta puede estar mal. Con la pregunta del churn del básico, mira el valo
 
 ## Paso 10: cuando el código falla, y cuando no falla pero debería
 
-**Qué haces.** Tres huecos: el desplegable que enseña el código, el `st.error` y el desplegable con los detalles. Este archivo vuelve al prompt del paso 8, sin los valores de las columnas: si preguntas por el churn del básico verás otra vez «básico», y ya sabes qué falta. Después dos preguntas: «Dibuja un gráfico de barras del churn por centro» y «¿Cuál es la satisfacción media de los socios?».
+**Qué haces.** Tres huecos: el desplegable que enseña el código, el `st.error` y el desplegable con los detalles. Este archivo vuelve al prompt del paso 8, sin los valores de las columnas: si preguntas por el churn del básico, comprueba si usa el valor real `basic` o necesita la aclaración. Después dos preguntas: «Dibuja un gráfico de barras del churn por centro» y «¿Cuál es la satisfacción media de los socios?».
 
-**Qué hay detrás.** `try` intenta ejecutar; si algo revienta, `except` recoge el error en `e` y la app sigue viva. Con el gráfico verás un error de verdad: el código suele intentar importar una librería de dibujo que no está instalada, y sin `try` la app se caería.
+**Qué hay detrás.** `try` intenta ejecutar; si algo revienta, `except` recoge el error en `e` y la app sigue viva. La petición del gráfico puede fallar, devolver una tabla o producir código válido. Anota lo que ocurrió. Para comprobar el manejo de errores aunque acierte, añade temporalmente dentro del `try`, antes de `exec`, `raise ValueError("Prueba controlada del error")`. Comprueba el mensaje y los detalles; retira esa línea después.
 
 La segunda pregunta es la importante. No hay ninguna columna de satisfacción, así que no se puede responder. Mira lo que hace el modelo: escribe código que calcula algo con las columnas que sí existen, o deja `resultado = None` y la app pinta `None` debajo de «Resultado». Si devuelve un número, ese número es aritmética real sobre filas reales, y responde a una pregunta que nadie puede responder con estos datos. No hay error, no salta `except`, y sin el desplegable no lo sabrías nunca. Por eso el código generado se enseña siempre: es la única forma de saber qué se ha calculado.
 
@@ -144,7 +144,7 @@ La segunda pregunta es la importante. No hay ninguna columna de satisfacción, a
 
 **Simulación 5, estación 5.** El caso del gráfico paso a paso: el código del primer intento, el error, la lista `messages` creciendo de dos a cuatro entradas y los tokens de cada intento.
 
-**Puerta.** Una pregunta resuelta al segundo intento, y en el desplegable una lista `messages` con cuatro entradas.
+**Puerta.** Explica qué recibió cada petición que realmente ocurrió. Si hubo corrección, localiza el código fallido y el error en la petición siguiente. Si acertó a la primera o reconoció que faltaban datos, explica por qué no hubo reintento. Para observar el mecanismo sin depender de un fallo del modelo, recorre el ejemplo registrado de la simulación.
 
 ## Vía avanzada
 

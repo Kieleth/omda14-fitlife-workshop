@@ -80,6 +80,8 @@ git commit -m "Mis notas de la sesión 1"
 git log --oneline -3
 ```
 
+Si Git pide tu nombre y correo antes de crear el commit, sigue [la configuración de identidad en ACTUALIZAR.md](ACTUALIZAR.md).
+
 `log` muestra tu commit el primero, encima de los de la rama de la clase. Un commit es una foto de tus archivos guardada en tu rama, en tu ordenador. Si Git sugiere `git push`, ignóralo: no hace falta y no tienes permiso para escribir en el repositorio del curso.
 
 **3. Haz que el cambio desaparezca y vuelva.** Crea una rama de prueba y cámbiate a ella:
@@ -254,11 +256,11 @@ Si al arrancar aparece «Missing credentials», el archivo `.env` no existe o no
 
 **Mira exactamente lo que ve el modelo.** Pega las seis líneas de la sección de la cabecera, como en el paso 5. Abre «Lo que enviamos» y lee el `content` del `system` hasta el final. ¿Cuántos socios distintos aparecen en las filas? ¿Cuántos planes? ¿Cuántos centros? Vuelve a la pregunta del centro con más socios con eso delante.
 
-**Qué hay detrás.** El modelo no tiene el CSV, ni tu pregunta anterior, ni las de tus compañeros. Tiene este JSON y nada más. Cuando le preguntas por algo que exige contar filas que no están, no puede contarlas; escribe el texto que mejor encaja con lo que tiene delante. A veces eso es un número. Ese número no sale de un cálculo, sale del mismo mecanismo que las palabras de alrededor.
+**Qué hay detrás.** Esta petición contiene cinco filas y los nombres de las columnas. No contiene la tabla completa ni tus preguntas anteriores. El modelo también usa lo aprendido durante su entrenamiento, pero eso no sustituye las observaciones de este caso. Si ofrece una cifra sobre filas ausentes, busca qué datos la respaldan. Si reconoce que falta información, ha identificado una limitación.
 
 **Simulación 3: `explicaciones/api.html`, con la casilla «Con contexto» marcada.** Estación 2: las cinco filas dentro del texto del `system`. Estación 4: la barra de tokens, con lo que pesa esta petición, la tabla entera y el límite del modelo.
 
-**Prueba A de la cabecera.** Si a la pregunta de la tasa de churn responde explicando un procedimiento en vez de dar un número, pide «Dame solo el porcentaje, sin explicar el procedimiento». Hazlo tres veces. Compara con tu número del paso 3. Si cambia entre intentos, no lo está calculando. Si coincide tres veces, tampoco: un número que no sale de contar las filas es un número inventado.
+**Prueba A de la cabecera.** Repite la pregunta de churn y compara la respuesta con tu cálculo del paso 3. Si solo explica el procedimiento, pide el porcentaje y observa si reconoce los datos que faltan. Localiza en la petición el cruce de plan y estado que haría falta. Que una cifra cambie o se repita no demuestra por sí solo cómo se obtuvo.
 
 **Puerta.** Tu tabla de cinco preguntas rellena y la respuesta a «¿cuántos socios distintos ve el modelo?».
 
@@ -268,7 +270,7 @@ Si al arrancar aparece «Missing credentials», el archivo `.env` no existe o no
 
 **Qué hay detrás.** Ahora el `system` lleva las distribuciones por plan, centro, estado y canal, y el contexto mensual completo. Responde a esto con tus resultados delante: ¿qué preguntas contesta ahora que antes no? ¿Estaba la respuesta escrita en el contexto? ¿Qué pregunta sigue sin poder contestar, y qué cruce de columnas le faltaría? Lee las últimas líneas de `context` y compáralas con lo que de verdad le hemos dado.
 
-**Reto E: el límite.** Con el bloque del paso 6 pegado aquí, anota `prompt_tokens` con `head()`. Cambia `head()` por `head(50)`, repite la pregunta y anota de nuevo. Resta, divide entre 45 y tienes los tokens por fila; multiplica por 16.334. Compara con el límite del modelo que da la cabecera; vuelve a la estación 4 de la simulación 3 para verlo a escala. Si pruebas `df_members.to_string()`, la petición falla con «Request too large» aunque quepa en la ventana del modelo: cada clave tiene además un límite de tokens por minuto, más bajo, y el error te dice cuántos tokens contó. Con la clave del curso no cuesta nada probarlo.
+**Reto E: el límite.** Con el bloque del paso 6 pegado aquí, anota `prompt_tokens` con `head()`. Cambia `head()` por `head(50)`, repite la pregunta y anota de nuevo. Resta, divide entre 45 y tienes los tokens por fila; multiplica por 16.334. Compara con el límite del modelo que da la cabecera; vuelve a la estación 4 de la simulación 3 para verlo a escala. Enviar la tabla completa puede superar los límites de tu proyecto o generar consumo. No presupongas un fallo gratuito: para esta prueba basta comparar 5 y 50 filas y explicar la diferencia entre tamaño de contexto y límite de peticiones.
 
 **Retos A a D.** Temperatura, persona, inyección de instrucciones (prompt injection) y memoria. Son opcionales; el D abre una pregunta que se trabaja en la sesión 3.
 

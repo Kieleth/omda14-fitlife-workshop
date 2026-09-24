@@ -82,7 +82,7 @@ Los pasos de hoy tienen un interruptor **Mostrar código** arriba a la derecha. 
 
 ## Repaso: dónde lo dejamos
 
-Un repaso corto con la versión terminada, aunque acabaras la sesión 2. Arranca `exercises/paso_11.py` y pregunta «Dibuja un gráfico de barras del churn por centro». Lo normal es que el primer intento falle y veas un mensaje azul. Abre «Lo que enviamos en el último intento»: la lista `messages` tiene cuatro entradas, el `system`, tu pregunta, el código que falló como `assistant` y el error como `user`. Si esta vez acertó a la primera, verás dos; pregúntalo otra vez. Mira también el resultado: que el segundo intento no dé error no quiere decir que el número esté bien.
+Un repaso corto con la versión terminada, aunque acabaras la sesión 2. Arranca `exercises/paso_11.py` y pregunta «Dibuja un gráfico de barras del churn por centro». Lo normal es que el primer intento falle y veas un mensaje azul. Abre «Lo que enviamos en el último intento»: la lista `messages` tiene cuatro entradas, el `system`, tu pregunta, el código que falló como `assistant` y el error como `user`. Si acertó a la primera, verás dos: es válido, explica por qué no hubo reintento. La simulación de sesión 2 permite inspeccionar un fallo registrado. Mira también el resultado: que el segundo intento no dé error no quiere decir que el número esté bien.
 
 Esa lista es la idea de hoy. El modelo no recordó su primer intento: recibió la conversación entera porque tu app la escribió en `messages`. Hoy harás lo mismo con las preguntas del usuario.
 
@@ -130,7 +130,7 @@ La pregunta 12 merece el reto C: «¿Debería FitLife bajar el precio del plan b
 
 **Simulación 6, estación 6.** El mismo prompt con y sin ejemplos, y dos preguntas reales cuyo código cambia de definición.
 
-**Puerta.** La pregunta del competidor antes y después de los ejemplos, con lo que compara el código en cada caso apuntado en `mis_notas.md`, y una de las preguntas 7 a 12 cuyo código haya cambiado.
+**Puerta.** La pregunta del competidor antes y después de los ejemplos, con lo que compara el código en cada caso apuntado en `mis_notas.md`, y una de las preguntas 7 a 12 comparada antes y después. Si el cálculo correcto no cambió, explica por qué el ejemplo no necesitaba cambiarlo.
 
 ## Paso 15 (opcional): el analista completo
 

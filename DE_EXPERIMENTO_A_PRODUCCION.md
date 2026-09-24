@@ -2,7 +2,7 @@
 
 Has construido un analista de FitLife, comprobado una cifra con Python y seguido las peticiones al modelo. Ahora otra persona debe poder abrir la app sin instalar Python. Desplegar significa ejecutar tu código en otro ordenador que atiende las visitas del navegador.
 
-La entrada es `app.py`: usa las dos herramientas de `fitlife_tools.py`. Cada consulta puede hacer varias llamadas a la API. El código de acceso compartido limita la entrada a la demo; no identifica a cada usuario ni impone un presupuesto por persona.
+La entrada es `app.py`: ofrece Cálculos (las dos herramientas del paso 17), Documentos (paso 20) y Gráficos (paso 21). Cada consulta puede hacer varias llamadas a la API. El código de acceso compartido limita la entrada a la demo; no identifica a cada usuario ni impone un presupuesto por persona.
 
 ## 1. Tu copia en GitHub
 
@@ -49,7 +49,7 @@ Abre la URL desplegada desde una ventana privada. Antes de introducir el código
 
 1. Pregunta por socios activos del básico en el último mes. Comprueba periodo, población y resultado de la herramienta.
 2. Haz una pregunta de seguimiento. Localiza ambas preguntas en la petición de API.
-3. Abre otra ventana en otro navegador o dispositivo. Su conversación debe empezar vacía. El mismo código de acceso no implica un chat compartido.
+3. Cambia a **Documentos** y comprueba una respuesta con su fuente. Cambia a **Gráficos** y pide una serie con su tabla. Abre otra ventana en otro navegador o dispositivo: sus conversaciones y consultas deben empezar vacías. El mismo código de acceso no implica un chat compartido.
 4. Descarga tu conversación. Recarga y recupérala. La copia contiene mensajes y resultados: consérvala fuera de GitHub. El límite de este ejercicio es 1 MB y 1000 mensajes; si se supera, la app avisa y no ofrece una copia que no pueda recuperar.
 5. Cambia un texto visible de `app.py`, haz commit y push a `mi-fork`. Comprueba que cambia en la URL. Has conectado un cambio de Git con una aplicación que se ejecuta en otro sitio.
 
@@ -60,7 +60,7 @@ Si un paso falla, anota entrada, resultado esperado, resultado observado y error
 | Tema | Qué tienes aquí | Qué tendrías que resolver con usuarios reales |
 | :--- | :--- | :--- |
 | Datos | CSV del caso, con meses y columnas conocidos. | Actualización, permisos y validación de esquema, fechas, duplicados y ausencias. |
-| Ejecución | Dos funciones permitidas, argumentos comprobados y bucle de llamadas acotado. | Permisos por operación y pruebas de cada cálculo. Un prompt no convierte `exec` en un entorno aislado. |
+| Ejecución | Funciones permitidas, argumentos comprobados y bucle de llamadas acotado. | Permisos por operación y pruebas de cada cálculo. Un prompt no convierte `exec` en un entorno aislado. |
 | Historial | Memoria de sesión más exportación manual. | Almacenamiento, acceso por usuario, borrado y política de conservación. |
 | Acceso y gasto | Código compartido; uso de tokens visible por llamada. | Identidad, límites de peticiones y controles de gasto. Un aviso de presupuesto no debe suponerse un corte automático. |
 | Evaluación | Preguntas de FitLife y pruebas locales sin API. | Casos representativos, errores conocidos y comparaciones repetidas cuando cambien modelo, prompt o datos. |

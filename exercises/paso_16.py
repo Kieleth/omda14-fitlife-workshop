@@ -139,7 +139,7 @@ REGLAS DE CÁLCULO:
 - Para cruzar tablas: df_members.merge(df_context, on='month')
 - 'month' es string YYYY-MM. Para año: pd.to_datetime(df['month']).dt.year
 - Un socio churned es uno con status == 'churned' en ese mes
-- Para LTV: agrupa por member_id, suma price_paid de todos los meses
+- Para ingreso observado por socio en 2022-2024: agrupa por member_id y suma price_paid. No lo presentes como LTV completo: faltan periodos fuera de la muestra y una definición de valor y vida del cliente.
 
 Reglas generales:
 - Usa pandas para las operaciones.

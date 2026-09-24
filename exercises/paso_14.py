@@ -117,6 +117,7 @@
 import streamlit as st
 import pandas as pd
 import re
+from copy import deepcopy
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -319,6 +320,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
             last_code = None
 
             for intento in range(MAX_RETRIES):
+                last_request = deepcopy(messages)
                 response = client.chat.completions.create(
                     model=MODEL,
                     messages=messages,
@@ -348,7 +350,7 @@ if prompt := st.chat_input("Pregunta sobre los datos de FitLife..."):
                         st.info(f"Intento {intento + 1} falló: {error}. Reintentando...")
 
         with st.expander("Lo que enviamos: pasada 1, el código"):
-            st.json({"model": MODEL, "messages": messages})
+            st.json({"model": MODEL, "messages": last_request})
         st.caption(f"Pasada 1: {intento + 1} petición(es), la última de {response.usage.prompt_tokens} tokens de prompt.")
 
         if show_code and last_code:

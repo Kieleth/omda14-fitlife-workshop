@@ -101,6 +101,7 @@ class OfflineSession4Tests(unittest.TestCase):
         self.requests = []
         self.denied = False
         self.repeat_tool = False
+        self.exhaust_retries = False
         self.tool_name = 'resumen_plan'
         self.arguments = {'plan': 'basic', 'month': 'ultimo'}
         self.enterContext(patch.dict(os.environ, {'OPENAI_API_KEY': 'sk-test'}, clear=True))
@@ -117,6 +118,8 @@ class OfflineSession4Tests(unittest.TestCase):
     def respond(self, request):
         data = json.loads(request.content)
         self.requests.append(copy.deepcopy(data))
+        if self.exhaust_retries:
+            return httpx2.Response(200, json=completion('```python\nraise ValueError("controlled retry failure")\n```'))
         if self.denied:
             return httpx2.Response(403, json={'error': {'message': 'Model access denied', 'type': 'permission_error'}})
         if 'tools' in data and (data['messages'][-1]['role'] != 'tool' or self.repeat_tool):
@@ -155,6 +158,25 @@ class OfflineSession4Tests(unittest.TestCase):
                 self.assertEqual([m['content'] for m in last_calculation['messages'] if m['role'] == 'user'], users)
                 if step > 12:
                     self.assertEqual([m['content'] for m in self.requests[-1]['messages'] if m['role'] == 'user'], users)
+
+    def test_exhausted_retries_display_only_messages_actually_sent(self):
+        self.exhaust_retries = True
+        for step in range(11, 17):
+            with self.subTest(step=step):
+                self.requests.clear()
+                app = self.app(f'exercises/paso_{step}.py')
+                app.chat_input[0].set_value('Prueba de tres errores').run(timeout=30)
+                self.assertFalse(app.exception, [e.message for e in app.exception])
+                self.assertEqual(len(self.requests), 3)
+                expected = self.requests[-1]['messages']
+                self.assertEqual(len(expected), 6)
+                if step == 16:
+                    shown = app.session_state['messages_v3'][-1]['details']['ultimo_intento']
+                else:
+                    shown = json.loads(app.json[0].value)['messages']
+                self.assertEqual(shown, expected)
+                if step >= 15:
+                    self.assertIn('No lo presentes como LTV completo', expected[0]['content'])
 
     def test_step16_keeps_inspection_and_can_restore_into_a_fresh_session(self):
         app = self.app('exercises/paso_16.py')

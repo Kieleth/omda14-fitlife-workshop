@@ -4,25 +4,21 @@
 #
 # ── ¿Qué es un LLM? ────────────────────────────────────────
 #
-# Un LLM (Large Language Model) es un programa que ha leído
-# cantidades absurdas de texto: miles de millones de páginas
-# web, libros, artículos, código. De todo eso ha aprendido
-# patrones de lenguaje.
+# Un LLM (Large Language Model) genera una respuesta a partir
+# de los tokens que recibe y de lo aprendido durante su entrenamiento.
+# Un token puede ser una palabra, parte de ella o un signo.
 #
-# Cuando le haces una pregunta, no busca la respuesta en
-# ningún sitio. Genera texto palabra por palabra basándose en
-# los patrones que aprendió. Es como un compañero que ha leído
-# todo internet, tiene una memoria impresionante para el
-# lenguaje, pero no tiene calculadora.
-#
-# Retén eso: no tiene calculadora. Es importante después.
+# En esta app todavía no le hemos dado una herramienta para ejecutar
+# cálculos ni buscar información externa. Que escriba un resultado
+# no demuestra que lo haya comprobado. Inspeccionaremos qué recibe
+# y qué operaciones hace realmente nuestro programa.
 #
 # ── ¿Qué es una API? ───────────────────────────────────────
 #
 # Una API es una puerta de entrada. Tú envías un mensaje
 # de texto a través de internet, OpenAI lo recibe, se lo pasa
 # al modelo, el modelo genera una respuesta, y os la devuelve.
-# Todo en 2-3 segundos.
+# El tiempo depende de la petición, el modelo y el servicio.
 #
 #   Tu app → mensaje → API de OpenAI → modelo → respuesta → tu app
 #

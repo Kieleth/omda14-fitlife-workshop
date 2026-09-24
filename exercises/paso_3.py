@@ -38,8 +38,8 @@
 #
 #   A. Prueba:
 #        st.write(df_members["status"].value_counts())
-#      ¿Cuántos socios activos hay vs. churned? ¿Te parece
-#      mucho o poco churn?
+#      ¿Cuántos registros activos y de baja hay? Un socio
+#      puede aparecer en varios meses: no son personas distintas.
 #
 #   B. Prueba:
 #        st.write(df_members["churn_reason"].value_counts())

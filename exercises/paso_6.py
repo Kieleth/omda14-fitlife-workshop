@@ -86,11 +86,11 @@
 #   A. Haz la pregunta 4 (tasa de churn) tres veces seguidas.
 #      Si en vez de un número te explica el procedimiento,
 #      pide: "Dame solo el porcentaje, sin explicar el
-#      procedimiento". ¿Da el mismo número cada vez? Si cambia,
-#      no lo está calculando: se lo está inventando. Compáralo
-#      con el recuento que hiciste en paso_3. Coincida o no, un
-#      número que no sale de contar las filas es inventado. En
-#      paso_7 A verás qué cambia con temperature=0.
+#      procedimiento". Compara con tu cálculo de paso_3 y busca
+#      las filas necesarias en la petición. Si faltan, no puedes
+#      atribuir la cifra a esos datos. Que una respuesta cambie o
+#      se repita no demuestra cómo se obtuvo. Reconocer que falta
+#      información también puede ser una respuesta correcta.
 #
 #   B. Prueba una pregunta que SÍ pueda responder bien:
 #        "Describe las columnas del dataset de socios"

@@ -31,7 +31,7 @@ models = st.multiselect('Modelos', ['gpt-4.1-mini', 'gpt-4.1-nano', 'o4-mini'], 
 question = st.text_area('Pregunta común', '¿Cuántos socios activos tiene el plan básico en el último mes de los datos?')
 criteria = st.text_area('Qué tendría que cumplir una respuesta correcta',
                         'Indicar el último mes del dataset, contar socios activos y no confundirlos con filas de tres años.')
-with st.expander('Comprobación con Python, sin LLM'):
+with st.expander('Referencia fija con Python: básico, último mes'):
     st.json(resumen_plan(df, 'basic', 'ultimo'))
 
 if st.button('Comparar', disabled=not models or not question.strip() or not criteria.strip()):

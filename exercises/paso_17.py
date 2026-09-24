@@ -7,7 +7,7 @@
 #    Repite. Señala el argumento new_price y quién calcula el nuevo ingreso.
 # 3. Lee escenario_precio en fitlife_tools.py. Verifica su resultado con pandas
 #    y explica por qué NO calcula cuántas personas dejarán de darse de baja.
-# 4. Construye una herramienta para otra pregunta de PREGUNTAS_TEST.md:
+# 4. Ampliación opcional: construye una herramienta para otra pregunta de PREGUNTAS_TEST.md:
 #    define población, periodo y unidad; escribe la función, su esquema y
 #    su entrada en execute_tool. Compruébala primero sin llamar al modelo.
 #
