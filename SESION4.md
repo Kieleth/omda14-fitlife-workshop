@@ -23,6 +23,18 @@ git branch --show-current
 
 El último comando debe mostrar `alumno/sesion-4`. Si ya existe, vuelve con `git switch alumno/sesion-4`. Tu sesión 3 sigue en su rama. Quien empieza desde main sigue los mismos comandos después de completar [SETUP.md](SETUP.md). Se usan el mismo `.venv`, las mismas dependencias y la misma clave de API.
 
+### Traer tus notas
+
+El archivo `mis_notas.md` que guardaste en la sesión 3 sigue en aquella rama. Mira primero si ya existe en la carpeta actual: si está, conserva esa versión y no ejecutes el bloque siguiente, porque la sustituiría. Si no está y lo habías guardado con un commit en `alumno/sesion-3`, cópialo:
+
+```text
+git restore --source=alumno/sesion-3 -- mis_notas.md
+git add mis_notas.md
+git commit -m "Traigo mis notas a la sesion 4"
+```
+
+Esto copia solo ese archivo, sin cambiar tus ejercicios ni borrar la versión de la otra rama. Si tus notas están en otra rama, sustituye `alumno/sesion-3` por su nombre. Si Git no encuentra el archivo, no estaba guardado allí: vuelve a la rama anterior para localizarlo. Si nunca creaste notas, puedes crear ahora `mis_notas.md` en la raíz del proyecto.
+
 Abre `exercises/paso_15.py`. Para ver qué cambió frente a la sesión anterior:
 
 ```text
@@ -58,6 +70,8 @@ Haz tres preguntas: «¿Cuántos planes tiene FitLife?», «¿Cuál tiene más s
 La pantalla se reconstruye desde `st.session_state`. La API recibe la lista que construye tu código. Son dos mecanismos distintos. En esta rama el historial se envía tanto para calcular como para interpretar. Los campos de pantalla, como `code` y `details`, no se copian como campos adicionales del mensaje de API.
 
 **Construye el cambio.** En `chat_history.py`, lee `api_messages`. En el paso 16, sustituye el bloque que construye `messages` por una llamada a esa función e impórtala junto a las otras funciones del módulo. Hay una segunda petición dentro de `interpret_result`: construye también su `messages` con `api_messages(interp_prompt, history)`. Comprueba que las dos siguen enviando el mismo contenido que antes. Después cambia `api_messages` para enviar solo dos turnos completos anteriores y la nueva pregunta: en una conversación alternada son las últimas cinco entradas, más el `system` que se añade aparte. Haz una pregunta que dependa del principio. La pantalla debe seguir completa aunque ambas peticiones reciban menos contexto. Si solo cambias la primera, la interpretación seguirá recibiendo toda la conversación y la prueba no demostrará ese límite.
+
+**Termina el experimento:** `api_messages` también se usa en las herramientas, los gráficos y la demo final. Si dejas `history[-5:]`, esas apps heredarán el límite aunque muestren todo el chat. Anota la diferencia observada y quita ese recorte antes de seguir: vuelve a recorrer `history` completo en el helper. Conserva las dos llamadas al helper que acabas de construir en el paso 16. Envía otra pregunta y comprueba que su petición incluye de nuevo el principio de la conversación.
 
 **Recupera una investigación.** Descarga el JSON con **Guardar conversación**, recarga el navegador y comprueba que la sesión nueva está vacía. Selecciona el archivo y pulsa **Recuperar conversación**. Deben volver preguntas, respuestas, código y detalles sin una nueva llamada al modelo. Prueba una copia del JSON a la que hayas quitado `content` de un mensaje: debe mostrar un error y conservar el chat actual.
 
@@ -99,9 +113,11 @@ Orquestar es decidir qué llamada ocurre, con qué información y después de cu
 
 Genera el análisis. Antes de revisarlo, añade al borrador «Bajar a 24 euros reducirá las bajas un 20 %». Pide la revisión. Abre la petición del revisor y busca el dato que justificaría ese 20 %. Ahora prueba con una respuesta correcta. ¿El revisor distingue ambas o critica por sistema?
 
-**Construye el cambio.** Modifica `REVIEW_PROMPT` para que cada objeción cite el campo de evidencia que usa y separe error, supuesto y dato que falta. Después quítale la evidencia de una prueba y compara qué pierde. No consideres aprobada una respuesta solo porque dos modelos coinciden.
+**Construye el cambio.** `REVIEW_PROMPT` ya pide citar el campo de evidencia de cada objeción. Conserva esa instrucción y añade una salida separada en **error**, **supuesto** y **dato que falta**, con un ejemplo de objeción válida. Después quítale la evidencia de una prueba y compara qué pierde. Restaura el envío de evidencia antes de continuar. No consideres aprobada una respuesta solo porque dos modelos coinciden.
 
 La pantalla conserva exactamente qué borrador se revisó. Si cambias el texto después, pide otra revisión: la anterior no evalúa el texto nuevo.
+
+La pregunta del análisis guardado también queda visible. Si editas la pregunta superior, pulsa **Generar análisis** para obtener nuevos datos y borrador. Hasta que esa petición termine correctamente, la revisión sigue usando la pregunta y la evidencia anteriores.
 
 **Comprobación para continuar:** una afirmación sin respaldo detectada o un fallo del revisor documentado, y una comprobación independiente con Python. El último juicio sigue siendo tuyo.
 

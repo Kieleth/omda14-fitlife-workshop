@@ -63,6 +63,9 @@ def main():
             st.error(f'No se ha completado el análisis: {exc}')
     if 'analyst' not in st.session_state:
         st.stop()
+    st.write('Pregunta del análisis guardado: ' + st.session_state.analysis_question)
+    if question != st.session_state.analysis_question:
+        st.info('El borrador, la evidencia y su revisión siguen usando la pregunta anterior. Pulsa Generar análisis para trabajar con la pregunta nueva.')
     evidence = [result for call in st.session_state.analyst['details']['calls'] for result in call['tool_results']]
     with st.expander('Evidencia calculada que recibirá el revisor'):
         st.json(evidence)

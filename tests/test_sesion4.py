@@ -22,6 +22,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class TranscriptTests(unittest.TestCase):
+    def test_shared_projection_keeps_early_questions_after_the_limit_experiment(self):
+        history = []
+        for number in range(4):
+            history.extend([{'role': 'user', 'content': f'Pregunta {number}'},
+                            {'role': 'assistant', 'content': f'Respuesta {number}', 'details': {'turn': number}}])
+        history.append({'role': 'user', 'content': 'Vuelve a la primera pregunta'})
+        before = copy.deepcopy(history)
+        sent = api_messages('Reglas', history)
+        self.assertEqual(len(sent), 10, 'Restaura history completo tras el experimento del paso 16.')
+        self.assertEqual(sent[1], {'role': 'user', 'content': 'Pregunta 0'})
+        self.assertEqual(sent[-1], history[-1])
+        self.assertTrue(all(set(message) == {'role', 'content'} for message in sent))
+        self.assertEqual(history, before)
+
     def test_download_cannot_produce_an_unrecoverable_file(self):
         with self.assertRaisesRegex(ValueError, '1 MB'):
             export_history([{'role': 'user', 'content': 'á' * 500_001}])
@@ -273,6 +287,24 @@ class OfflineSession4Tests(unittest.TestCase):
         sent = json.loads(self.requests[-1]['messages'][-1]['content'])
         self.assertEqual(sent['borrador'], 'Las bajas se reducirán un 20 %.')
         self.assertEqual(sent['evidencia'][0]['name'], 'resumen_plan')
+
+    def test_review_keeps_its_question_visible_after_edit_or_failed_regeneration(self):
+        app = self.app('exercises/paso_19.py')
+        original = app.text_area[0].value
+        app.button[0].click().run()
+        app.text_area[0].set_value('Una pregunta nueva sobre premium').run()
+        self.assertEqual(len(self.requests), 2)
+        self.assertIn('Pregunta del análisis guardado: ' + original, [m.value for m in app.markdown])
+        self.assertTrue(any('pregunta anterior' in message.value for message in app.info))
+        app.button[1].click().run()
+        sent = json.loads(self.requests[-1]['messages'][-1]['content'])
+        self.assertEqual(sent['pregunta'], original)
+        self.denied = True
+        app.button[0].click().run()
+        self.assertFalse(app.exception)
+        self.assertEqual(app.session_state['analysis_question'], original)
+        self.assertTrue(any('pregunta anterior' in message.value for message in app.info))
+        self.assertIn('Pregunta del análisis guardado: ' + original, [m.value for m in app.markdown])
 
     def test_deployment_is_closed_without_password_and_does_not_call_api(self):
         app = self.app('app.py')
